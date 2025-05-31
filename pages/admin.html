@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Panel de Administración - MEDITIME</title>
+  <link rel="stylesheet" href="../assets/css/styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link rel="stylesheet" href="../assets/css/admin.css">
+</head>
+<body>
+  <!-- Barra de navegación -->
+  <nav class="navbar">
+    <div class="container">
+      <div class="logo">
+        <a href="../index.html">
+          <img src="../assets/img/logo.png" height="150" width="150" alt="">
+       </a>
+      </div>
+      <ul class="nav-links">
+        <li><a href="../index.html">Inicio</a></li>
+        <li><a href="../pages/recordatorios.html">Mis Recordatorios</a></li>
+        <li><a href="../pages/calendario.html">Calendario</a></li>
+        <li><a href="../pages/contacto.html">Contacto</a></li>
+      </ul>
+      <div class="menu-toggle">
+        <i class="fas fa-bars"></i>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Contenido principal -->
+  <main>
+    <section class="page-header">
+      <div class="container">
+        <h2>Panel de Administración</h2>
+        <p>Gestione usuarios y configuraciones del sistema</p>
+      </div>
+    </section>
+
+    <section class="admin-section">
+      <div class="container">
+        <div class="admin-grid">
+          <!-- Panel de navegación lateral -->
+          <div class="admin-sidebar">
+            <div class="admin-menu">
+              <div class="admin-menu-item active" data-tab="usuarios">
+                <i class="fas fa-users"></i>
+                <span>Gestión de Usuarios</span>
+              </div>
+              <div class="admin-menu-item" data-tab="estadisticas">
+                <i class="fas fa-chart-bar"></i>
+                <span>Estadísticas</span>
+              </div>
+              <div class="admin-menu-item" data-tab="configuracion">
+                <i class="fas fa-cogs"></i>
+                <span>Configuración</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Panel de contenido -->
+          <div class="admin-content">
+            <!-- Pestaña de Usuarios -->
+            <div class="admin-tab active" id="usuarios-tab">
+              <div class="admin-header">
+                <h3>Gestión de Usuarios</h3>
+                <div class="admin-actions">
+                  <div class="search-box">
+                    <input type="text" id="search-user" placeholder="Buscar usuario...">
+                    <i class="fas fa-search"></i>
+                  </div>
+                  <button class="btn btn-primary" id="add-user-btn">
+                    <i class="fas fa-user-plus"></i> Añadir Usuario
+                  </button>
+                </div>
+              </div>
+
+              <div class="admin-table-container">
+                <table class="admin-table" id="users-table">
+                  <thead>
+                    <tr>
+                      <th>ID</th>
+                      <th>Nombre</th>
+                      <th>Email</th>
+                      <th>Teléfono</th>
+                      <th>Fecha de Registro</th>
+                      <th>Admin</th>
+                      <th>Acciones</th>
+                    </tr>
+                  </thead>
+                  <tbody id="users-table-body">
+                    <!-- Los usuarios se cargarán dinámicamente aquí -->
+                    <tr>
+                      <td colspan="7" class="loading-message">Cargando usuarios...</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <div class="pagination">
+                <button class="pagination-btn" id="prev-page" disabled>
+                  <i class="fas fa-chevron-left"></i> Anterior
+                </button>
+                <span class="pagination-info" id="pagination-info">Página 1 de 1</span>
+                <button class="pagination-btn" id="next-page" disabled>
+                  Siguiente <i class="fas fa-chevron-right"></i>
+                </button>
+              </div>
+            </div>
+
+            <!-- Pestaña de Estadísticas -->
+            <div class="admin-tab" id="estadisticas-tab">
+              <div class="admin-header">
+                <h3>Estadísticas del Sistema</h3>
+              </div>
+
+              <div class="stats-grid">
+                <div class="stats-card">
+                  <div class="stats-icon">
+                    <i class="fas fa-users"></i>
+                  </div>
+                  <div class="stats-info">
+                    <h4>Total Usuarios</h4>
+                    <div class="stats-value" id="total-users">0</div>
+                  </div>
+                </div>
+
+                <div class="stats-card">
+                  <div class="stats-icon">
+                    <i class="fas fa-user-plus"></i>
+                  </div>
+                  <div class="stats-info">
+                    <h4>Nuevos Usuarios (Mes)</h4>
+                    <div class="stats-value" id="new-users">0</div>
+                  </div>
+                </div>
+
+                <div class="stats-card">
+                  <div class="stats-icon">
+                    <i class="fas fa-pills"></i>
+                  </div>
+                  <div class="stats-info">
+                    <h4>Total Medicamentos</h4>
+                    <div class="stats-value" id="total-meds">0</div>
+                  </div>
+                </div>
+
+                <div class="stats-card">
+                  <div class="stats-icon">
+                    <i class="fas fa-bell"></i>
+                  </div>
+                  <div class="stats-info">
+                    <h4>Recordatorios Activos</h4>
+                    <div class="stats-value" id="active-reminders">0</div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="charts-container">
+                <div class="chart-card">
+                  <h4>Usuarios Registrados por Mes</h4>
+                  <div class="chart-placeholder">
+                    <i class="fas fa-chart-line"></i>
+                    <p>Gráfico de usuarios registrados</p>
+                  </div>
+                </div>
+
+                <div class="chart-card">
+                  <h4>Distribución de Medicamentos</h4>
+                  <div class="chart-placeholder">
+                    <i class="fas fa-chart-pie"></i>
+                    <p>Gráfico de distribución de medicamentos</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Pestaña de Configuración -->
+            <div class="admin-tab" id="configuracion-tab">
+              <div class="admin-header">
+                <h3>Configuración del Sistema</h3>
+              </div>
+
+              <div class="config-form-container">
+                <form id="system-config-form">
+                  <div class="config-section">
+                    <h4>Configuración General</h4>
+                    
+                    <div class="form-group">
+                      <label for="site-name">Nombre del Sitio</label>
+                      <input type="text" id="site-name" name="site-name" value="MEDITIME">
+                    </div>
+                    
+                    <div class="form-group">
+                      <label for="contact-email">Email de Contacto</label>
+                      <input type="email" id="contact-email" name="contact-email" value="info@meditime.com">
+                    </div>
+                    
+                    <div class="form-group checkbox-group">
+                      <input type="checkbox" id="maintenance-mode" name="maintenance-mode">
+                      <label for="maintenance-mode">Modo de Mantenimiento</label>
+                    </div>
+                  </div>
+                  
+                  <div class="config-section">
+                    <h4>Configuración de Notificaciones</h4>
+                    
+                    <div class="form-group">
+                      <label for="notification-frequency">Frecuencia de Notificaciones</label>
+                      <select id="notification-frequency" name="notification-frequency">
+                        <option value="immediate">Inmediata</option>
+                        <option value="hourly">Cada hora</option>
+                        <option value="daily">Diaria</option>
+                      </select>
+                    </div>
+                    
+                    <div class="form-group checkbox-group">
+                      <input type="checkbox" id="email-notifications" name="email-notifications" checked>
+                      <label for="email-notifications">Notificaciones por Email</label>
+                    </div>
+                    
+                    <div class="form-group checkbox-group">
+                      <input type="checkbox" id="browser-notifications" name="browser-notifications" checked>
+                      <label for="browser-notifications">Notificaciones del Navegador</label>
+                    </div>
+                  </div>
+                  
+                  <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" id="reset-config">Restablecer</button>
+                    <button type="submit" class="btn btn-primary">Guardar Configuración</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Pie de página -->
+  <footer>
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-logo">
+          <h3>MEDITIME</h3>
+          <p>Su asistente personal para medicamentos</p>
+        </div>
+        <div class="footer-links">
+          <div class="footer-column">
+            <h4>Navegación</h4>
+            <ul>
+              <li><a href="../index.html">Inicio</a></li>
+              <li><a href="../pages/recordatorios.html">Mis Recordatorios</a></li>
+              <li><a href="../pages/calendario.html">Calendario</a></li>
+              <li><a href="../pages/contacto.html">Contacto</a></li>
+            </ul>
+          </div>
+          <div class="footer-column">
+            <h4>Recursos</h4>
+            <ul>
+              <li><a href="#">Ayuda</a></li>
+              <li><a href="#">Preguntas frecuentes</a></li>
+              <li><a href="#">Tutoriales</a></li>
+            </ul>
+          </div>
+          <div class="footer-column">
+            <h4>Legal</h4>
+            <ul>
+              <li><a href="#">Política de privacidad</a></li>
+              <li><a href="#">Términos de uso</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2025 MEDITIME. Todos los derechos reservados.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Modal para añadir/editar usuario -->
+  <div id="user-modal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 id="modal-title">Añadir Usuario</h3>
+        <button class="close-modal" aria-label="Cerrar">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      <form id="user-form">
+        <div class="form-group">
+          <label for="user-nombre">Nombre</label>
+          <input type="text" id="user-nombre" name="nombre" required>
+        </div>
+        
+        <div class="form-group">
+          <label for="user-apellidos">Apellidos</label>
+          <input type="text" id="user-apellidos" name="apellidos" required>
+        </div>
+        
+        <div class="form-group">
+          <label for="user-email">Email</label>
+          <input type="email" id="user-email" name="email" required>
+        </div>
+        
+        <div class="form-group">
+          <label for="user-telefono">Teléfono</label>
+          <input type="tel" id="user-telefono" name="telefono">
+        </div>
+        
+        <div class="form-group">
+          <label for="user-fecha-nacimiento">Fecha de Nacimiento</label>
+          <input type="date" id="user-fecha-nacimiento" name="fecha_nacimiento" required>
+        </div>
+        
+        <div class="form-group">
+          <label for="user-domicilio">Domicilio</label>
+          <input type="text" id="user-domicilio" name="domicilio">
+        </div>
+        
+        <div class="form-group">
+          <label for="user-password">Contraseña</label>
+          <input type="password" id="user-password" name="password">
+          <small>Dejar en blanco para mantener la contraseña actual (en caso de edición)</small>
+        </div>
+        
+        <div class="form-group checkbox-group">
+          <input type="checkbox" id="user-admin" name="isAdmin">
+          <label for="user-admin">Administrador</label>
+        </div>
+        
+        <div class="form-group checkbox-group">
+          <input type="checkbox" id="user-notificaciones" name="notificaciones" checked>
+          <label for="user-notificaciones">Recibir notificaciones</label>
+        </div>
+        
+        <div class="form-actions">
+          <button type="button" class="btn btn-secondary" id="cancel-user-btn">Cancelar</button>
+          <button type="submit" class="btn btn-primary">Guardar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal de confirmación para eliminar -->
+  <div id="confirm-modal" class="modal">
+    <div class="modal-content confirm-content">
+      <div class="modal-header">
+        <h3>Confirmar eliminación</h3>
+        <button class="close-modal" aria-label="Cerrar">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      <p>¿Está seguro de que desea eliminar este usuario? Esta acción no se puede deshacer.</p>
+      <div class="form-actions">
+        <button type="button" class="btn btn-secondary" id="cancel-delete">Cancelar</button>
+        <button type="button" class="btn btn-danger" id="confirm-delete">Eliminar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="../assets/js/auth.js"></script>
+  <script src="../assets/js/script.js"></script>
+  <script src="../assets/js/admin.js"></script>
+</body>
+</html>

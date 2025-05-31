@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mi Perfil - MEDITIME</title>
+  <link rel="stylesheet" href="../assets/css/styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link rel="stylesheet" href="../assets/css/perfil.css">
+</head>
+<body>
+  <!-- Barra de navegación -->
+  <nav class="navbar">
+    <div class="container">
+      <div class="logo">
+        <a href="../index.html">
+          <img src="../assets/img/logo.png" height="150" width="150" alt="">
+       </a>
+      </div>
+      <ul class="nav-links">
+        <li><a href="../index.html">Inicio</a></li>
+        <li><a href="../pages/recordatorios.html">Mis Recordatorios</a></li>
+        <li><a href="../pages/calendario.html">Calendario</a></li>
+        <li><a href="../pages/contacto.html">Contacto</a></li>
+      </ul>
+      <div class="menu-toggle">
+        <i class="fas fa-bars"></i>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Contenido principal -->
+  <main>
+    <section class="page-header">
+      <div class="container">
+        <h2>Mi Perfil</h2>
+        <p>Gestione su información personal y preferencias de cuenta</p>
+      </div>
+    </section>
+
+    <section class="perfil-section">
+      <div class="container">
+        <div class="perfil-grid">
+          <!-- Menú lateral -->
+          <div class="perfil-sidebar">
+            <div class="perfil-menu">
+              <div class="perfil-menu-item active" data-tab="datos-personales">
+                <i class="fas fa-user"></i>
+                <span>Datos Personales</span>
+              </div>
+              <div class="perfil-menu-item" data-tab="seguridad">
+                <i class="fas fa-lock"></i>
+                <span>Seguridad</span>
+              </div>
+              <div class="perfil-menu-item" data-tab="notificaciones">
+                <i class="fas fa-bell"></i>
+                <span>Notificaciones</span>
+              </div>
+              <div class="perfil-menu-item" data-tab="preferencias">
+                <i class="fas fa-cog"></i>
+                <span>Preferencias</span>
+              </div>
+              <div class="perfil-menu-item" data-tab="privacidad">
+                <i class="fas fa-shield-alt"></i>
+                <span>Privacidad</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Contenido del perfil -->
+          <div class="perfil-content">
+            <!-- Pestaña de Datos Personales -->
+            <div class="perfil-tab active" id="datos-personales-tab">
+              <div class="perfil-header">
+                <h3>Datos Personales</h3>
+                <p>Actualice su información personal</p>
+              </div>
+
+              <form id="datos-personales-form" class="perfil-form">
+                <div class="perfil-avatar">
+                  <div class="avatar-container">
+                    <!-- <img id="avatar-preview" src="/placeholder.svg?height=120&width=120" alt="Foto de perfil"> -->
+                    <div class="avatar-overlay">
+                      <i class="fas fa-camera"></i>
+                    </div>
+                  </div>
+                  <input type="file" id="avatar-upload" accept="image/*" style="display: none;">
+                  <button type="button" id="change-avatar-btn" class="btn btn-secondary btn-sm">Cambiar foto</button>
+                </div>
+
+                <div class="form-row">
+                  <div class="form-group">
+                    <label for="nombre">Nombre</label>
+                    <input type="text" id="nombre" name="nombre" required>
+                  </div>
+                  
+                  <div class="form-group">
+                    <label for="apellidos">Apellidos</label>
+                    <input type="text" id="apellidos" name="apellidos" required>
+                  </div>
+                </div>
+                
+                <div class="form-group">
+                  <label for="email">Correo electrónico</label>
+                  <input type="email" id="email" name="email" required>
+                </div>
+                
+                <div class="form-row">
+                  <div class="form-group">
+                    <label for="telefono">Teléfono</label>
+                    <input type="tel" id="telefono" name="telefono">
+                  </div>
+                  
+                  <div class="form-group">
+                    <label for="fecha_nacimiento">Fecha de nacimiento</label>
+                    <input type="date" id="fecha_nacimiento" name="fecha_nacimiento" required>
+                  </div>
+                </div>
+                
+                <div class="form-group">
+                  <label for="domicilio">Domicilio</label>
+                  <input type="text" id="domicilio" name="domicilio">
+                </div>
+
+                <div id="datos-error" class="error-message" style="display: none;"></div>
+                <div id="datos-success" class="success-message" style="display: none;"></div>
+                
+                <div class="form-actions">
+                  <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+                </div>
+              </form>
+            </div>
+
+            <!-- Pestaña de Seguridad -->
+            <div class="perfil-tab" id="seguridad-tab">
+              <div class="perfil-header">
+                <h3>Seguridad</h3>
+                <p>Actualice su contraseña y configure opciones de seguridad</p>
+              </div>
+
+              <form id="cambiar-password-form" class="perfil-form">
+                <h4>Cambiar Contraseña</h4>
+                
+                <div class="form-group">
+                  <label for="password-actual">Contraseña actual</label>
+                  <div class="input-with-icon">
+                    <input type="password" id="password-actual" name="password-actual" required>
+                    <button type="button" class="toggle-password" aria-label="Mostrar contraseña">
+                      <i class="fas fa-eye"></i>
+                    </button>
+                  </div>
+                </div>
+                
+                <div class="form-group">
+                  <label for="password-nuevo">Nueva contraseña</label>
+                  <div class="input-with-icon">
+                    <input type="password" id="password-nuevo" name="password-nuevo" required>
+                    <button type="button" class="toggle-password" aria-label="Mostrar contraseña">
+                      <i class="fas fa-eye"></i>
+                    </button>
+                  </div>
+                  <div class="password-strength">
+                    <div class="strength-meter">
+                      <div class="strength-bar"></div>
+                    </div>
+                    <span class="strength-text">Seguridad de la contraseña</span>
+                  </div>
+                </div>
+                
+                <div class="form-group">
+                  <label for="password-confirmar">Confirmar nueva contraseña</label>
+                  <div class="input-with-icon">
+                    <input type="password" id="password-confirmar" name="password-confirmar" required>
+                    <button type="button" class="toggle-password" aria-label="Mostrar contraseña">
+                      <i class="fas fa-eye"></i>
+                    </button>
+                  </div>
+                </div>
+
+                <div id="password-error" class="error-message" style="display: none;"></div>
+                <div id="password-success" class="success-message" style="display: none;"></div>
+                
+                <div class="form-actions">
+                  <button type="submit" class="btn btn-primary">Cambiar Contraseña</button>
+                </div>
+              </form>
+
+              <div class="security-options">
+                <h4>Opciones de Seguridad Adicionales</h4>
+                
+                <div class="option-card">
+                  <div class="option-info">
+                    <h5>Verificación en dos pasos</h5>
+                    <p>Añada una capa adicional de seguridad a su cuenta</p>
+                  </div>
+                  <div class="option-action">
+                    <button type="button" class="btn btn-secondary" id="setup-2fa-btn">Configurar</button>
+                  </div>
+                </div>
+                
+                <div class="option-card">
+                  <div class="option-info">
+                    <h5>Sesiones activas</h5>
+                    <p>Gestione los dispositivos donde ha iniciado sesión</p>
+                  </div>
+                  <div class="option-action">
+                    <button type="button" class="btn btn-secondary" id="view-sessions-btn">Ver sesiones</button>
+                  </div>
+                </div>
+                
+                <div class="option-card">
+                  <div class="option-info">
+                    <h5>Historial de actividad</h5>
+                    <p>Revise la actividad reciente de su cuenta</p>
+                  </div>
+                  <div class="option-action">
+                    <button type="button" class="btn btn-secondary" id="view-activity-btn">Ver historial</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Pestaña de Notificaciones -->
+            <div class="perfil-tab" id="notificaciones-tab">
+              <div class="perfil-header">
+                <h3>Notificaciones</h3>
+                <p>Configure cómo y cuándo recibir notificaciones</p>
+              </div>
+
+              <form id="notificaciones-form" class="perfil-form">
+                <div class="notification-section">
+                  <h4>Recordatorios de Medicamentos</h4>
+                  
+                  <div class="notification-option">
+                    <div class="notification-info">
+                      <h5>Notificaciones por correo electrónico</h5>
+                      <p>Reciba recordatorios de medicamentos por correo electrónico</p>
+                    </div>
+                    <div class="notification-toggle">
+                      <label class="switch">
+                        <input type="checkbox" name="email-meds" id="email-meds" checked>
+                        <span class="slider round"></span>
+                      </label>
+                    </div>
+                  </div>
+                  
+                  <div class="notification-option">
+                    <div class="notification-info">
+                      <h5>Notificaciones del navegador</h5>
+                      <p>Reciba recordatorios de medicamentos en su navegador</p>
+                    </div>
+                    <div class="notification-toggle">
+                      <label class="switch">
+                        <input type="checkbox" name="browser-meds" id="browser-meds" checked>
+                        <span class="slider round"></span>
+                      </label>
+                    </div>
+                  </div>
+                  
+                  <div class="notification-option">
+                    <div class="notification-info">
+                      <h5>Tiempo de anticipación</h5>
+                      <p>Reciba recordatorios con anticipación</p>
+                    </div>
+                    <div class="notification-select">
+                      <select name="reminder-time" id="reminder-time">
+                        <option value="0">En el momento exacto</option>
+                        <option value="5" selected>5 minutos antes</option>
+                        <option value="10">10 minutos antes</option>
+                        <option value="15">15 minutos antes</option>
+                        <option value="30">30 minutos antes</option>
+                        <option value="60">1 hora antes</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="notification-section">
+                  <h4>Actualizaciones del Sistema</h4>
+                  
+                  <div class="notification-option">
+                    <div class="notification-info">
+                      <h5>Nuevas características</h5>
+                      <p>Reciba notificaciones sobre nuevas características y mejoras</p>
+                    </div>
+                    <div class="notification-toggle">
+                      <label class="switch">
+                        <input type="checkbox" name="features-updates" id="features-updates" checked>
+                        <span class="slider round"></span>
+                      </label>
+                    </div>
+                  </div>
+                  
+                  <div class="notification-option">
+                    <div class="notification-info">
+                      <h5>Consejos y recomendaciones</h5>
+                      <p>Reciba consejos sobre el uso de medicamentos y la aplicación</p>
+                    </div>
+                    <div class="notification-toggle">
+                      <label class="switch">
+                        <input type="checkbox" name="tips-updates" id="tips-updates" checked>
+                        <span class="slider round"></span>
+                      </label>
+                    </div>
+                  </div>
+                </div>
+
+                <div id="notificaciones-error" class="error-message" style="display: none;"></div>
+                <div id="notificaciones-success" class="success-message" style="display: none;"></div>
+                
+                <div class="form-actions">
+                  <button type="submit" class="btn btn-primary">Guardar Preferencias</button>
+                </div>
+              </form>
+            </div>
+
+            <!-- Pestaña de Preferencias -->
+            <div class="perfil-tab" id="preferencias-tab">
+              <div class="perfil-header">
+                <h3>Preferencias</h3>
+                <p>Personalice su experiencia en MEDITIME</p>
+              </div>
+
+              <form id="preferencias-form" class="perfil-form">
+                <div class="preference-section">
+                  <h4>Apariencia</h4>
+                  
+                  <div class="preference-option">
+                    <div class="preference-info">
+                      <h5>Tema</h5>
+                      <p>Elija el tema de la aplicación</p>
+                    </div>
+                    <div class="preference-select">
+                      <select name="theme" id="theme">
+                        <option value="light" selected>Claro</option>
+                        <option value="dark">Oscuro</option>
+                        <option value="system">Automático (según sistema)</option>
+                      </select>
+                    </div>
+                  </div>
+                  
+                  <div class="preference-option">
+                    <div class="preference-info">
+                      <h5>Tamaño de texto</h5>
+                      <p>Ajuste el tamaño del texto en la aplicación</p>
+                    </div>
+                    <div class="preference-select">
+                      <select name="font-size" id="font-size">
+                        <option value="small">Pequeño</option>
+                        <option value="medium" selected>Mediano</option>
+                        <option value="large">Grande</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="preference-section">
+                  <h4>Calendario</h4>
+                  
+                  <div class="preference-option">
+                    <div class="preference-info">
+                      <h5>Vista predeterminada</h5>
+                      <p>Elija la vista predeterminada del calendario</p>
+                    </div>
+                    <div class="preference-select">
+                      <select name="calendar-view" id="calendar-view">
+                        <option value="month" selected>Mes</option>
+                        <option value="week">Semana</option>
+                        <option value="day">Día</option>
+                      </select>
+                    </div>
+                  </div>
+                  
+                  <div class="preference-option">
+                    <div class="preference-info">
+                      <h5>Primer día de la semana</h5>
+                      <p>Elija el primer día de la semana en el calendario</p>
+                    </div>
+                    <div class="preference-select">
+                      <select name="first-day" id="first-day">
+                        <option value="0" selected>Domingo</option>
+                        <option value="1">Lunes</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="preference-section">
+                  <h4>Idioma y Región</h4>
+                  
+                  <div class="preference-option">
+                    <div class="preference-info">
+                      <h5>Idioma</h5>
+                      <p>Elija el idioma de la aplicación</p>
+                    </div>
+                    <div class="preference-select">
+                      <select name="language" id="language">
+                        <option value="es" selected>Español</option>
+                        <option value="en">English</option>
+                        <option value="fr">Français</option>
+                      </select>
+                    </div>
+                  </div>
+                  
+                  <div class="preference-option">
+                    <div class="preference-info">
+                      <h5>Formato de hora</h5>
+                      <p>Elija el formato de hora</p>
+                    </div>
+                    <div class="preference-select">
+                      <select name="time-format" id="time-format">
+                        <option value="12" selected>12 horas (AM/PM)</option>
+                        <option value="24">24 horas</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+
+                <div id="preferencias-error" class="error-message" style="display: none;"></div>
+                <div id="preferencias-success" class="success-message" style="display: none;"></div>
+                
+                <div class="form-actions">
+                  <button type="submit" class="btn btn-primary">Guardar Preferencias</button>
+                </div>
+              </form>
+            </div>
+
+            <!-- Pestaña de Privacidad -->
+            <div class="perfil-tab" id="privacidad-tab">
+              <div class="perfil-header">
+                <h3>Privacidad</h3>
+                <p>Gestione su privacidad y datos personales</p>
+              </div>
+
+              <div class="privacy-section">
+                <h4>Gestión de Datos</h4>
+                
+                <div class="privacy-card">
+                  <div class="privacy-info">
+                    <h5>Exportar mis datos</h5>
+                    <p>Descargue una copia de todos sus datos personales y medicamentos</p>
+                  </div>
+                  <div class="privacy-action">
+                    <button type="button" class="btn btn-secondary" id="export-data-btn">Exportar</button>
+                  </div>
+                </div>
+                
+                <div class="privacy-card">
+                  <div class="privacy-info">
+                    <h5>Eliminar mi cuenta</h5>
+                    <p>Elimine permanentemente su cuenta y todos sus datos</p>
+                  </div>
+                  <div class="privacy-action">
+                    <button type="button" class="btn btn-danger" id="delete-account-btn">Eliminar cuenta</button>
+                  </div>
+                </div>
+              </div>
+
+              <div class="privacy-section">
+                <h4>Cookies y Rastreo</h4>
+                
+                <div class="privacy-card">
+                  <div class="privacy-info">
+                    <h5>Cookies esenciales</h5>
+                    <p>Cookies necesarias para el funcionamiento del sitio</p>
+                  </div>
+                  <div class="privacy-toggle">
+                    <label class="switch">
+                      <input type="checkbox" id="essential-cookies" checked disabled>
+                      <span class="slider round"></span>
+                    </label>
+                  </div>
+                </div>
+                
+                <div class="privacy-card">
+                  <div class="privacy-info">
+                    <h5>Cookies de análisis</h5>
+                    <p>Cookies que nos ayudan a mejorar el sitio mediante análisis de uso</p>
+                  </div>
+                  <div class="privacy-toggle">
+                    <label class="switch">
+                      <input type="checkbox" id="analytics-cookies" checked>
+                      <span class="slider round"></span>
+                    </label>
+                  </div>
+                </div>
+                
+                <div class="privacy-card">
+                  <div class="privacy-info">
+                    <h5>Cookies de marketing</h5>
+                    <p>Cookies utilizadas para mostrar publicidad relevante</p>
+                  </div>
+                  <div class="privacy-toggle">
+                    <label class="switch">
+                      <input type="checkbox" id="marketing-cookies">
+                      <span class="slider round"></span>
+                    </label>
+                  </div>
+                </div>
+              </div>
+
+              <div class="privacy-section">
+                <h4>Documentos Legales</h4>
+                
+                <div class="document-links">
+                  <a href="#" class="document-link">
+                    <i class="fas fa-file-alt"></i>
+                    <span>Política de Privacidad</span>
+                  </a>
+                  <a href="#" class="document-link">
+                    <i class="fas fa-file-alt"></i>
+                    <span>Términos de Servicio</span>
+                  </a>
+                  <a href="#" class="document-link">
+                    <i class="fas fa-file-alt"></i>
+                    <span>Política de Cookies</span>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Pie de página -->
+  <footer>
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-logo">
+          <h3>MEDITIME</h3>
+          <p>Su asistente personal para medicamentos</p>
+        </div>
+        <div class="footer-links">
+          <div class="footer-column">
+            <h4>Navegación</h4>
+            <ul>
+              <li><a href="../index.html">Inicio</a></li>
+              <li><a href="../pages/recordatorios.html">Mis Recordatorios</a></li>
+              <li><a href="../pages/calendario.html">Calendario</a></li>
+              <li><a href="../pages/contacto.html">Contacto</a></li>
+            </ul>
+          </div>
+          <div class="footer-column">
+            <h4>Recursos</h4>
+            <ul>
+              <li><a href="#">Ayuda</a></li>
+              <li><a href="#">Preguntas frecuentes</a></li>
+              <li><a href="#">Tutoriales</a></li>
+            </ul>
+          </div>
+          <div class="footer-column">
+            <h4>Legal</h4>
+            <ul>
+              <li><a href="#">Política de privacidad</a></li>
+              <li><a href="#">Términos de uso</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2025 MEDITIME. Todos los derechos reservados.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Modal de confirmación para eliminar cuenta -->
+  <div id="confirm-delete-modal" class="modal">
+    <div class="modal-content confirm-content">
+      <div class="modal-header">
+        <h3>Eliminar cuenta</h3>
+        <button class="close-modal" aria-label="Cerrar">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="warning-icon">
+          <i class="fas fa-exclamation-triangle"></i>
+        </div>
+        <p>¿Está seguro de que desea eliminar su cuenta? Esta acción no se puede deshacer y perderá todos sus datos.</p>
+        <div class="confirm-password">
+          <label for="confirm-delete-password">Ingrese su contraseña para confirmar:</label>
+          <input type="password" id="confirm-delete-password" required>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" id="cancel-delete-btn">Cancelar</button>
+        <button type="button" class="btn btn-danger" id="confirm-delete-btn">Eliminar definitivamente</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal de sesiones activas -->
+  <div id="sessions-modal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Sesiones Activas</h3>
+        <button class="close-modal" aria-label="Cerrar">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="sessions-list">
+          <div class="session-item current">
+            <div class="session-info">
+              <div class="session-device">
+                <i class="fas fa-laptop"></i>
+                <div>
+                  <h4>Windows - Chrome</h4>
+                  <p>Madrid, España</p>
+                  <span class="session-current">Sesión actual</span>
+                </div>
+              </div>
+              <div class="session-time">
+                <p>Último acceso: Hoy, 15:30</p>
+              </div>
+            </div>
+          </div>
+          
+          <div class="session-item">
+            <div class="session-info">
+              <div class="session-device">
+                <i class="fas fa-mobile-alt"></i>
+                <div>
+                  <h4>iPhone - Safari</h4>
+                  <p>Madrid, España</p>
+                </div>
+              </div>
+              <div class="session-time">
+                <p>Último acceso: Ayer, 18:45</p>
+              </div>
+            </div>
+            <div class="session-action">
+              <button class="btn-icon btn-delete" aria-label="Cerrar sesión">
+                <i class="fas fa-sign-out-alt"></i>
+              </button>
+            </div>
+          </div>
+          
+          <div class="session-item">
+            <div class="session-info">
+              <div class="session-device">
+                <i class="fas fa-tablet-alt"></i>
+                <div>
+                  <h4>iPad - Safari</h4>
+                  <p>Barcelona, España</p>
+                </div>
+              </div>
+              <div class="session-time">
+                <p>Último acceso: 15/04/2025, 10:20</p>
+              </div>
+            </div>
+            <div class="session-action">
+              <button class="btn-icon btn-delete" aria-label="Cerrar sesión">
+                <i class="fas fa-sign-out-alt"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" id="close-all-sessions-btn">Cerrar todas las sesiones</button>
+        <button type="button" class="btn btn-secondary" id="close-sessions-modal-btn">Cerrar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="../assets/js/auth.js"></script>
+  <script src="../assets/js/script.js"></script>
+  <script src="../assets/js/perfil.js"></script>
+</body>
+</html>

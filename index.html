@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MEDITIME - Recordatorio de medicamentos</title>
+    <link rel="stylesheet" href="assets/css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+
+<body>
+    <!-- Barra de navegación -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="logo">
+                <a href="index.html">
+                    <img src="assets/img/logo.png" height="150" width="150" alt="">
+                </a>
+            </div>
+            <ul class="nav-links">
+                <li><a href="index.html" class="active">Inicio</a></li>
+                <li><a href="pages/recordatorios.html">Mis Recordatorios</a></li>
+                <li><a href="pages/calendario.html">Calendario</a></li>
+                <li><a href="pages/contacto.html">Contacto</a></li>
+                <li class="auth-buttons" id="auth-buttons">
+                    <a href="pages/login.html" class="btn btn-secondary btn-sm">Iniciar Sesión</a>
+                    <a href="pages/registro.html" class="btn btn-primary btn-sm">Registrarse</a>
+                </li>
+            </ul>
+            <div class="menu-toggle">
+                <i class="fas fa-bars"></i>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Contenido principal -->
+    <main>
+        <!-- Banner principal -->
+        <section class="hero">
+            <div class="container">
+                <div class="hero-content">
+                    <h2>Nunca olvide tomar sus medicamentos</h2>
+                    <p>MEDITIME le ayuda a recordar cuándo tomar sus medicamentos de forma sencilla y confiable.</p>
+                    <div class="cta-buttons">
+                        <a href="pages/recordatorios.html" class="btn btn-primary btn-large">Comenzar ahora</a>
+                        <a href="#como-funciona" class="btn btn-secondary">Cómo funciona</a>
+                    </div>
+                </div>
+                <div class="hero-image">
+                    <img src="assets/img/ImagenInicio.png" alt="Persona mayor usando MEDITIME">
+                </div>
+            </div>
+        </section>
+
+        <!-- Sección de beneficios -->
+        <section class="benefits" id="beneficios">
+            <div class="container">
+                <h2 class="section-title">¿Por qué usar MEDITIME?</h2>
+                <div class="benefits-grid">
+                    <div class="benefit-card">
+                        <div class="benefit-icon">
+                            <i class="fas fa-bell"></i>
+                        </div>
+                        <h3>Recordatorios claros</h3>
+                        <p>Reciba alertas sencillas cuando sea el momento de tomar su medicación.</p>
+                    </div>
+                    <div class="benefit-card">
+                        <div class="benefit-icon">
+                            <i class="fas fa-calendar-alt"></i>
+                        </div>
+                        <h3>Calendario visual</h3>
+                        <p>Vea todos sus medicamentos organizados en un calendario fácil de entender.</p>
+                    </div>
+                    <div class="benefit-card">
+                        <div class="benefit-icon">
+                            <i class="fas fa-user-friends"></i>
+                        </div>
+                        <h3>Comparta con familiares</h3>
+                        <p>Permita que sus seres queridos le ayuden a mantener su régimen de medicamentos.</p>
+                    </div>
+                    <div class="benefit-card">
+                        <div class="benefit-icon">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                        <h3>Fácil de usar</h3>
+                        <p>Diseñado especialmente para ser sencillo y accesible para todos.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Sección de cómo funciona -->
+        <section class="how-it-works" id="como-funciona">
+            <div class="container">
+                <h2 class="section-title">Cómo funciona MEDITIME</h2>
+                <div class="steps">
+                    <div class="step">
+                        <div class="step-number">1</div>
+                        <div class="step-content">
+                            <h3>Registre sus medicamentos</h3>
+                            <p>Ingrese el nombre, dosis y horario de cada medicamento que necesita tomar.</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">2</div>
+                        <div class="step-content">
+                            <h3>Reciba recordatorios</h3>
+                            <p>MEDITIME le avisará cuando sea hora de tomar cada medicamento.</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">3</div>
+                        <div class="step-content">
+                            <h3>Marque como completado</h3>
+                            <p>Confirme cuando haya tomado su medicamento para mantener un registro.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Sección de testimonios -->
+        <section class="testimonials">
+            <div class="container">
+                <h2 class="section-title">Lo que dicen nuestros usuarios</h2>
+                <div class="testimonial-slider">
+                    <div class="testimonial">
+                        <div class="testimonial-content">
+                            <p>"Desde que uso MEDITIME, no he olvidado tomar mis medicamentos. Es muy fácil de usar y me
+                                da tranquilidad."</p>
+                        </div>
+                        <div class="testimonial-author">
+                            <div>
+                                <h4>María García</h4>
+                                <p>72 años</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="testimonial">
+                        <div class="testimonial-content">
+                            <p>"Configuré MEDITIME para mi padre y ahora puedo estar tranquilo sabiendo que toma sus
+                                medicinas a tiempo."</p>
+                        </div>
+                        <div class="testimonial-author">
+                            <div>
+                                <h4>Carlos Rodríguez</h4>
+                                <p>Hijo cuidador</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="testimonial-dots">
+                    <span class="dot active"></span>
+                    <span class="dot"></span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Sección de llamado a la acción -->
+        <section class="cta-section">
+            <div class="container">
+                <h2>Comience a usar MEDITIME hoy mismo</h2>
+                <p>Es gratis, fácil de usar y puede mejorar significativamente su rutina de medicamentos.</p>
+                <a href="pages/registro.html" class="btn btn-primary btn-large">Registrarse gratis</a>
+            </div>
+        </section>
+    </main>
+
+    <!-- Pie de página -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <h3>MEDITIME</h3>
+                    <p>Su asistente personal para medicamentos</p>
+                </div>
+                <div class="footer-links">
+                    <div class="footer-column">
+                        <h4>Navegación</h4>
+                        <ul>
+                            <li><a href="index.html">Inicio</a></li>
+                            <li><a href="/pages/recordatorios.html">Mis Recordatorios</a></li>
+                            <li><a href="/pages/calendario.html">Calendario</a></li>
+                            <li><a href="/pages/contacto.html">Contacto</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-column">
+                        <h4>Recursos</h4>
+                        <ul>
+                            <li><a href="#">Ayuda</a></li>
+                            <li><a href="#">Preguntas frecuentes</a></li>
+                            <li><a href="#">Tutoriales</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-column">
+                        <h4>Legal</h4>
+                        <ul>
+                            <li><a href="#">Política de privacidad</a></li>
+                            <li><a href="#">Términos de uso</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 MEDITIME. Todos los derechos reservados.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Añadir script de autenticación antes del script principal -->
+    <script src="assets/js/auth.js"></script>
+    <script src="assets/js/script.js"></script>
+</body>
+
+</html>

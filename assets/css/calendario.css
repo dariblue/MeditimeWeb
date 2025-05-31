@@ -1,0 +1,804 @@
+/* Estilos específicos para la página de calendario */
+
+/* Encabezado de página */
+.page-header {
+  background-color: #f0f7ff;
+  padding: 40px 0;
+  text-align: center;
+}
+
+.page-header h2 {
+  font-size: 2.2rem;
+  margin-bottom: 10px;
+  color: var(--text-color);
+}
+
+.page-header p {
+  font-size: 1.2rem;
+  color: var(--text-light);
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+/* Sección de calendario */
+.calendario-section {
+  padding: 60px 0;
+}
+
+.calendario-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 30px;
+  max-width: 1400px; /* Aumentar el ancho máximo */
+  margin: 0 auto; /* Centrar el contenedor */
+  padding: 20px; /* Añadir espacio interno */
+}
+
+/* Panel de calendario */
+.calendario-panel {
+  background-color: white;
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+  padding: 20px;
+}
+
+.calendario-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.calendario-header h3 {
+  font-size: 1.5rem;
+  margin: 0;
+  color: var(--text-color);
+}
+
+.btn-nav {
+  background: none;
+  border: none;
+  font-size: 1.2rem;
+  color: var(--primary-color);
+  cursor: pointer;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: var(--transition);
+}
+
+.btn-nav:hover {
+  background-color: #f0f7ff;
+}
+
+.calendario-dias {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 5px;
+  margin-bottom: 10px;
+}
+
+.dia-semana {
+  text-align: center;
+  font-weight: bold;
+  padding: 10px;
+  color: var(--text-color);
+  font-size: 1rem;
+}
+
+.calendario-grid-dias {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr); /* 7 columnas para los días de la semana */
+  gap: 15px; /* Aumentar el espacio entre las celdas */
+}
+
+.dia-calendario {
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+  padding: 10px;
+  min-height: 120px; /* Altura mínima para las celdas */
+  max-height: 150px; /* Altura máxima para evitar desbordamiento */
+  cursor: pointer;
+  transition: var(--transition);
+  position: relative;
+  font-size: 1rem;
+  overflow: hidden; /* Ocultar contenido que se desborde */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.dia-calendario:hover {
+  background-color: #f8f9fa;
+  border-color: var(--primary-color);
+}
+
+.dia-calendario.otro-mes {
+  background-color: #f8f9fa;
+  color: var(--text-light);
+}
+
+.dia-calendario.hoy {
+  background-color: #e8f5e9;
+  border-color: var(--secondary-color);
+}
+
+.dia-calendario.seleccionado {
+  background-color: #e3f2fd;
+  border-color: var(--primary-color);
+}
+
+/* Número del día */
+.numero-dia {
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin-bottom: 5px;
+  white-space: nowrap; /* Evitar que el texto se divida en varias líneas */
+  overflow: hidden; /* Ocultar texto que se desborde */
+  text-overflow: ellipsis; /* Añadir puntos suspensivos si el texto es demasiado largo */
+}
+
+/* Medicaciones dentro de las celdas */
+.medicamentos-dia {
+  font-size: 0.9rem;
+  line-height: 1.2;
+  color: var(--text-light);
+  max-height: 80px; /* Limitar la altura para evitar desbordamiento */
+  overflow-y: auto; /* Añadir scroll si hay demasiados elementos */
+}
+
+.medicamento-item {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  white-space: nowrap; /* Evitar que el texto se divida en varias líneas */
+  overflow: hidden; /* Ocultar texto que se desborde */
+  text-overflow: ellipsis; /* Añadir puntos suspensivos si el texto es demasiado largo */
+}
+
+/* Mejorar el indicador de medicamentos */
+.indicador-medicamentos {
+  position: absolute;
+  bottom: 5px;
+  right: 5px;
+  background-color: var(--primary-color);
+  color: white;
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.8rem;
+  font-weight: bold;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* Mejorar la visualización de medicamentos en el día del calendario */
+.medicamento-preview {
+  font-size: 0.8rem;
+  color: var(--text-color);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-bottom: 3px;
+  padding: 2px 4px;
+  border-radius: 3px;
+  background-color: rgba(74, 144, 226, 0.1);
+  border-left: 3px solid var(--primary-color);
+}
+
+/* Panel de información */
+.info-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.info-card {
+  background-color: white;
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow);
+  padding: 20px;
+}
+
+.info-card h3 {
+  margin-top: 0;
+  margin-bottom: 20px;
+  font-size: 1.4rem;
+  color: var(--primary-color);
+  border-bottom: 2px solid var(--border-color);
+  padding-bottom: 10px;
+}
+
+.estadisticas {
+  display: flex;
+  justify-content: space-between;
+  text-align: center;
+}
+
+.estadistica {
+  flex: 1;
+}
+
+.estadistica .valor {
+  font-size: 2rem;
+  font-weight: bold;
+  color: var(--primary-color);
+}
+
+.estadistica .etiqueta {
+  font-size: 0.9rem;
+  color: var(--text-light);
+}
+
+.proximos-lista {
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.proximo-item {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  border-bottom: 1px solid var(--border-color);
+  transition: var(--transition);
+}
+
+.proximo-item:last-child {
+  border-bottom: none;
+}
+
+.proximo-item:hover {
+  background-color: #f8f9fa;
+}
+
+.proximo-fecha {
+  min-width: 80px;
+  text-align: center;
+  font-weight: bold;
+  color: var(--primary-color);
+}
+
+.proximo-info {
+  flex: 1;
+  margin-left: 10px;
+}
+
+.proximo-info h4 {
+  margin: 0 0 5px;
+  font-size: 1rem;
+}
+
+.proximo-info p {
+  margin: 0;
+  font-size: 0.9rem;
+  color: var(--text-light);
+}
+
+.no-recordatorios {
+  text-align: center;
+  padding: 20px;
+  color: var(--text-light);
+}
+
+.no-recordatorios i {
+  font-size: 2rem;
+  margin-bottom: 10px;
+  color: var(--border-color);
+}
+
+.tips-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.tips-list li {
+  display: flex;
+  margin-bottom: 15px;
+  align-items: flex-start;
+}
+
+.tips-list li:last-child {
+  margin-bottom: 0;
+}
+
+.tips-list i {
+  font-size: 1.2rem;
+  color: var(--primary-color);
+  margin-right: 15px;
+  margin-top: 5px;
+}
+
+.tips-list h4 {
+  margin: 0 0 5px;
+  font-size: 1rem;
+}
+
+.tips-list p {
+  margin: 0;
+  color: var(--text-light);
+  font-size: 0.9rem;
+}
+
+/* Sección de detalle del día */
+.detalle-dia-section {
+  padding: 60px 0;
+  background-color: #f8f9fa;
+}
+
+.detalle-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+}
+
+.detalle-header h3 {
+  font-size: 1.8rem;
+  margin: 0;
+  color: var(--text-color);
+}
+
+/* Mejorar la visualización de medicamentos agrupados por hora */
+.grupo-hora {
+  margin-bottom: 30px;
+  padding: 15px;
+  background-color: #f8f9fa;
+  border-radius: var(--border-radius);
+  border-left: 4px solid var(--primary-color);
+}
+
+.hora-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 15px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.hora-header .hora {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: var(--primary-color);
+  margin-right: 15px;
+}
+
+.hora-header .cantidad {
+  background-color: var(--primary-color);
+  color: white;
+  border-radius: 20px;
+  padding: 5px 12px;
+  font-size: 0.9rem;
+  font-weight: bold;
+}
+
+.medicamentos-lista {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 15px;
+}
+
+/* Mejorar las tarjetas de medicamentos */
+.medicamento-card {
+  background-color: white;
+  border-radius: var(--border-radius);
+  padding: 20px;
+  transition: var(--transition);
+  cursor: pointer;
+  border-left: 4px solid var(--primary-color);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.medicamento-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+}
+
+.medicamento-card h4 {
+  margin: 0 0 10px;
+  font-size: 1.2rem;
+  color: var(--text-color);
+}
+
+.medicamento-info {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.medicamento-dosis {
+  font-weight: bold;
+  color: var(--text-color);
+}
+
+.medicamento-frecuencia {
+  color: var(--text-light);
+  font-size: 0.9rem;
+}
+
+.medicamento-instrucciones {
+  color: var(--text-light);
+  font-size: 0.9rem;
+  margin-bottom: 15px;
+}
+
+.medicamento-acciones {
+  display: flex;
+  justify-content: space-between;
+}
+
+.btn-accion {
+  background: none;
+  border: none;
+  color: var(--primary-color);
+  cursor: pointer;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  transition: var(--transition);
+}
+
+.btn-accion i {
+  margin-right: 5px;
+}
+
+.btn-accion:hover {
+  color: var(--secondary-color);
+}
+
+.no-medicamentos {
+  text-align: center;
+  padding: 40px 20px;
+  color: var(--text-light);
+}
+
+.no-medicamentos i {
+  font-size: 3rem;
+  margin-bottom: 15px;
+  color: var(--border-color);
+}
+
+.no-medicamentos p {
+  margin-bottom: 20px;
+  font-size: 1.1rem;
+}
+
+/* Vista semanal */
+.vista-semanal-section {
+  padding: 60px 0;
+}
+
+.vista-semanal-section h3 {
+  text-align: center;
+  margin-bottom: 30px;
+  font-size: 1.8rem;
+  color: var(--text-color);
+}
+
+.vista-semanal-container {
+  background-color: white;
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+
+.vista-semanal-header {
+  display: grid;
+  grid-template-columns: 80px repeat(7, 1fr);
+  background-color: var(--primary-color);
+  color: white;
+}
+
+.hora-header,
+.dia-header {
+  padding: 15px;
+  text-align: center;
+  font-weight: bold;
+}
+
+.dias-semana {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+}
+
+.vista-semanal-grid {
+  display: grid;
+  grid-template-columns: 80px repeat(7, 1fr);
+}
+
+.hora-row {
+  display: contents;
+}
+
+.hora-cell {
+  padding: 15px;
+  text-align: center;
+  border-right: 1px solid var(--border-color);
+  border-bottom: 1px solid var(--border-color);
+  background-color: #f8f9fa;
+  font-weight: bold;
+}
+
+.dia-cell {
+  padding: 10px;
+  border-right: 1px solid var(--border-color);
+  border-bottom: 1px solid var(--border-color);
+  min-height: 80px;
+  position: relative;
+}
+
+.medicamento-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: var(--primary-color);
+  display: inline-block;
+  margin-right: 5px;
+}
+
+/* Mejorar la vista semanal */
+.medicamento-mini {
+  font-size: 0.85rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-bottom: 5px;
+  padding: 4px 8px;
+  border-radius: 4px;
+  background-color: #e3f2fd;
+  border-left: 3px solid var(--primary-color);
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.medicamento-mini:hover {
+  background-color: #bbdefb;
+}
+
+/* Sección de acciones */
+.acciones-section {
+  padding: 60px 0;
+  background-color: #f0f7ff;
+}
+
+.acciones-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 30px;
+}
+
+.accion-card {
+  background-color: white;
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow);
+  padding: 30px;
+  text-align: center;
+  transition: var(--transition);
+}
+
+.accion-card:hover {
+  transform: translateY(-10px);
+}
+
+.accion-card i {
+  font-size: 3rem;
+  color: var(--primary-color);
+  margin-bottom: 20px;
+}
+
+.accion-card h4 {
+  margin: 0 0 15px;
+  font-size: 1.3rem;
+  color: var(--text-color);
+}
+
+.accion-card p {
+  margin: 0 0 20px;
+  color: var(--text-light);
+}
+
+.btn-outline {
+  background-color: transparent;
+  color: var(--primary-color);
+  border: 2px solid var(--primary-color);
+}
+
+.btn-outline:hover {
+  background-color: var(--primary-color);
+  color: white;
+}
+
+/* Modal */
+.modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 1001;
+  overflow: auto;
+  padding: 20px;
+}
+
+.modal.active {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-content {
+  background-color: white;
+  border-radius: var(--border-radius);
+  width: 100%;
+  max-width: 600px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  position: relative;
+  animation: modalFadeIn 0.3s;
+}
+
+@keyframes modalFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.modal-header {
+  padding: 20px;
+  border-bottom: 1px solid var(--border-color);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.modal-header h3 {
+  margin: 0;
+  font-size: 1.4rem;
+}
+
+.close-modal {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: var(--text-light);
+  transition: var(--transition);
+}
+
+.close-modal:hover {
+  color: var(--text-color);
+}
+
+.modal-body {
+  padding: 20px;
+}
+
+.modal-footer {
+  padding: 15px 20px;
+  border-top: 1px solid var(--border-color);
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.detalle-item {
+  margin-bottom: 15px;
+}
+
+.detalle-item:last-child {
+  margin-bottom: 0;
+}
+
+.detalle-label {
+  font-weight: bold;
+  margin-bottom: 5px;
+  color: var(--text-color);
+}
+
+.detalle-valor {
+  color: var(--text-light);
+}
+
+/* Estilos responsivos */
+@media (max-width: 992px) {
+  .calendario-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .acciones-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .vista-semanal-header,
+  .vista-semanal-grid {
+    grid-template-columns: 60px repeat(7, 1fr);
+  }
+
+  .medicamentos-lista {
+    grid-template-columns: 1fr;
+  }
+
+  .acciones-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .calendario-grid-dias {
+    gap: 10px; /* Reducir el espacio entre las celdas en pantallas pequeñas */
+  }
+}
+
+@media (max-width: 576px) {
+  .vista-semanal-container {
+    overflow-x: auto;
+  }
+
+  .vista-semanal-header,
+  .vista-semanal-grid {
+    width: 800px;
+  }
+
+  .calendario-dias,
+  .calendario-grid-dias {
+    font-size: 0.9rem;
+  }
+
+  .dia-calendario {
+    min-height: 80px;
+  }
+}
+
+/* Mejorar la accesibilidad */
+.dia-calendario:focus,
+.medicamento-card:focus,
+.btn-nav:focus,
+.medicamento-mini:focus {
+  outline: 3px solid var(--primary-color);
+  outline-offset: 3px;
+}
+
+/* Modo de alto contraste */
+@media (prefers-contrast: more) {
+  .dia-calendario {
+    border: 2px solid black;
+  }
+
+  .medicamento-card {
+    border: 2px solid black;
+  }
+}
+
+/* Diseño responsivo para pantallas medianas */
+@media (max-width: 1200px) {
+  .calendario-grid {
+    max-width: 1000px; /* Reducir el ancho máximo en pantallas medianas */
+    grid-template-columns: 1fr; /* Cambiar a una sola columna */
+  }
+}
+
+/* Diseño responsivo para pantallas pequeñas */
+@media (max-width: 768px) {
+  .calendario-grid {
+    max-width: 95%; /* Usar un porcentaje para pantallas pequeñas */
+    padding: 10px; /* Reducir el espacio interno */
+  }
+
+  .dia-calendario {
+    min-height: 120px; /* Reducir la altura mínima en pantallas pequeñas */
+    padding: 10px;
+    font-size: 0.9rem;
+  }
+}

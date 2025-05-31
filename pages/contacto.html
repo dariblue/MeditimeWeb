@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contacto - MEDITIME</title>
+    <link rel="stylesheet" href="../assets/css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="../assets/css/contacto.css">
+</head>
+<body>
+    <!-- Barra de navegación -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="logo">
+                <a href="../index.html">
+                    <img src="../assets/img/logo.png" height="150" width="150" alt="">
+                 </a>
+            </div>
+            <ul class="nav-links">
+                <li><a href="/index.html">Inicio</a></li>
+                <li><a href="../pages/recordatorios.html">Mis Recordatorios</a></li>
+                <li><a href="../pages/calendario.html">Calendario</a></li>
+                <li><a href="../pages/contacto.html" class="active">Contacto</a></li>
+            </ul>
+            <div class="menu-toggle">
+                <i class="fas fa-bars"></i>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Contenido principal -->
+    <main>
+        <section class="page-header">
+            <div class="container">
+                <h2>Contacto</h2>
+                <p>Estamos aquí para ayudarle. Contáctenos con cualquier pregunta o comentario.</p>
+            </div>
+        </section>
+
+        <section class="contacto-section">
+            <div class="container">
+                <div class="contacto-grid">
+                    <!-- Información de contacto -->
+                    <div class="contacto-info">
+                        <div class="info-card">
+                            <h3>Información de Contacto</h3>
+                            <ul class="contact-list">
+                                <li>
+                                    <i class="fas fa-map-marker-alt"></i>
+                                    <div>
+                                        <h4>Dirección</h4>
+                                        <p>Calle Principal 123, Ciudad, CP 28001</p>
+                                    </div>
+                                </li>
+                                <li>
+                                    <i class="fas fa-phone"></i>
+                                    <div>
+                                        <h4>Teléfono</h4>
+                                        <p>+34 91 123 45 67</p>
+                                    </div>
+                                </li>
+                                <li>
+                                    <i class="fas fa-envelope"></i>
+                                    <div>
+                                        <h4>Email</h4>
+                                        <p>info@meditime.com</p>
+                                    </div>
+                                </li>
+                                <li>
+                                    <i class="fas fa-clock"></i>
+                                    <div>
+                                        <h4>Horario de Atención</h4>
+                                        <p>Lunes a Viernes: 9:00 - 18:00</p>
+                                        <p>Sábados: 10:00 - 14:00</p>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div class="info-card">
+                            <h3>Síguenos</h3>
+                            <div class="social-links">
+                                <a href="#" aria-label="Facebook">
+                                    <i class="fab fa-facebook-f"></i>
+                                </a>
+                                <a href="#" aria-label="Twitter">
+                                    <i class="fab fa-twitter"></i>
+                                </a>
+                                <a href="#" aria-label="Instagram">
+                                    <i class="fab fa-instagram"></i>
+                                </a>
+                                <a href="#" aria-label="LinkedIn">
+                                    <i class="fab fa-linkedin-in"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Formulario de contacto -->
+                    <div class="contacto-form">
+                        <div class="form-card">
+                            <h3>Envíenos un Mensaje</h3>
+                            <p>Complete el formulario a continuación y nos pondremos en contacto con usted lo antes posible.</p>
+                            
+                            <form id="contact-form">
+                                <div class="form-group">
+                                    <label for="nombre">Nombre completo</label>
+                                    <input type="text" id="nombre" name="nombre" required placeholder="Ej: María García">
+                                </div>
+                                
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="email">Correo electrónico</label>
+                                        <input type="email" id="email" name="email" required placeholder="Ej: maria@ejemplo.com">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="telefono">Teléfono</label>
+                                        <input type="tel" id="telefono" name="telefono" placeholder="Ej: 612345678">
+                                    </div>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="asunto">Asunto</label>
+                                    <input type="text" id="asunto" name="asunto" required placeholder="Ej: Consulta sobre recordatorios">
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="mensaje">Mensaje</label>
+                                    <textarea id="mensaje" name="mensaje" required placeholder="Escriba su mensaje aquí..."></textarea>
+                                </div>
+                                
+                                <div class="form-group checkbox-group">
+                                    <input type="checkbox" id="politica" name="politica" required>
+                                    <label for="politica">Acepto la política de privacidad y el tratamiento de mis datos.</label>
+                                </div>
+                                
+                                <button type="submit" class="btn btn-primary btn-block">Enviar Mensaje</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="mapa-section">
+            <div class="container">
+                <h3>Nuestra Ubicación</h3>
+                <div class="mapa-container">
+                    <!-- Aquí iría un mapa real, pero usamos un placeholder -->
+                    <div class="mapa-placeholder">
+                        <i class="fas fa-map-marked-alt"></i>
+                        <p>Mapa de ubicación</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="faq-section">
+            <div class="container">
+                <h3>Preguntas Frecuentes</h3>
+                <div class="accordion" id="faq-accordion">
+                    <div class="accordion-item">
+                        <div class="accordion-header" id="faq-1">
+                            <button class="accordion-button" type="button" aria-expanded="false" aria-controls="faq-content-1">
+                                ¿Cómo puedo configurar recordatorios para mis medicamentos?
+                            </button>
+                        </div>
+                        <div id="faq-content-1" class="accordion-content" aria-labelledby="faq-1">
+                            <p>Para configurar recordatorios, vaya a la sección "Mis Recordatorios" y haga clic en el botón "Añadir Medicamento". Complete el formulario con los detalles de su medicamento, incluyendo nombre, dosis, hora y frecuencia. Una vez guardado, recibirá recordatorios según la configuración establecida.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="accordion-item">
+                        <div class="accordion-header" id="faq-2">
+                            <button class="accordion-button" type="button" aria-expanded="false" aria-controls="faq-content-2">
+                                ¿Puedo configurar múltiples recordatorios para un mismo medicamento?
+                            </button>
+                        </div>
+                        <div id="faq-content-2" class="accordion-content" aria-labelledby="faq-2">
+                            <p>Sí, puede configurar múltiples horas para un mismo medicamento. Al añadir o editar un medicamento, seleccione la opción "Personalizado" en el campo de frecuencia y podrá añadir tantas horas como necesite para ese medicamento.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="accordion-item">
+                        <div class="accordion-header" id="faq-3">
+                            <button class="accordion-button" type="button" aria-expanded="false" aria-controls="faq-content-3">
+                                ¿Cómo puedo marcar un medicamento como tomado?
+                            </button>
+                        </div>
+                        <div id="faq-content-3" class="accordion-content" aria-labelledby="faq-3">
+                            <p>En la lista de recordatorios, cada medicamento tiene un botón con un icono de verificación (✓). Haga clic en este botón para marcar el medicamento como tomado. El estado cambiará y podrá ver que ha sido completado.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="accordion-item">
+                        <div class="accordion-header" id="faq-4">
+                            <button class="accordion-button" type="button" aria-expanded="false" aria-controls="faq-content-4">
+                                ¿Mis datos están seguros en MEDITIME?
+                            </button>
+                        </div>
+                        <div id="faq-content-4" class="accordion-content" aria-labelledby="faq-4">
+                            <p>Sí, la seguridad de sus datos es nuestra prioridad. Toda la información se almacena localmente en su dispositivo y no se comparte con terceros. Utilizamos tecnologías de encriptación para proteger su información personal y médica.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="accordion-item">
+                        <div class="accordion-header" id="faq-5">
+                            <button class="accordion-button" type="button" aria-expanded="false" aria-controls="faq-content-5">
+                                ¿Puedo usar MEDITIME en diferentes dispositivos?
+                            </button>
+                        </div>
+                        <div id="faq-content-5" class="accordion-content" aria-labelledby="faq-5">
+                            <p>MEDITIME está diseñado para funcionar en cualquier dispositivo con un navegador web moderno, incluyendo ordenadores, tablets y teléfonos móviles. La interfaz se adapta automáticamente al tamaño de su pantalla para una experiencia óptima.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="soporte-section">
+            <div class="container">
+                <div class="soporte-grid">
+                    <div class="soporte-card">
+                        <i class="fas fa-book"></i>
+                        <h4>Guías y Tutoriales</h4>
+                        <p>Acceda a nuestras guías detalladas y tutoriales paso a paso para aprovechar al máximo MEDITIME.</p>
+                        <a href="#" class="btn btn-outline">Ver Guías</a>
+                    </div>
+                    
+                    <div class="soporte-card">
+                        <i class="fas fa-headset"></i>
+                        <h4>Soporte Técnico</h4>
+                        <p>¿Tiene problemas técnicos? Nuestro equipo de soporte está disponible para ayudarle.</p>
+                        <a href="#" class="btn btn-outline">Contactar Soporte</a>
+                    </div>
+                    
+                    <div class="soporte-card">
+                        <i class="fas fa-comments"></i>
+                        <h4>Comunidad</h4>
+                        <p>Únase a nuestra comunidad para compartir experiencias y consejos con otros usuarios.</p>
+                        <a href="#" class="btn btn-outline">Unirse</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Modal de confirmación de envío -->
+        <div id="confirm-modal" class="modal">
+            <div class="modal-content confirm-content">
+                <div class="modal-header">
+                    <h3>Mensaje Enviado</h3>
+                    <button class="close-modal" aria-label="Cerrar">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="success-icon">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <p>¡Gracias por contactarnos! Su mensaje ha sido enviado correctamente.</p>
+                    <p>Nos pondremos en contacto con usted lo antes posible.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" id="confirm-ok">Aceptar</button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Pie de página -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <h3>MEDITIME</h3>
+                    <p>Su asistente personal para medicamentos</p>
+                </div>
+                <div class="footer-links">
+                    <div class="footer-column">
+                        <h4>Navegación</h4>
+                        <ul>
+                            <li><a href="../index.html">Inicio</a></li>
+                            <li><a href="../pages/recordatorios.html">Mis Recordatorios</a></li>
+                            <li><a href="../pages/calendario.html">Calendario</a></li>
+                            <li><a href="../pages/contacto.html">Contacto</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-column">
+                        <h4>Recursos</h4>
+                        <ul>
+                            <li><a href="#">Ayuda</a></li>
+                            <li><a href="#">Preguntas frecuentes</a></li>
+                            <li><a href="#">Tutoriales</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-column">
+                        <h4>Legal</h4>
+                        <ul>
+                            <li><a href="#">Política de privacidad</a></li>
+                            <li><a href="#">Términos de uso</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 MEDITIME. Todos los derechos reservados.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="../assets/js/auth.js"></script>
+    <script src="../assets/js/script.js"></script>
+    <script src="../assets/js/contacto.js"></script>
+</body>
+</html>

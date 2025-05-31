@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MediTime - Recordatorios</title>
+    <link rel="stylesheet" href="../assets/css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="../assets/css/recordatorios.css">
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Barra de navegación -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="logo">
+                <a href="../index.html">
+                    <img src="../assets/img/logo.png" height="150" width="150" alt="">
+                 </a>
+            </div>
+            <ul class="nav-links">
+                <li><a href="../index.html">Inicio</a></li>
+                <li><a href="../pages/recordatorios.html" class="active">Mis Recordatorios</a></li>
+                <li><a href="../pages/calendario.html">Calendario</a></li>
+                <li><a href="../pages/contacto.html">Contacto</a></li>
+            </ul>
+            <div class="menu-toggle">
+                <i class="fas fa-bars"></i>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Contenido principal -->
+    <main>
+        <section class="page-header">
+            <div class="container">
+                <h2>Mis Recordatorios de Medicamentos</h2>
+                <p>Gestione sus medicamentos y recordatorios en un solo lugar</p>
+            </div>
+        </section>
+
+        <section class="recordatorios-section">
+            <div class="container">
+                <div class="recordatorios-grid">
+                    <!-- Panel de recordatorios -->
+                    <div class="recordatorios-panel">
+                        <div class="panel-header">
+                            <h3>Mis Medicamentos</h3>
+                            <!-- Boton para comprobar las notificaciones -->
+                            <!-- <button id="test-notification" class="btn btn-secondary">Probar Notificación</button> -->
+                            <button id="add-med-btn" class="btn btn-primary">
+                                <i class="fas fa-plus"></i> Añadir Medicamento
+                            </button>
+                        </div>
+
+                        <!-- Filtros -->
+                        <div class="filtros">
+                            <button class="filtro-btn active" data-filter="todos">Todos</button>
+                            <button class="filtro-btn" data-filter="pendientes">Pendientes</button>
+                            <button class="filtro-btn" data-filter="completados">Completados</button>
+                        </div>
+
+                        <!-- Lista de recordatorios -->
+                        <div class="recordatorios-lista" id="recordatorios-container">
+                            <!-- Los recordatorios se cargarán aquí dinámicamente -->
+                            
+                            <!-- Mensaje cuando no hay recordatorios -->
+                            <div id="no-recordatorios" class="no-recordatorios">
+                                <i class="fas fa-pills"></i>
+                                <p>No tiene recordatorios en este momento</p>
+                                <button id="add-first-med" class="btn btn-primary">Añadir su primer medicamento</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Panel de información y ayuda -->
+                    <div class="info-panel">
+                        <!-- Calendario pequeño -->
+                        <div class="info-card">
+                            <h3>Calendario</h3>
+                            <div id="mini-calendario"></div>
+                        </div>
+
+                        <div class="info-card">
+                            <h3>Estadísticas</h3>
+                            <div class="estadisticas">
+                                <div class="estadistica">
+                                    <div class="valor" id="porcentaje-cumplimiento">0%</div>
+                                    <div class="etiqueta">Cumplimiento</div>
+                                </div>
+                                <div class="estadistica">
+                                    <div class="valor" id="total-medicamentos">0</div>
+                                    <div class="etiqueta">Medicamentos</div>
+                                </div>
+                                <div class="estadistica">
+                                    <div class="valor" id="total-dosis">0</div>
+                                    <div class="etiqueta">Dosis diarias</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="info-card consejos">
+                            <h3>Consejos para la Adherencia</h3>
+                            <ul class="tips-list">
+                                <li>
+                                    <i class="fas fa-check-circle"></i>
+                                    <div>
+                                        <h4>Mantenga una rutina</h4>
+                                        <p>Tomar los medicamentos a la misma hora cada día ayuda a crear un hábito.</p>
+                                    </div>
+                                </li>
+                                <li>
+                                    <i class="fas fa-pills"></i>
+                                    <div>
+                                        <h4>Use un pastillero</h4>
+                                        <p>Los organizadores de pastillas pueden ayudarle a mantener un seguimiento de sus medicamentos.</p>
+                                    </div>
+                                </li>
+                                <li>
+                                    <i class="fas fa-mobile-alt"></i>
+                                    <div>
+                                        <h4>Configure alertas</h4>
+                                        <p>Utilice MEDITIME para recibir recordatorios cuando sea hora de tomar su medicación.</p>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Modal para añadir/editar medicamento -->
+        <div class="modal fade" id="med-modal" tabindex="-1" aria-labelledby="medModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="medModalLabel">Añadir Nuevo Medicamento</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                    </div>
+                    
+                    <div class="modal-body">
+                        <form id="med-form">
+                            <div class="mb-3">
+                                <label for="med-nombre" class="form-label">Nombre del medicamento</label>
+                                <input type="text" class="form-control" id="med-nombre" name="nombre" required 
+                                       placeholder="Ej: Paracetamol 500mg" autocomplete="off">
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="med-tipo" class="form-label">Tipo de medicamento</label>
+                                <select class="form-select" id="med-tipo" name="tipo" required>
+                                    <option value="" disabled selected>Seleccione un tipo</option>
+                                    <option value="pastilla">Pastilla</option>
+                                    <option value="capsula">Cápsula</option>
+                                    <option value="jarabe">Jarabe</option>
+                                    <option value="aerosol">Aerosol</option>
+                                    <option value="inyeccion">Inyección</option>
+                                    <option value="pomada">Pomada</option>
+                                    <option value="gotas">Gotas</option>
+                                    <option value="otro">Otro</option>
+                                </select>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="med-dosis" class="form-label">Dosis</label>
+                                <input type="text" class="form-control" id="med-dosis" name="dosis" required 
+                                       placeholder="Ej: 1 pastilla, 5ml" autocomplete="off">
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="med-hora" class="form-label">Hora de toma</label>
+                                <input type="time" class="form-control" id="med-hora" name="hora" required>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="med-inicio" class="form-label">Fecha de inicio</label>
+                                <input type="date" class="form-control" id="med-inicio" name="inicio" required>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="med-fin" class="form-label">Fecha de finalización (opcional)</label>
+                                <input type="date" class="form-control" id="med-fin" name="fin">
+                                <div class="form-text">Deje en blanco si el tratamiento es indefinido</div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="med-instrucciones" class="form-label">Notas adicionales</label>
+                                <textarea class="form-control" id="med-instrucciones" name="instrucciones" 
+                                          placeholder="Ej: Tomar con comida, no consumir con lácteos..." 
+                                          rows="4" spellcheck="true"></textarea>
+                            </div>
+                            
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                <button type="submit" class="btn btn-success">Guardar Medicamento</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal de confirmación para eliminar -->
+        <div class="modal fade" id="confirm-modal" tabindex="-1" aria-labelledby="confirmModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="confirmModalLabel">Confirmar eliminación</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p>¿Está seguro de que desea eliminar este recordatorio?</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="button" class="btn btn-danger" id="confirm-delete">Eliminar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Pie de página -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <h3>MEDITIME</h3>
+                    <p>Su asistente personal para medicamentos</p>
+                </div>
+                <div class="footer-links">
+                    <div class="footer-column">
+                        <h4>Navegación</h4>
+                        <ul>
+                            <li><a href="../index.html">Inicio</a></li>
+                            <li><a href="recordatorios.html">Mis Recordatorios</a></li>
+                            <li><a href="calendario.html">Calendario</a></li>
+                            <li><a href="contacto.html">Contacto</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-column">
+                        <h4>Recursos</h4>
+                        <ul>
+                            <li><a href="#">Ayuda</a></li>
+                            <li><a href="#">Preguntas frecuentes</a></li>
+                            <li><a href="#">Tutoriales</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-column">
+                        <h4>Legal</h4>
+                        <ul>
+                            <li><a href="#">Política de privacidad</a></li>
+                            <li><a href="#">Términos de uso</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 MEDITIME. Todos los derechos reservados.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script type="module" src="../assets/js/auth.js"></script>
+    <script type="module" src="../assets/js/script.js"></script>
+    <script type="module" src="../assets/js/modules/utils.js"></script>
+    <script type="module" src="../assets/js/modules/modal.js"></script>
+    <script type="module" src="../assets/js/modules/medicamentos.js"></script>
+    <script type="module" src="../assets/js/recordatorios.js"></script>
+    <script src="../assets/js/notifications.js"></script>
+</body>
+</html>
