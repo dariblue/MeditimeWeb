@@ -1,5 +1,5 @@
 // API URL
-const API_URL = "https://api.bestdariblue.tech"
+const API_URL = "https://api.dariblue.dev"
 
 document.addEventListener("DOMContentLoaded", () => {
   // Referencias a elementos del DOM

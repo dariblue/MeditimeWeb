@@ -1,4 +1,4 @@
-const API_URL = "https://api.bestdariblue.tech";
+const API_URL = "https://api.dariblue.dev";
 
 let session;
 

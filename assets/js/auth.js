@@ -1,5 +1,5 @@
 (function() {
-  const API_URL = 'https://api.bestdariblue.tech';
+  const API_URL = 'https://api.dariblue.dev';
   const SESSION_KEY = 'meditime_session';
 
   // Funciones de utilidad
