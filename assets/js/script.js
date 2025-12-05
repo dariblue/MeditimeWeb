@@ -26,11 +26,11 @@ function setupUserMenu() {
         <i class="fas fa-chevron-down"></i>
       </button>
       <ul class="user-dropdown">
-        <li><a href="/pages/recordatorios.html"><i class="fas fa-bell"></i> Mis Recordatorios</a></li>
-        <li><a href="/pages/calendario.html"><i class="fas fa-calendar"></i> Calendario</a></li>
-        <li><a href="/pages/perfil.html"><i class="fas fa-user-circle"></i> Mi Perfil</a></li>
+        <li><a href="/pages/recordatorios"><i class="fas fa-bell"></i> Mis Recordatorios</a></li>
+        <li><a href="/pages/calendario"><i class="fas fa-calendar"></i> Calendario</a></li>
+        <li><a href="/pages/perfil"><i class="fas fa-user-circle"></i> Mi Perfil</a></li>
         <li><a href="#"><i class="fas fa-cog"></i> Configuración</a></li>
-        ${session.isAdmin ? '<li><a href="/pages/admin.html"><i class="fas fa-shield-alt"></i> Panel Admin</a></li>' : ''}
+        ${session.isAdmin ? '<li><a href="/pages/admin"><i class="fas fa-shield-alt"></i> Panel Admin</a></li>' : ''}
         <li><a href="#" id="logout-button"><i class="fas fa-sign-out-alt"></i> Cerrar Sesión</a></li>
       </ul>
     `;
@@ -54,7 +54,7 @@ function setupUserMenu() {
       logoutButton.addEventListener('click', (e) => {
         e.preventDefault();
         window.auth.logout();
-        window.location.href = '/index.html';
+        window.location.href = '/';
       });
     }
   } else {
@@ -67,20 +67,20 @@ function setupUserMenu() {
 
 // Función para verificar la autenticación
 function checkAuthentication() {
-  const isAuthPage = window.location.pathname.includes("login.html") || 
-                    window.location.pathname.includes("registro.html");
-  const isAdminPage = window.location.pathname.includes("admin.html");
+  const isAuthPage = window.location.pathname.includes("login") || 
+                    window.location.pathname.includes("registro");
+  const isAdminPage = window.location.pathname.includes("admin");
   const session = window.auth.getCurrentUser();
 
   if (session) {
     if (isAuthPage) {
-      window.location.href = "/index.html";
+      window.location.href = "/";
     }
     if (isAdminPage && !session.isAdmin) {
-      window.location.href = "/index.html";
+      window.location.href = "/";
     }
   } else if (isAdminPage) {
-    window.location.href = "login.html";
+    window.location.href = "login";
   }
 }
 

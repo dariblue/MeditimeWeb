@@ -1,4 +1,4 @@
-const API_URL = 'http://localhost:5000';
+const API_URL = 'https://api.bestdariblue.tech';
 
 
 import { formatHora, showError, hideError } from "./modules/utils.js";
@@ -16,7 +16,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   const session = window.auth.getCurrentUser();
   if (!session) {
-    window.location.href = "/pages/login.html";
+    window.location.href = "/pages/login";
     return;
   }
 

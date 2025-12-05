@@ -1,5 +1,5 @@
 (function() {
-  const API_URL = 'http://localhost:5000';
+  const API_URL = 'https://api.bestdariblue.tech';
   const SESSION_KEY = 'meditime_session';
 
   // Funciones de utilidad
@@ -170,7 +170,7 @@
   // Función de logout
   function logout() {
     clearSession(); // Elimina la sesión del almacenamiento local
-    window.location.href = '/pages/login.html'; // Redirige al usuario a la página de inicio de sesión
+    window.location.href = '/pages/login'; // Redirige al usuario a la página de inicio de sesión
   }
 
   // Función para verificar si el usuario está autenticado
@@ -247,7 +247,7 @@
           }
 
           // Redirigir al usuario
-          window.location.href = '/index.html';
+          window.location.href = '/';
         } catch (error) {
           console.error('Error en login:', error);
           if (errorElement) {
@@ -353,7 +353,7 @@
           
           // Redirigir al usuario a la página de login después de 2 segundos
           setTimeout(() => {
-            window.location.href = '/pages/login.html';
+            window.location.href = '/pages/login';
           }, 2000);
         } catch (error) {
           console.error('Error en registro:', error);
@@ -384,9 +384,9 @@
   };
 
   // Inicializar el formulario correspondiente según la página
-  if (window.location.pathname.includes('login.html')) {
+  if (window.location.pathname.includes('login')) {
     initLoginForm();
-  } else if (window.location.pathname.includes('registro.html')) {
+  } else if (window.location.pathname.includes('registro')) {
     initRegisterForm();
   }
 })();

@@ -1,5 +1,5 @@
 // API URL
-const API_URL = "http://localhost:5020"
+const API_URL = "https://api.bestdariblue.tech"
 
 document.addEventListener("DOMContentLoaded", () => {
   // Referencias a elementos del DOM
@@ -176,7 +176,7 @@ document.addEventListener("DOMContentLoaded", () => {
       // Obtener sesión
       const session = JSON.parse(localStorage.getItem("meditime_session") || "null")
       if (!session) {
-        window.location.href = "login.html"
+        window.location.href = "login"
         return
       }
 
@@ -607,14 +607,14 @@ document.addEventListener("DOMContentLoaded", () => {
       localStorage.removeItem("meditime_session")
 
       // Redirigir a la página de inicio
-      window.location.href = "index.html"
+      window.location.href = "/"
     } catch (error) {
       console.error("Error al eliminar cuenta:", error)
       alert("Error al eliminar cuenta. Verifique su contraseña e intente nuevamente.")
 
       // Para desarrollo, simular éxito
       localStorage.removeItem("meditime_session")
-      window.location.href = "index.html"
+      window.location.href = "/"
     }
   }
 
@@ -637,7 +637,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
       // Cerrar sesión actual
       localStorage.removeItem("meditime_session")
-      window.location.href = "login.html"
+      window.location.href = "login"
     } catch (error) {
       console.error("Error al cerrar sesiones:", error)
       alert("Error al cerrar sesiones. Intente nuevamente.")
@@ -646,7 +646,7 @@ document.addEventListener("DOMContentLoaded", () => {
       closeModals()
       alert("Todas las sesiones han sido cerradas. Deberá iniciar sesión nuevamente.")
       localStorage.removeItem("meditime_session")
-      window.location.href = "login.html"
+      window.location.href = "login"
     }
   }
 
