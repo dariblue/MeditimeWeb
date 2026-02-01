@@ -216,30 +216,19 @@ document.addEventListener("DOMContentLoaded", async () => {
     numeroDia.textContent = date.getDate();
     diaElement.appendChild(numeroDia);
   
-    // Añadir medicamentos del día
+    // Añadir contador de medicamentos del día
     const medicamentosDia = getMedicamentosPorDia(date);
     if (medicamentosDia.length > 0) {
-      const medicamentosLista = document.createElement("div");
-      medicamentosLista.className = "medicamentos-dia";
-  
-      medicamentosDia.forEach((med) => {
-        const medicamentoItem = document.createElement("div");
-        medicamentoItem.className = "medicamento-item";
-        medicamentoItem.innerHTML = `
-          <span class="medicamento-dot"></span>
-          ${med.nombre}
-        `;
-  
-        // Añadir evento para mostrar detalles
-        medicamentoItem.addEventListener("click", (e) => {
-          e.stopPropagation(); // Evitar que el clic seleccione el día
-          showMedicamentoDetalle(med);
-        });
-  
-        medicamentosLista.appendChild(medicamentoItem);
-      });
-  
-      diaElement.appendChild(medicamentosLista);
+      const contadorContainer = document.createElement("div");
+      contadorContainer.className = "medicamentos-dia-contador";
+      
+      const contador = document.createElement("div");
+      contador.className = "medicamento-count";
+      const texto = medicamentosDia.length === 1 ? "medicamento" : "medicamentos";
+      contador.textContent = `${medicamentosDia.length} ${texto}`;
+      
+      contadorContainer.appendChild(contador);
+      diaElement.appendChild(contadorContainer);
     }
   
     // Añadir evento de clic para seleccionar el día

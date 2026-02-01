@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,6 +9,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="../assets/css/calendario.css">
 </head>
+
 <body>
     <!-- Barra de navegación -->
     <nav class="navbar">
@@ -15,7 +17,7 @@
             <div class="logo">
                 <a href="/">
                     <img src="../assets/img/logo.png" height="150" width="150" alt="">
-                 </a>
+                </a>
             </div>
             <ul class="nav-links">
                 <li><a href="/">Inicio</a></li>
@@ -38,6 +40,46 @@
             </div>
         </section>
 
+        <section class="detalle-dia-section">
+            <div class="container">
+                <div class="detalle-header">
+                    <button id="prev-day" class="btn-nav" aria-label="Día anterior">
+                        <i class="fas fa-chevron-left"></i>
+                    </button>
+                    <h3 id="current-day">Hoy, 15 de Abril de 2025</h3>
+                    <button id="next-day" class="btn-nav" aria-label="Día siguiente">
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+                </div>
+
+                <div id="medicamentos-dia" class="medicamentos-dia">
+                    <!-- Los medicamentos del día se agruparán por horas -->
+                    <div class="no-medicamentos">
+                        <i class="fas fa-calendar-times"></i>
+                        <p>No hay medicamentos programados para este día</p>
+                        <a href="recordatorios" class="btn btn-primary">Añadir Medicamento</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="vista-semanal-section">
+            <div class="container">
+                <h3>Vista Semanal</h3>
+                <div class="vista-semanal-container">
+                    <div class="vista-semanal-header">
+                        <div class="hora-header">Hora</div>
+                        <div id="dias-semana" class="dias-semana">
+                            <!-- Los días de la semana se generarán dinámicamente -->
+                        </div>
+                    </div>
+                    <div id="vista-semanal-grid" class="vista-semanal-grid">
+                        <!-- La vista semanal se generará dinámicamente -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
         <section class="calendario-section">
             <div class="container">
                 <div class="calendario-grid">
@@ -52,7 +94,7 @@
                                 <i class="fas fa-chevron-right"></i>
                             </button>
                         </div>
-                        
+
                         <div class="calendario-dias">
                             <div class="dia-semana">Dom</div>
                             <div class="dia-semana">Lun</div>
@@ -62,7 +104,7 @@
                             <div class="dia-semana">Vie</div>
                             <div class="dia-semana">Sáb</div>
                         </div>
-                        
+
                         <div id="calendario-grid" class="calendario-grid-dias">
                             <!-- Los días del calendario se generarán dinámicamente con JavaScript -->
                         </div>
@@ -113,58 +155,20 @@
                                     <i class="fas fa-pills"></i>
                                     <div>
                                         <h4>Use un pastillero</h4>
-                                        <p>Los organizadores de pastillas pueden ayudarle a mantener un seguimiento de sus medicamentos.</p>
+                                        <p>Los organizadores de pastillas pueden ayudarle a mantener un seguimiento de
+                                            sus medicamentos.</p>
                                     </div>
                                 </li>
                                 <li>
                                     <i class="fas fa-mobile-alt"></i>
                                     <div>
                                         <h4>Configure alertas</h4>
-                                        <p>Utilice MEDITIME para recibir recordatorios cuando sea hora de tomar su medicación.</p>
+                                        <p>Utilice MEDITIME para recibir recordatorios cuando sea hora de tomar su
+                                            medicación.</p>
                                     </div>
                                 </li>
                             </ul>
                         </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <section class="detalle-dia-section">
-            <div class="container">
-                <div class="detalle-header">
-                    <button id="prev-day" class="btn-nav" aria-label="Día anterior">
-                        <i class="fas fa-chevron-left"></i>
-                    </button>
-                    <h3 id="current-day">Hoy, 15 de Abril de 2025</h3>
-                    <button id="next-day" class="btn-nav" aria-label="Día siguiente">
-                        <i class="fas fa-chevron-right"></i>
-                    </button>
-                </div>
-
-                <div id="medicamentos-dia" class="medicamentos-dia">
-                    <!-- Los medicamentos del día se agruparán por horas -->
-                    <div class="no-medicamentos">
-                        <i class="fas fa-calendar-times"></i>
-                        <p>No hay medicamentos programados para este día</p>
-                        <a href="recordatorios" class="btn btn-primary">Añadir Medicamento</a>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <section class="vista-semanal-section">
-            <div class="container">
-                <h3>Vista Semanal</h3>
-                <div class="vista-semanal-container">
-                    <div class="vista-semanal-header">
-                        <div class="hora-header">Hora</div>
-                        <div id="dias-semana" class="dias-semana">
-                            <!-- Los días de la semana se generarán dinámicamente -->
-                        </div>
-                    </div>
-                    <div id="vista-semanal-grid" class="vista-semanal-grid">
-                        <!-- La vista semanal se generará dinámicamente -->
                     </div>
                 </div>
             </div>
@@ -179,14 +183,14 @@
                         <p>Obtenga una copia impresa de su calendario de medicamentos para tenerla a mano.</p>
                         <button id="btn-imprimir" class="btn btn-outline">Imprimir</button>
                     </div>
-                    
+
                     <div class="accion-card">
                         <i class="fas fa-file-export"></i>
                         <h4>Exportar Datos</h4>
                         <p>Exporte sus datos de medicamentos para compartirlos con su médico o cuidador.</p>
                         <button id="btn-exportar" class="btn btn-outline">Exportar</button>
                     </div>
-                    
+
                     <div class="accion-card">
                         <i class="fas fa-sync-alt"></i>
                         <h4>Sincronizar</h4>
@@ -263,4 +267,5 @@
     <script src="../assets/js/script.js"></script>
     <script src="../assets/js/calendario.js"></script>
 </body>
+
 </html>
