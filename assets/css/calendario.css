@@ -29,9 +29,12 @@
   display: grid;
   grid-template-columns: 2fr 1fr;
   gap: 30px;
-  max-width: 1400px; /* Aumentar el ancho máximo */
-  margin: 0 auto; /* Centrar el contenedor */
-  padding: 20px; /* Añadir espacio interno */
+  max-width: 1400px;
+  /* Aumentar el ancho máximo */
+  margin: 0 auto;
+  /* Centrar el contenedor */
+  padding: 20px;
+  /* Añadir espacio interno */
 }
 
 /* Panel de calendario */
@@ -78,38 +81,47 @@
 .calendario-dias {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
-  gap: 5px;
+  gap: 10px;
   margin-bottom: 10px;
 }
 
 .dia-semana {
   text-align: center;
-  font-weight: bold;
+  font-weight: 600;
   padding: 10px;
   color: var(--text-color);
-  font-size: 1rem;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
 }
 
 .calendario-grid-dias {
   display: grid;
-  grid-template-columns: repeat(7, 1fr); /* 7 columnas para los días de la semana */
-  gap: 15px; /* Aumentar el espacio entre las celdas */
+  grid-template-columns: repeat(7, 1fr);
+  /* 7 columnas para los días de la semana */
+  gap: 10px;
+  /* Unificar espacio */
 }
 
 .dia-calendario {
   border: 1px solid var(--border-color);
   border-radius: var(--border-radius);
   padding: 10px;
-  min-height: 120px; /* Altura mínima para las celdas */
-  max-height: 150px; /* Altura máxima para evitar desbordamiento */
+  min-height: 120px;
+  /* Altura mínima para las celdas */
+  max-height: 150px;
+  /* Altura máxima para evitar desbordamiento */
   cursor: pointer;
   transition: var(--transition);
   position: relative;
   font-size: 1rem;
-  overflow: hidden; /* Ocultar contenido que se desborde */
+  overflow: hidden;
+  /* Ocultar contenido que se desborde */
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: flex-start;
+  gap: 5px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.02);
 }
 
 .dia-calendario:hover {
@@ -137,9 +149,12 @@
   font-size: 1.2rem;
   font-weight: bold;
   margin-bottom: 5px;
-  white-space: nowrap; /* Evitar que el texto se divida en varias líneas */
-  overflow: hidden; /* Ocultar texto que se desborde */
-  text-overflow: ellipsis; /* Añadir puntos suspensivos si el texto es demasiado largo */
+  white-space: nowrap;
+  /* Evitar que el texto se divida en varias líneas */
+  overflow: hidden;
+  /* Ocultar texto que se desborde */
+  text-overflow: ellipsis;
+  /* Añadir puntos suspensivos si el texto es demasiado largo */
 }
 
 /* Medicaciones dentro de las celdas */
@@ -147,17 +162,22 @@
   font-size: 0.9rem;
   line-height: 1.2;
   color: var(--text-light);
-  max-height: 80px; /* Limitar la altura para evitar desbordamiento */
-  overflow-y: auto; /* Añadir scroll si hay demasiados elementos */
+  max-height: 80px;
+  /* Limitar la altura para evitar desbordamiento */
+  overflow-y: auto;
+  /* Añadir scroll si hay demasiados elementos */
 }
 
 .medicamento-item {
   display: flex;
   align-items: center;
   gap: 5px;
-  white-space: nowrap; /* Evitar que el texto se divida en varias líneas */
-  overflow: hidden; /* Ocultar texto que se desborde */
-  text-overflow: ellipsis; /* Añadir puntos suspensivos si el texto es demasiado largo */
+  white-space: nowrap;
+  /* Evitar que el texto se divida en varias líneas */
+  overflow: hidden;
+  /* Ocultar texto que se desborde */
+  text-overflow: ellipsis;
+  /* Añadir puntos suspensivos si el texto es demasiado largo */
 }
 
 /* Mejorar el indicador de medicamentos */
@@ -503,8 +523,7 @@
 }
 
 .dias-semana {
-  display: grid;
-  grid-template-columns: repeat(7, 1fr);
+  display: contents;
 }
 
 .vista-semanal-grid {
@@ -649,6 +668,7 @@
     opacity: 0;
     transform: translateY(-20px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -723,6 +743,7 @@
 }
 
 @media (max-width: 768px) {
+
   .vista-semanal-header,
   .vista-semanal-grid {
     grid-template-columns: 60px repeat(7, 1fr);
@@ -737,7 +758,8 @@
   }
 
   .calendario-grid-dias {
-    gap: 10px; /* Reducir el espacio entre las celdas en pantallas pequeñas */
+    gap: 10px;
+    /* Reducir el espacio entre las celdas en pantallas pequeñas */
   }
 }
 
@@ -784,20 +806,25 @@
 /* Diseño responsivo para pantallas medianas */
 @media (max-width: 1200px) {
   .calendario-grid {
-    max-width: 1000px; /* Reducir el ancho máximo en pantallas medianas */
-    grid-template-columns: 1fr; /* Cambiar a una sola columna */
+    max-width: 1000px;
+    /* Reducir el ancho máximo en pantallas medianas */
+    grid-template-columns: 1fr;
+    /* Cambiar a una sola columna */
   }
 }
 
 /* Diseño responsivo para pantallas pequeñas */
 @media (max-width: 768px) {
   .calendario-grid {
-    max-width: 95%; /* Usar un porcentaje para pantallas pequeñas */
-    padding: 10px; /* Reducir el espacio interno */
+    max-width: 95%;
+    /* Usar un porcentaje para pantallas pequeñas */
+    padding: 10px;
+    /* Reducir el espacio interno */
   }
 
   .dia-calendario {
-    min-height: 120px; /* Reducir la altura mínima en pantallas pequeñas */
+    min-height: 120px;
+    /* Reducir la altura mínima en pantallas pequeñas */
     padding: 10px;
     font-size: 0.9rem;
   }
