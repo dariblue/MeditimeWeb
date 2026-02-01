@@ -107,10 +107,12 @@
   border: 1px solid var(--border-color);
   border-radius: var(--border-radius);
   padding: 10px;
-  min-height: 120px;
-  /* Altura mínima para las celdas */
-  max-height: 150px;
-  /* Altura máxima para evitar desbordamiento */
+  aspect-ratio: 1 / 1;
+  /* Hacer las celdas cuadradas */
+  min-height: auto;
+  /* Dejar que el aspect-ratio decida */
+  max-height: none;
+  /* Eliminar restricción de altura */
   cursor: pointer;
   transition: var(--transition);
   position: relative;
@@ -157,27 +159,40 @@
   /* Añadir puntos suspensivos si el texto es demasiado largo */
 }
 
-/* Medicaciones dentro de las celdas */
-.medicamentos-dia {
-  font-size: 0.9rem;
+/* Medicaciones dentro de las celdas del calendario */
+.dia-calendario .medicamentos-dia {
+  font-size: 0.85rem;
   line-height: 1.2;
   color: var(--text-light);
-  max-height: 80px;
-  /* Limitar la altura para evitar desbordamiento */
+  flex: 1;
   overflow-y: auto;
-  /* Añadir scroll si hay demasiados elementos */
+  margin-top: 5px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+/* Contenedor principal de medicamentos del día (sección detalle) */
+#medicamentos-dia {
+  min-height: 200px;
+  /* Eliminar restricciones de altura y scroll */
+  max-height: none;
+  overflow: visible;
 }
 
 .medicamento-item {
   display: flex;
   align-items: center;
   gap: 5px;
-  white-space: nowrap;
-  /* Evitar que el texto se divida en varias líneas */
+  /* Permitir wrapping para leer mejor el nombre */
+  white-space: normal;
   overflow: hidden;
-  /* Ocultar texto que se desborde */
   text-overflow: ellipsis;
-  /* Añadir puntos suspensivos si el texto es demasiado largo */
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  line-height: 1.1;
+  margin-bottom: 2px;
 }
 
 /* Mejorar el indicador de medicamentos */
@@ -199,17 +214,23 @@
 }
 
 /* Mejorar la visualización de medicamentos en el día del calendario */
+/* Mejorar la visualización de medicamentos en el día del calendario */
 .medicamento-preview {
-  font-size: 0.8rem;
+  font-size: 0.75rem;
   color: var(--text-color);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  margin-bottom: 3px;
-  padding: 2px 4px;
-  border-radius: 3px;
-  background-color: rgba(74, 144, 226, 0.1);
+  margin-bottom: 2px;
+  padding: 3px 6px;
+  border-radius: 4px;
+  background-color: rgba(74, 144, 226, 0.15);
   border-left: 3px solid var(--primary-color);
+
+  /* Permitir múltiples líneas si es necesario, pero cortar si es muy largo */
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  white-space: normal;
+  /* Permitir wrapping */
 }
 
 /* Panel de información */
