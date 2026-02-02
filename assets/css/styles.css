@@ -1,10 +1,11 @@
-/* Variables globales */
 :root {
-  --primary-color: #4a90e2;
+  --primary-color: #2a6fc9;
+  /* Darkened for AA contrast (was #4a90e2) */
   --secondary-color: #5cb85c;
   --accent-color: #f7b731;
   --text-color: #333333;
-  --text-light: #666666;
+  --text-light: #555555;
+  /* Darkened slightly for better contrast (was #666666) */
   --background-color: #ffffff;
   --background-alt: #f8f9fa;
   --border-color: #e1e4e8;
@@ -57,7 +58,7 @@ a {
 }
 
 a:hover {
-  color: #2a6fc9;
+  color: #1a4b8c;
 }
 
 img {
@@ -90,7 +91,7 @@ img {
 }
 
 .btn-primary:hover {
-  background-color: #2a6fc9;
+  background-color: #1a4b8c;
   color: white;
 }
 

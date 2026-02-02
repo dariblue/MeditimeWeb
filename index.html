@@ -7,6 +7,8 @@
     <title>MEDITIME - Recordatorio de medicamentos</title>
     <link rel="stylesheet" href="assets/css/styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/webfonts/fa-solid-900.woff2"
+        as="font" type="font/woff2" crossorigin>
 </head>
 
 <body>
@@ -14,7 +16,7 @@
     <nav class="navbar">
         <div class="container">
             <div class="logo">
-                <a href="/">
+                <a href="/" aria-label="Inicio">
                     <img src="/assets/img/logo.png" height="150" width="150" alt="">
                 </a>
             </div>
@@ -40,7 +42,7 @@
         <section class="hero">
             <div class="container">
                 <div class="hero-content">
-                    <h2>Nunca olvide tomar sus medicamentos</h2>
+                    <h1>Nunca olvide tomar sus medicamentos</h1>
                     <p>MEDITIME le ayuda a recordar cuándo tomar sus medicamentos de forma sencilla y confiable.</p>
                     <div class="cta-buttons">
                         <a href="pages/recordatorios" class="btn btn-primary btn-large">Comenzar ahora</a>
@@ -48,7 +50,8 @@
                     </div>
                 </div>
                 <div class="hero-image">
-                    <img src="assets/img/ImagenInicio.png" alt="Persona mayor usando MEDITIME">
+                    <img src="assets/img/ImagenInicio.png" alt="Persona mayor usando MEDITIME" width="1024"
+                        height="1024" fetchpriority="high">
                 </div>
             </div>
         </section>
@@ -132,7 +135,7 @@
                         </div>
                         <div class="testimonial-author">
                             <div>
-                                <h4>María García</h4>
+                                <h3>María García</h3>
                                 <p>72 años</p>
                             </div>
                         </div>
@@ -144,7 +147,7 @@
                         </div>
                         <div class="testimonial-author">
                             <div>
-                                <h4>Carlos Rodríguez</h4>
+                                <h3>Carlos Rodríguez</h3>
                                 <p>Hijo cuidador</p>
                             </div>
                         </div>
