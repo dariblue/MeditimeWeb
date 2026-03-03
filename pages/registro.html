@@ -40,25 +40,37 @@
                         <form id="registro-form" class="auth-form">
                             <div class="form-row">
                                 <div class="form-group">
-                                    <label for="nombre">Nombre</label>
+                                    <label for="nombre">Nombre Completo</label>
                                     <div class="input-with-icon">
                                         <i class="fas fa-user"></i>
                                         <input type="text" id="nombre" name="nombre" required
                                             placeholder="Ingrese su nombre">
                                     </div>
                                 </div>
-
-                                <div class="form-group">
-                                    <label for="apellidos">Apellidos</label>
-                                    <div class="input-with-icon">
-                                        <i class="fas fa-user"></i>
-                                        <input type="text" id="apellidos" name="apellidos" required
-                                            placeholder="Ingrese sus apellidos">
-                                    </div>
-                                </div>
                             </div>
 
                             <div class="form-group">
+                                <label for="role">Tipo de cuenta</label>
+
+                                <div class="input-with-icon custom-select" id="roleSelect">
+                                    <i class="fas fa-user-tag"></i>
+
+                                    <button type="button" class="custom-select-trigger" aria-haspopup="listbox" aria-expanded="false">
+                                    <span class="custom-select-value">Seleccione una opción</span>
+                                    <i class="fas fa-chevron-down custom-select-arrow"></i>
+                                    </button>
+
+                                    <ul class="custom-select-options" role="listbox" aria-label="Tipo de cuenta">
+                                    <li class="custom-select-option" role="option" data-value="responsable">Responsable</li>
+                                    <li class="custom-select-option" role="option" data-value="usuario">Usuario</li>
+                                    </ul>
+
+                                    <!-- Este input es el que se enviará en el form -->
+                                    <input type="hidden" name="role" id="role" required>
+                                </div>
+                            </div>
+
+                            <div class="form-group">    
                                 <label for="email">Correo electrónico</label>
                                 <div class="input-with-icon">
                                     <i class="fas fa-envelope"></i>
@@ -100,7 +112,7 @@
                                     <i class="fas fa-lock"></i>
                                     <input type="password" id="password" name="password" required
                                         placeholder="Cree una contraseña">
-                                    <button type="button" class="toggle-password" aria-label="Mostrar contraseña">
+                                    <button type="button" class="toggle-password eye-icon" aria-label="Mostrar contraseña">
                                         <i class="fas fa-eye"></i>
                                     </button>
                                 </div>
@@ -184,7 +196,7 @@
     <footer>
         <div class="container">
             <div class="footer-bottom">
-                <p>&copy; 2025 MEDITIME. Todos los derechos reservados.</p>
+                <p>&copy; MEDITIME. Todos los derechos reservados.</p>
             </div>
         </div>
     </footer>

@@ -368,6 +368,48 @@
     }
   }
 
+    // ===== Custom select (Tipo de cuenta) =====  *REVISAR*
+  (function () {
+    const cs = document.getElementById("roleSelect");
+    if (!cs) return;
+
+    const trigger = cs.querySelector(".custom-select-trigger");
+    const valueSpan = cs.querySelector(".custom-select-value");
+    const options = cs.querySelector(".custom-select-options");
+    const hiddenInput = cs.querySelector("#role");
+
+    function closeSelect() {
+      cs.classList.remove("open");
+      trigger.setAttribute("aria-expanded", "false");
+    }
+
+    trigger.addEventListener("click", (e) => {
+      e.stopPropagation();
+      cs.classList.toggle("open");
+      trigger.setAttribute("aria-expanded", cs.classList.contains("open") ? "true" : "false");
+    });
+
+    options.addEventListener("click", (e) => {
+      const opt = e.target.closest(".custom-select-option");
+      if (!opt) return;
+
+      const text = opt.textContent.trim();
+      const val = opt.dataset.value;
+
+      valueSpan.textContent = text;
+      hiddenInput.value = val;
+
+      closeSelect();
+    });
+
+    document.addEventListener("click", closeSelect);
+
+    // Cerrar con Escape
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") closeSelect();
+    });
+  })();
+
   // Exponer las funciones al objeto window
   window.auth = {
     login,
