@@ -126,10 +126,10 @@ img {
   background-color: #f0f7ff;
 }
 
-.btn-large {
+/* .btn-large {    COMENTADA TEMPORALMENTE *REVISAR* BOTON COMENZAR AHORA BOTON COMO FUNCIONA
   padding: 16px 32px;
   font-size: 1.1rem;
-}
+} */
 
 /* Barra de navegación */
 .navbar {
@@ -570,6 +570,94 @@ footer {
   text-align: center;
   padding-top: 20px;
   border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.input-with-icon select {
+  padding-left: 45px;
+  width: 100%;
+  height: 50px;
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+  font-size: 1rem;
+  transition: var(--transition); 
+}
+
+.input-with-icon select:focus {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.2);
+  outline: none;
+}
+
+/* ===== Custom Select (solo este) ===== *REVISAR* */ 
+.custom-select {
+  position: relative;
+  width: 100%;
+}
+
+.custom-select-trigger {
+  width: 100%;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  padding: 12px 44px 12px 44px; /* espacio para icono izq y flecha dcha */
+  background: #fff;
+  cursor: pointer;
+  text-align: left;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-sizing: border-box;
+}
+
+.custom-select-value {
+  display: inline-block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.custom-select-arrow {
+  pointer-events: none;
+  position: relative !important;
+}
+
+.custom-select-options {
+  position: absolute;
+  left: 0;
+  top: calc(100% + 6px);
+  width: 100%;                 /* ✅ MISMO ANCHO QUE EL CONTENEDOR */
+  margin: 0;
+  padding: 6px 0;
+  list-style: none;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  background: #e6f7ff;;
+  box-sizing: border-box;
+  display: none;
+  z-index: 9999;
+  max-height: 220px;
+  overflow-y: auto;
+}
+
+.custom-select.open .custom-select-options {
+  display: block;
+}
+
+.custom-select-option {
+  padding: 10px 14px;
+  cursor: pointer;
+}
+
+.custom-select-option:hover {
+  background: var(--border-radius);
+}
+
+/* Mantén tu icono izquierdo dentro como en inputs */
+.custom-select > i.fas.fa-user-tag {
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
 }
 
 /* Estilos responsivos */
