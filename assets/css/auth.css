@@ -260,6 +260,246 @@
   padding-right: 7%;
 }
 
+/*  ESTILOS PARA LA SECCIÓN DE TUTOR EN REGISTRO  */
+
+/* Contenedor principal de la sección de tutor */
+.tutor-seccion {
+    margin-top: 30px;
+    padding: 20px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    border-left: 4px solid #007bff;
+    display: none; /* Oculto por defecto */
+}
+
+.tutor-seccion h3 {
+    margin-top: 0;
+    margin-bottom: 10px;
+    color: #333;
+    font-size: 1.2rem;
+}
+
+.tutor-seccion h3 i {
+    margin-right: 8px;
+    color: #007bff;
+}
+
+.tutor-seccion p {
+    margin: 10px 0;
+    color: #666;
+}
+
+/* Barra de búsqueda */
+.tutor-busqueda {
+    display: flex;
+    gap: 10px;
+    margin: 15px 0;
+}
+
+.tutor-busqueda input {
+    flex: 1;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 1rem;
+    transition: border-color 0.3s;
+}
+
+.tutor-busqueda input:focus {
+    border-color: #007bff;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(0,123,255,0.1);
+}
+
+/* Botón secundario (verde) */
+.btn-secondary {
+    background: #28a745;
+    color: white;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.3s;
+}
+
+.btn-secondary:hover {
+    background: #218838;
+}
+
+.btn-secondary:disabled {
+    background: #6c757d;
+    cursor: not-allowed;
+}
+
+/* Tarjeta de información del tutor encontrado */
+.tutor-info {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    margin: 15px 0;
+    border: 1px solid #dee2e6;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.tutor-info p {
+    margin: 8px 0;
+    color: #495057;
+}
+
+.tutor-info p:first-child {
+    font-weight: 600;
+    color: #007bff;
+}
+
+/* Formulario para registrar nuevo tutor */
+.tutor-registro-form {
+    background: #e3f2fd;
+    padding: 25px;
+    border-radius: 8px;
+    margin: 15px 0;
+    border: 1px solid #bbdefb;
+}
+
+.tutor-registro-form h4 {
+    margin-top: 0;
+    margin-bottom: 15px;
+    color: #0056b3;
+    font-size: 1.1rem;
+}
+
+.tutor-registro-form .form-group {
+    margin-bottom: 15px;
+}
+
+.tutor-registro-form label {
+    display: block;
+    margin-bottom: 5px;
+    color: #2c3e50;
+    font-weight: 600;
+    font-size: 0.95rem;
+}
+
+.tutor-registro-form input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #cbd5e0;
+    border-radius: 5px;
+    font-size: 0.95rem;
+    transition: border-color 0.3s;
+}
+
+.tutor-registro-form input:focus {
+    border-color: #007bff;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(0,123,255,0.1);
+}
+
+.tutor-registro-form small {
+    display: block;
+    margin-top: 5px;
+    color: #6c757d;
+    font-size: 0.85rem;
+}
+
+/* Contenedor de botones */
+.button-group {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.button-group button {
+    flex: 1;
+    padding: 12px;
+    font-size: 0.95rem;
+}
+
+/* Estado de tutores asignados */
+.tutor-seleccionado {
+    background: #d4edda;
+    padding: 20px;
+    border-radius: 8px;
+    margin: 15px 0;
+    border: 1px solid #c3e6cb;
+}
+
+.tutor-seleccionado p {
+    margin: 5px 0;
+    color: #155724;
+}
+
+.tutor-seleccionado ul {
+    margin: 10px 0;
+    padding-left: 20px;
+    color: #155724;
+}
+
+.tutor-seleccionado li {
+    margin: 5px 0;
+    list-style-type: disc;
+}
+
+.tutor-seleccionado small {
+    display: block;
+    margin-top: 10px;
+    color: #6c757d;
+    font-size: 0.85rem;
+}
+
+/* Mensajes de error y éxito */
+.error-message {
+    background-color: #f8d7da;
+    color: #721c24;
+    padding: 12px;
+    border-radius: 5px;
+    margin: 10px 0;
+    font-size: 0.95rem;
+    border: 1px solid #f5c6cb;
+}
+
+.success-message {
+    background-color: #d4edda;
+    color: #155724;
+    padding: 12px;
+    border-radius: 5px;
+    margin: 10px 0;
+    font-size: 0.95rem;
+    border: 1px solid #c3e6cb;
+}
+
+/* Botón pequeño (para acciones dentro de tarjetas) */
+.btn-sm {
+    padding: 6px 12px;
+    font-size: 0.85rem;
+}
+
+/* Estado de carga */
+.loading {
+    opacity: 0.6;
+    pointer-events: none;
+    position: relative;
+}
+
+.loading::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 20px;
+    height: 20px;
+    margin: -10px 0 0 -10px;
+    border: 2px solid #f3f3f3;
+    border-top: 2px solid #007bff;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
 /* Estilos responsivos */
 @media (max-width: 992px) {
   .auth-container {
@@ -285,4 +525,16 @@
     align-items: flex-start;
     gap: 10px;
   }
+
+  .tutor-busqueda {
+        flex-direction: column;
+    }
+    
+    .button-group {
+        flex-direction: column;
+    }
+    
+    .tutor-busqueda button {
+        width: 100%;
+    }
 }
