@@ -679,6 +679,316 @@ input:checked + .slider:before {
   background-color: #c82333;
 }
 
+/*  ESTILOS PARA LA SECCIÓN DE RESPONSABLES  */
+
+/* Tarjeta de estado de la cuenta */
+.responsable-status-card {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 25px;
+  border-radius: 12px;
+  margin-bottom: 30px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.responsable-status-card .status-title {
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  opacity: 0.9;
+  margin-bottom: 10px;
+}
+
+.responsable-status-card .status-value {
+  font-size: 1.4rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  flex-wrap: wrap;
+}
+
+.responsable-status-card .status-badge {
+  display: inline-block;
+  padding: 5px 15px;
+  border-radius: 50px;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.responsable-status-card .status-badge.responsable {
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.responsable-status-card .status-badge.no-responsable {
+  background: #f6ad55;
+  color: #2d3748;
+}
+
+.responsable-status-card p {
+  margin-top: 15px;
+  font-size: 0.95rem;
+  opacity: 0.9;
+  line-height: 1.5;
+}
+
+/* Cabecera de la lista de responsables */
+.responsables-list-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 25px;
+  padding-bottom: 15px;
+  border-bottom: 2px solid var(--border-color);
+}
+
+.responsables-list-header h4 {
+  margin: 0;
+  color: var(--text-color);
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+/* Grid de responsables */
+.responsables-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+  margin-top: 10px;
+}
+
+/* Tarjeta de cada responsable */
+.responsable-card {
+  background: white;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease;
+  border: 1px solid var(--border-color);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.responsable-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+  border-color: #cbd5e0;
+}
+
+.responsable-info h4 {
+  margin: 0 0 8px 0;
+  color: var(--text-color);
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.responsable-info p {
+  margin: 0;
+  color: var(--text-light);
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.responsable-info p i {
+  color: #a0aec0;
+  font-size: 0.85rem;
+}
+
+.responsable-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.btn-icon-danger {
+  background: none;
+  border: none;
+  color: #fc8181;
+  cursor: pointer;
+  font-size: 1.2rem;
+  padding: 8px;
+  border-radius: 8px;
+  transition: all 0.2s;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-icon-danger:hover {
+  background: #fff5f5;
+  color: #f56565;
+}
+
+/* Estado vacío (cuando no hay responsables) */
+.empty-responsables {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 60px 20px;
+  background: #f8f9fa;
+  border-radius: 12px;
+  border: 2px dashed var(--border-color);
+}
+
+.empty-responsables i {
+  font-size: 3.5rem;
+  color: #a0aec0;
+  margin-bottom: 15px;
+}
+
+.empty-responsables h3 {
+  color: var(--text-color);
+  margin-bottom: 8px;
+  font-size: 1.3rem;
+}
+
+.empty-responsables p {
+  color: var(--text-light);
+  margin-bottom: 20px;
+}
+
+/* Modal para añadir responsable */
+#modalAgregarResponsable .buscador-responsable {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+#modalAgregarResponsable .buscador-responsable input {
+  flex: 1;
+  padding: 12px;
+  border: 2px solid var(--border-color);
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: all 0.3s;
+}
+
+#modalAgregarResponsable .buscador-responsable input:focus {
+  border-color: var(--primary-color);
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
+}
+
+#modalAgregarResponsable .resultado-busqueda {
+  margin-top: 20px;
+  padding: 20px;
+  background: #f8f9fa;
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+}
+
+/* Tarjetas dentro de resultados */
+#modalAgregarResponsable .tutor-info {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+  text-align: center;
+}
+
+#modalAgregarResponsable .tutor-info p {
+  margin: 10px 0;
+  color: var(--text-color);
+}
+
+#modalAgregarResponsable .tutor-info p:first-child {
+  font-weight: 600;
+  color: var(--primary-color);
+  font-size: 1.1rem;
+}
+
+/* Formulario de registro de nuevo tutor */
+#modalAgregarResponsable .tutor-registro-form {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+}
+
+#modalAgregarResponsable .tutor-registro-form h4 {
+  margin: 0 0 20px 0;
+  color: var(--text-color);
+  font-size: 1.1rem;
+}
+
+#modalAgregarResponsable .tutor-registro-form .form-group {
+  margin-bottom: 15px;
+}
+
+#modalAgregarResponsable .tutor-registro-form label {
+  display: block;
+  margin-bottom: 5px;
+  color: var(--text-color);
+  font-weight: 500;
+}
+
+#modalAgregarResponsable .tutor-registro-form input {
+  width: 100%;
+  padding: 10px;
+  border: 2px solid var(--border-color);
+  border-radius: 6px;
+  font-size: 0.95rem;
+}
+
+#modalAgregarResponsable .tutor-registro-form input:focus {
+  border-color: var(--primary-color);
+  outline: none;
+}
+
+#modalAgregarResponsable .button-group {
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+#modalAgregarResponsable .button-group button {
+  flex: 1;
+}
+
+/* Botón de éxito (verde) */
+.btn-success {
+  background: #28a745;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.95rem;
+  transition: background 0.3s;
+}
+
+.btn-success:hover {
+  background: #218838;
+}
+
+.btn-success:disabled {
+  background: #6c757d;
+  cursor: not-allowed;
+}
+
+/* Loading */
+.loading {
+  text-align: center;
+  padding: 40px;
+  color: var(--text-light);
+}
+
+.loading i {
+  font-size: 2rem;
+  margin-bottom: 10px;
+  color: var(--primary-color);
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
 /* Estilos responsivos */
 @media (max-width: 992px) {
   .perfil-grid {

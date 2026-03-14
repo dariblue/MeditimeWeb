@@ -66,6 +66,10 @@
                 <i class="fas fa-shield-alt"></i>
                 <span>Privacidad</span>
               </div>
+              <div class="perfil-menu-item" data-tab="responsables">
+                <i class="fas fa-user-shield"></i>
+                <span>Mis Responsables</span>
+              </div>
             </div>
           </div>
 
@@ -517,6 +521,59 @@
                     <i class="fas fa-file-alt"></i>
                     <span>Política de Cookies</span>
                   </a>
+                </div>
+              </div>
+            </div>
+            <!-- Pestaña de Responsables -->
+            <div class="perfil-tab" id="responsables-tab">
+              <div class="perfil-header">
+                <h3>Mis Responsables</h3>
+                <p>Gestiona las personas que pueden supervisar tu medicación</p>
+              </div>
+
+              <!-- Estado actual del usuario -->
+              <div class="responsable-status-card" id="userStatusCard">
+                <!-- Se llenará con JavaScript -->
+              </div>
+
+              <!-- Lista de responsables actuales -->
+              <div class="responsables-list-header">
+                <h4>Responsables actuales</h4>
+                <button type="button" class="btn btn-primary" id="btnAgregarResponsable">
+                  <i class="fas fa-plus"></i> Añadir responsable
+                </button>
+              </div>
+
+              <div id="responsables-container" class="responsables-grid">
+                <!-- Se llenará con JavaScript -->
+                <div class="loading">Cargando responsables...</div>
+              </div>
+
+              <!-- Modal para añadir responsable -->
+              <div id="modalAgregarResponsable" class="modal" style="display: none;">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h3>Añadir Responsable</h3>
+                    <button type="button" class="close-modal" onclick="cerrarModalResponsable()">
+                      <i class="fas fa-times"></i>
+                    </button>
+                  </div>
+                  <div class="modal-body">
+                    <p>Busca un responsable por su correo electrónico. Si no existe, puedes registrarlo.</p>
+
+                    <!-- Buscador -->
+                    <div class="buscador-responsable">
+                      <input type="email" id="buscarResponsableEmail" placeholder="Correo electrónico"
+                        class="form-control">
+                      <button type="button" id="btnBuscarResponsable" class="btn btn-primary">Buscar</button>
+                    </div>
+
+                    <!-- Resultado de búsqueda -->
+                    <div id="resultadoBusquedaResponsable" class="resultado-busqueda"></div>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" onclick="cerrarModalResponsable()">Cancelar</button>
+                  </div>
                 </div>
               </div>
             </div>

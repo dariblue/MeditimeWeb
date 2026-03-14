@@ -259,6 +259,228 @@
     }
   }
 
+  //  FUNCIONES PARA REGISTRO CON TUTOR 
+  let tutoresRegistro = []; // Para almacenar tutores durante el registro
+
+  function initTutorRegistro() {
+    const noResponsableCheck = document.getElementById('noResponsable');
+    const tutorSeccion = document.getElementById('tutorSeccion');
+
+    if (!noResponsableCheck || !tutorSeccion) return;
+
+    noResponsableCheck.addEventListener('change', function (e) {
+      tutorSeccion.style.display = e.target.checked ? 'block' : 'none';
+      if (!e.target.checked) {
+        tutoresRegistro = [];
+        actualizarEstadoTutorRegistro();
+      }
+    });
+
+    const buscarBtn = document.getElementById('buscarTutor');
+    if (buscarBtn) {
+      buscarBtn.addEventListener('click', buscarTutorRegistro);
+    }
+  }
+
+  async function buscarTutorRegistro() {
+    const email = document.getElementById('tutorEmail').value.trim();
+    const resultadoDiv = document.getElementById('resultadoBusqueda');
+
+    if (!email || !validateEmail(email)) {
+      resultadoDiv.innerHTML = '<p class="error-message">Email inválido</p>';
+      return;
+    }
+
+    const btn = document.getElementById('buscarTutor');
+    btn.disabled = true;
+    btn.textContent = 'Buscando...';
+    // PARA PRUEBAS SIMULAMOS UNA RESPUESTA
+    setTimeout(() => {
+      // Datos de ejemplo para probar
+      if (email === 'carlos@email.com') {
+        // Tutor existente
+        resultadoDiv.innerHTML = `
+        <div class="tutor-info">
+          <p><strong>Tutor encontrado:</strong> Carlos López</p>
+          <p>Email: carlos@email.com</p>
+          <button onclick="asignarTutorRegistro(2, 'Carlos López', 'carlos@email.com')" class="btn-success">
+            Asignar
+          </button>
+        </div>
+      `;
+      } else if (email === 'maria@email.com') {
+        // Tutor existente
+        resultadoDiv.innerHTML = `
+        <div class="tutor-info">
+          <p><strong>Tutor encontrado:</strong> María García</p>
+          <p>Email: maria@email.com</p>
+          <button onclick="asignarTutorRegistro(3, 'María García', 'maria@email.com')" class="btn-success">
+            Asignar
+          </button>
+        </div>
+      `;
+      } else {
+        // No existe - mostrar formulario de registro
+        resultadoDiv.innerHTML = `
+        <div class="tutor-registro-form">
+          <h4>Registrar nuevo tutor</h4>
+          <div class="form-group">
+            <label>Nombre completo</label>
+            <input type="text" id="nuevoTutorNombre" placeholder="Nombre">
+          </div>
+          <div class="form-group">
+            <label>Contraseña</label>
+            <input type="password" id="nuevoTutorPassword" placeholder="Mínimo 6 caracteres">
+          </div>
+          <div class="button-group">
+            <button onclick="registrarTutorRegistro('${email}')" class="btn-success">Registrar y asignar</button>
+            <button onclick="cancelarBusquedaRegistro()" class="btn btn-secondary">Cancelar</button>
+          </div>
+        </div>
+      `;
+      }
+    btn.disabled = false;
+    btn.textContent = 'Buscar';
+  }, 1000);
+
+    /** PARA CUANDO ESTE HECHA LA BASE DE DATOS
+        try {
+          const response = await fetch(`${API_URL}/Usuarios/buscar?email=${encodeURIComponent(email)}`);
+          const data = await response.json();
+    
+          if (data.existe) {
+            mostrarTutorExistenteRegistro(data.usuario);
+          } else {
+            mostrarFormularioRegistroTutor(email);
+          }
+        } catch (error) {
+          resultadoDiv.innerHTML = '<p class="error-message">Error al buscar</p>';
+        } finally {
+          btn.disabled = false;
+          btn.textContent = 'Buscar';
+        } */
+  }
+
+  function mostrarTutorExistenteRegistro(usuario) {
+    const resultadoDiv = document.getElementById('resultadoBusqueda');
+
+    if (tutoresRegistro.some(t => t.email === usuario.email)) {
+      resultadoDiv.innerHTML = '<p class="error-message">Este tutor ya está asignado</p>';
+      return;
+    }
+
+    resultadoDiv.innerHTML = `
+    <div class="tutor-info">
+      <p><strong>Tutor encontrado:</strong> ${usuario.nombre}</p>
+      <p>Email: ${usuario.email}</p>
+      <button onclick="asignarTutorRegistro(${usuario.id}, '${usuario.nombre}', '${usuario.email}')" class="btn-success">
+        Asignar
+      </button>
+    </div>
+  `;
+  }
+
+  function mostrarFormularioRegistroTutor(email) {
+    const resultadoDiv = document.getElementById('resultadoBusqueda');
+
+    resultadoDiv.innerHTML = `
+    <div class="tutor-registro-form">
+      <h4>Registrar nuevo tutor</h4>
+      <div class="form-group">
+        <label>Nombre completo</label>
+        <input type="text" id="nuevoTutorNombre" placeholder="Nombre">
+      </div>
+      <div class="form-group">
+        <label>Contraseña</label>
+        <input type="password" id="nuevoTutorPassword" placeholder="Mínimo 6 caracteres">
+      </div>
+      <div class="button-group">
+        <button onclick="registrarTutorRegistro('${email}')" class="btn-success">Registrar y asignar</button>
+        <button onclick="cancelarBusquedaRegistro()" class="btn btn-secondary">Cancelar</button>
+      </div>
+    </div>
+  `;
+  }
+
+  window.asignarTutorRegistro = function (id, nombre, email) {
+    tutoresRegistro.push({ id, nombre, email });
+    document.getElementById('tutorEmail').value = '';
+    document.getElementById('resultadoBusqueda').innerHTML = '';
+    actualizarEstadoTutorRegistro();
+  };
+
+  window.registrarTutorRegistro = async function (email) {
+    const nombre = document.getElementById('nuevoTutorNombre').value.trim();
+    const password = document.getElementById('nuevoTutorPassword').value.trim();
+
+    if (!nombre || !password || password.length < 6) {
+      alert('Completa todos los campos');
+      return;
+    }
+
+    const btn = event.target;
+    btn.disabled = true;
+    btn.textContent = 'Registrando...';
+
+    try {
+      const response = await fetch(`${API_URL}/Usuarios/registro`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          nombre: nombre,
+          email: email,
+          contrasena: password,
+          rol: 'tutor'
+        })
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        tutoresRegistro.push({
+          id: data.usuarioId || data.id,
+          nombre: nombre,
+          email: email
+        });
+
+        document.getElementById('tutorEmail').value = '';
+        document.getElementById('resultadoBusqueda').innerHTML = '';
+        actualizarEstadoTutorRegistro();
+        alert('Tutor registrado correctamente');
+      }
+    } catch (error) {
+      alert('Error al registrar');
+    } finally {
+      btn.disabled = false;
+      btn.textContent = 'Registrar y asignar';
+    }
+  };
+
+  window.cancelarBusquedaRegistro = function () {
+    document.getElementById('resultadoBusqueda').innerHTML = '';
+    document.getElementById('tutorEmail').value = '';
+  };
+
+  function actualizarEstadoTutorRegistro() {
+    const estadoDiv = document.getElementById('tutorEstado');
+    const btnRegistro = document.getElementById('btnRegistro');
+
+    if (tutoresRegistro.length === 0) {
+      estadoDiv.innerHTML = '<p class="error-message">⚠️ Necesitas asignar al menos un tutor</p>';
+      if (btnRegistro) btnRegistro.disabled = true;
+      return;
+    }
+
+    let html = '<div class="tutor-seleccionado"><p><strong>Tutores asignados:</strong></p><ul>';
+    tutoresRegistro.forEach(t => {
+      html += `<li>${t.nombre} (${t.email})</li>`;
+    });
+    html += '</ul></div>';
+
+    estadoDiv.innerHTML = html;
+    if (btnRegistro) btnRegistro.disabled = false;
+  }
+
   // Función para inicializar el formulario de registro
   function initRegisterForm() {
     const registerForm = document.getElementById('registro-form');
@@ -268,6 +490,8 @@
     const passwordInput = document.getElementById('password');
     const confirmPasswordInput = document.getElementById('confirm-password');
     let isSubmitting = false; // Bandera para evitar envíos duplicados
+
+    initTutorRegistro(); // Inicializar la funcionalidad de asignación de tutores en el registro
 
     if (togglePassword && passwordInput) {
       togglePassword.addEventListener('click', () => {
@@ -301,6 +525,8 @@
         const notificaciones = document.getElementById('notificaciones').checked;
         const terms = document.getElementById('terms').checked;
 
+        const noResponsable = document.getElementById('noResponsable')?.checked || false;
+
         // Limpiar mensajes anteriores
         if (errorElement) {
           errorElement.style.display = 'none';
@@ -331,6 +557,13 @@
           return;
         }
 
+        // Validar tutores si no es responsable
+        if (noResponsable && tutoresRegistro.length === 0) {
+          showError(errorElement, 'Debes asignar al menos un tutor');
+          isSubmitting = false;
+          return;
+        }
+
         try {
           // console.log('Iniciando proceso de registro...');
           const user = await register({
@@ -345,6 +578,11 @@
           });
 
           // console.log('Registro exitoso:', user);
+
+          // Si no es responsable, asignar tutores
+          if (noResponsable && tutoresRegistro.length > 0) {
+            await asignarTutorRegistro(user.usuarioId || user.id);
+          }
 
           if (successElement) {
             successElement.textContent = 'Registro exitoso. Redirigiendo...';
@@ -368,7 +606,7 @@
     }
   }
 
-    // ===== Custom select (Tipo de cuenta) =====  *REVISAR*
+  //  Custom select (Tipo de cuenta)   *REVISAR*
   (function () {
     const cs = document.getElementById("roleSelect");
     if (!cs) return;

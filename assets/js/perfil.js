@@ -27,262 +27,632 @@ document.addEventListener("DOMContentLoaded", () => {
   const closeAllSessionsBtn = document.getElementById("close-all-sessions-btn")
   const exportDataBtn = document.getElementById("export-data-btn")
 
-
   // Estado de la aplicación
   let currentTab = "datos-personales"
   let userData = {}
+  let tutoresAsignados = [] // Responsables del usuario
 
   // Inicialización
   init()
 
-  // Funciones
   function init() {
-    // Cargar datos del usuario
     loadUserData()
-
-    // Configurar eventos
     setupEvents()
-
-    // Configurar permisos de notificaciones
     setupNotificationPermission()
+    // NOTA: initResponsablesSeccion() se llama DESPUÉS de loadUserData
   }
 
   function setupEvents() {
-    // Manejar cambio de pestañas
+    // Cambio de pestañas
     perfilMenuItems.forEach((item) => {
       item.addEventListener("click", () => {
         const tab = item.getAttribute("data-tab")
-        if (tab) {
-          changeTab(tab)
-        }
+        if (tab) changeTab(tab)
       })
     })
 
-    // Manejar envío del formulario de datos personales
-    if (datosPersonalesForm) {
-      datosPersonalesForm.addEventListener("submit", handleDatosPersonalesSubmit)
-    }
+    // Formularios
+    if (datosPersonalesForm) datosPersonalesForm.addEventListener("submit", handleDatosPersonalesSubmit)
+    if (cambiarPasswordForm) cambiarPasswordForm.addEventListener("submit", handleCambiarPasswordSubmit)
+    if (notificacionesForm) notificacionesForm.addEventListener("submit", handleNotificacionesSubmit)
+    if (preferenciasForm) preferenciasForm.addEventListener("submit", handlePreferenciasSubmit)
 
-    // Manejar envío del formulario de cambio de contraseña
-    if (cambiarPasswordForm) {
-      cambiarPasswordForm.addEventListener("submit", handleCambiarPasswordSubmit)
-    }
-
-    // Manejar envío del formulario de notificaciones
-    if (notificacionesForm) {
-      notificacionesForm.addEventListener("submit", handleNotificacionesSubmit)
-    }
-
-    // Manejar envío del formulario de preferencias
-    if (preferenciasForm) {
-      preferenciasForm.addEventListener("submit", handlePreferenciasSubmit)
-    }
-
-    // Manejar cambio de avatar
+    // Avatar
     if (changeAvatarBtn && avatarUpload) {
-      changeAvatarBtn.addEventListener("click", () => {
-        avatarUpload.click()
-      })
-
+      changeAvatarBtn.addEventListener("click", () => avatarUpload.click())
       avatarUpload.addEventListener("change", handleAvatarChange)
     }
 
-    // Manejar botones de mostrar/ocultar contraseña
-    togglePasswordBtns.forEach((btn) => {
-      btn.addEventListener("click", togglePasswordVisibility)
-    })
+    // Contraseña
+    togglePasswordBtns.forEach(btn => btn.addEventListener("click", togglePasswordVisibility))
+    if (passwordNuevo) passwordNuevo.addEventListener("input", updatePasswordStrength)
 
-    // Manejar medidor de seguridad de contraseña
-    if (passwordNuevo) {
-      passwordNuevo.addEventListener("input", updatePasswordStrength)
-    }
+    // Eliminar cuenta
+    if (deleteAccountBtn) deleteAccountBtn.addEventListener("click", () => confirmDeleteModal.classList.add("active"))
+    if (cancelDeleteBtn) cancelDeleteBtn.addEventListener("click", closeModals)
+    if (confirmDeleteBtn) confirmDeleteBtn.addEventListener("click", handleDeleteAccount)
 
-    // Manejar eliminar cuenta
-    if (deleteAccountBtn) {
-      deleteAccountBtn.addEventListener("click", () => {
-        confirmDeleteModal.classList.add("active")
-      })
-    }
-
-    // Manejar cancelar eliminación
-    if (cancelDeleteBtn) {
-      cancelDeleteBtn.addEventListener("click", closeModals)
-    }
-
-    // Manejar confirmar eliminación
-    if (confirmDeleteBtn) {
-      confirmDeleteBtn.addEventListener("click", handleDeleteAccount)
-    }
-
-    // Manejar cerrar modales
-    closeModalBtns.forEach((btn) => {
-      btn.addEventListener("click", closeModals)
-    })
-
-    // Cerrar modales al hacer clic fuera del contenido
+    // Modales
+    closeModalBtns.forEach(btn => btn.addEventListener("click", closeModals))
     window.addEventListener("click", (event) => {
-      if (event.target === confirmDeleteModal || event.target === sessionsModal) {
-        closeModals()
-      }
+      if (event.target === confirmDeleteModal || event.target === sessionsModal) closeModals()
     })
 
-    // Manejar ver sesiones
-    if (viewSessionsBtn) {
-      viewSessionsBtn.addEventListener("click", () => {
-        sessionsModal.classList.add("active")
-      })
-    }
-
-    // Manejar cerrar modal de sesiones
-    if (closeSessionsModalBtn) {
-      closeSessionsModalBtn.addEventListener("click", closeModals)
-    }
-
-    // Manejar cerrar todas las sesiones
-    if (closeAllSessionsBtn) {
-      closeAllSessionsBtn.addEventListener("click", handleCloseAllSessions)
-    }
-
-    // Manejar exportar datos
-    if (exportDataBtn) {
-      exportDataBtn.addEventListener("click", handleExportData)
-    }
+    // Sesiones
+    if (viewSessionsBtn) viewSessionsBtn.addEventListener("click", () => sessionsModal.classList.add("active"))
+    if (closeSessionsModalBtn) closeSessionsModalBtn.addEventListener("click", closeModals)
+    if (closeAllSessionsBtn) closeAllSessionsBtn.addEventListener("click", handleCloseAllSessions)
+    if (exportDataBtn) exportDataBtn.addEventListener("click", handleExportData)
   }
 
   function changeTab(tab) {
     currentTab = tab
-
-    // Actualizar clases activas en menú
-    perfilMenuItems.forEach((item) => {
-      if (item.getAttribute("data-tab") === tab) {
-        item.classList.add("active")
-      } else {
-        item.classList.remove("active")
-      }
-    })
-
-    // Actualizar pestañas visibles
-    perfilTabs.forEach((tabElement) => {
-      if (tabElement.id === `${tab}-tab`) {
-        tabElement.classList.add("active")
-      } else {
-        tabElement.classList.remove("active")
-      }
-    })
+    perfilMenuItems.forEach(item => item.classList.toggle("active", item.getAttribute("data-tab") === tab))
+    perfilTabs.forEach(tabElement => tabElement.classList.toggle("active", tabElement.id === `${tab}-tab`))
   }
 
   async function loadUserData() {
     try {
+      //  SIMULACIÓN 
+      userData = {
+        iD_Usuario: 1,
+        nombre: "Alberto",
+        apellidos: "Gutiérrez",
+        email: "alberto@email.com",
+        rol: "no_responsable", // Cambiar a "responsable" para probar la otra vista
+        telefono: "123456789",
+        fecha_Nacimiento: "1980-05-15",
+        domicilio: "Calle del pez 55",
+        notificaciones: true
+      }
+
+      fillUserForms()
+      initResponsablesSeccion()
+
+      /*  CÓDIGO REAL  
       // Obtener sesión
       const session = JSON.parse(localStorage.getItem("meditime_session") || "null")
-      // if (!session) {
-      //   window.location.href = "login"
-      //   return
-      // }
+      if (!session) {
+        window.location.href = "login.html"
+        return
+      }
 
-      // Realizar solicitud a la API
       const response = await fetch(`${API_URL}/Usuarios/${session.userId}`, {
         headers: {
-          // Añadir token de autenticación si es necesario
-          // "Authorization": `Bearer ${session.token}`
-        },
+          "Authorization": `Bearer ${session.token}`
+        }
       })
 
       if (!response.ok) {
         throw new Error("Error al cargar datos del usuario")
       }
 
-      // Obtener datos
       userData = await response.json()
+      
+      // Asegurar que userData.rol existe
+      if (!userData.rol) {
+        userData.rol = localStorage.getItem('user_role') || 'responsable'
+      }
 
-      // Rellenar formularios
       fillUserForms()
+      initResponsablesSeccion()
+      */
     } catch (error) {
       console.error("Error al cargar datos del usuario:", error)
-
-      // Cargar datos de ejemplo para desarrollo
       loadSampleUserData()
     }
   }
 
   function loadSampleUserData() {
-    // Datos de ejemplo para desarrollo
+    // Datos de ejemplo para desarrollo (fallback)
     userData = {
       iD_Usuario: 1,
       nombre: "Alberto",
       apellidos: "Gutiérrez",
       email: "albertito@gmail.com",
+      rol: "no_responsable",
       telefono: 123456789,
       fecha_Nacimiento: "1980-05-15T00:00:00",
       domicilio: "Calle del pez 55",
       notificaciones: true,
-      isAdmin: true,
-      createdAt: "2024-01-15T10:30:00",
       preferencias: {
         tema: "light",
         tamanoTexto: "medium",
         vistaCalendario: "month",
         primerDiaSemana: 0,
         idioma: "es",
-        formatoHora: "12",
+        formatoHora: "12"
       },
       configuracionNotificaciones: {
         emailMedicamentos: true,
         navegadorMedicamentos: true,
         tiempoAnticipacion: 5,
         nuevasCaracteristicas: true,
-        consejos: true,
-      },
+        consejos: true
+      }
     }
-
-    // Rellenar formularios
     fillUserForms()
+    initResponsablesSeccion()
   }
 
   function fillUserForms() {
-    // Rellenar formulario de datos personales
-    if (datosPersonalesForm) {
-      document.getElementById("nombre").value = userData.nombre || ""
-      document.getElementById("apellidos").value = userData.apellidos || ""
-      document.getElementById("email").value = userData.email || ""
-      document.getElementById("telefono").value = userData.telefono || ""
+    if (!datosPersonalesForm) return
+    document.getElementById("nombre").value = userData.nombre || ""
+    document.getElementById("apellidos").value = userData.apellidos || ""
+    document.getElementById("email").value = userData.email || ""
+    document.getElementById("telefono").value = userData.telefono || ""
+    if (userData.fecha_Nacimiento) {
+      const fecha = new Date(userData.fecha_Nacimiento)
+      document.getElementById("fecha_nacimiento").value = fecha.toISOString().split("T")[0]
+    }
+    document.getElementById("domicilio").value = userData.domicilio || ""
+  }
 
-      if (userData.fecha_Nacimiento) {
-        const fechaNacimiento = new Date(userData.fecha_Nacimiento)
-        document.getElementById("fecha_nacimiento").value = fechaNacimiento.toISOString().split("T")[0]
-      }
+  //  FUNCIONES DE RESPONSABLES 
 
-      document.getElementById("domicilio").value = userData.domicilio || ""
+  function initResponsablesSeccion() {
+    const esNoResponsable = userData.rol === 'no_responsable'
+
+    // Configurar botón de añadir responsable
+    const btnAgregar = document.getElementById('btnAgregarResponsable')
+    if (btnAgregar) {
+      const nuevoBoton = btnAgregar.cloneNode(true)
+      btnAgregar.parentNode.replaceChild(nuevoBoton, btnAgregar)
+      nuevoBoton.addEventListener('click', (e) => {
+        e.preventDefault()
+        document.getElementById('modalAgregarResponsable').style.display = 'flex'
+        document.getElementById('buscarResponsableEmail').value = ''
+        document.getElementById('resultadoBusquedaResponsable').innerHTML = ''
+      })
     }
 
-    // Rellenar formulario de notificaciones
-    if (notificacionesForm && userData.configuracionNotificaciones) {
-      document.getElementById("email-meds").checked = userData.configuracionNotificaciones.emailMedicamentos
-      document.getElementById("browser-meds").checked = userData.configuracionNotificaciones.navegadorMedicamentos
-      document.getElementById("reminder-time").value = userData.configuracionNotificaciones.tiempoAnticipacion
-      document.getElementById("features-updates").checked = userData.configuracionNotificaciones.nuevasCaracteristicas
-      document.getElementById("tips-updates").checked = userData.configuracionNotificaciones.consejos
+    // Configurar búsqueda
+    const btnBuscar = document.getElementById('btnBuscarResponsable')
+    if (btnBuscar) btnBuscar.addEventListener('click', buscarResponsable)
+
+    const inputBuscar = document.getElementById('buscarResponsableEmail')
+    if (inputBuscar) {
+      inputBuscar.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+          e.preventDefault()
+          buscarResponsable()
+        }
+      })
     }
 
-    // Rellenar formulario de preferencias
-    if (preferenciasForm && userData.preferencias) {
-      document.getElementById("theme").value = userData.preferencias.tema
-      document.getElementById("font-size").value = userData.preferencias.tamanoTexto
-      document.getElementById("calendar-view").value = userData.preferencias.vistaCalendario
-      document.getElementById("first-day").value = userData.preferencias.primerDiaSemana
-      document.getElementById("language").value = userData.preferencias.idioma
-      document.getElementById("time-format").value = userData.preferencias.formatoHora
+    // Actualizar UI según el rol
+    actualizarStatusCard()
+    cargarResponsables()
+  }
+
+  function actualizarStatusCard() {
+    const card = document.getElementById('userStatusCard')
+    if (!card) return
+
+    if (userData.rol === 'no_responsable') {
+      card.innerHTML = `
+        <div class="status-title">ESTADO DE TU CUENTA</div>
+        <div class="status-value">
+          Necesitas responsables que supervisen tu medicación
+          <span class="status-badge no-responsable">No responsable</span>
+        </div>
+        <p>Las personas que asignes como responsables podrán gestionar tu medicación y recibir notificaciones de tus tomas.</p>
+      `
+      document.querySelector('.responsables-list-header').style.display = 'flex'
+    } else {
+      card.innerHTML = `
+        <div class="status-title">ESTADO DE TU CUENTA</div>
+        <div class="status-value">
+          Eres responsable de ti mismo
+          <span class="status-badge responsable">Responsable</span>
+        </div>
+        <p>Como eres responsable de ti mismo, no necesitas que otras personas supervisen tu medicación.</p>
+      `
+      document.querySelector('.responsables-list-header').style.display = 'none'
     }
   }
 
+  async function cargarResponsables() {
+    const container = document.getElementById('responsables-container')
+    if (!container) return
+
+    if (userData.rol !== 'no_responsable') {
+      container.innerHTML = `
+        <div class="empty-responsables">
+          <i class="fas fa-check-circle"></i>
+          <h3>No necesitas responsables</h3>
+          <p>Eres responsable de ti mismo, por lo que no requieres supervisión de otras personas.</p>
+        </div>
+      `
+      return
+    }
+
+    // Mostrar loading
+    container.innerHTML = `
+      <div class="loading">
+        <i class="fas fa-circle-notch fa-spin"></i>
+        <p>Cargando responsables...</p>
+      </div>
+    `
+
+    //  SIMULACIÓN  
+    setTimeout(() => {
+      // Datos de ejemplo
+      tutoresAsignados = [
+        { id: 2, nombre: "Carlos López", email: "carlos@email.com" },
+        { id: 3, nombre: "María García", email: "maria@email.com" }
+      ]
+
+      if (tutoresAsignados.length === 0) {
+        container.innerHTML = `
+          <div class="empty-responsables">
+            <i class="fas fa-user-shield"></i>
+            <h3>Aún no tienes responsables asignados</h3>
+            <p>Haz clic en "Añadir responsable" para que alguien pueda supervisar tu medicación.</p>
+          </div>
+        `
+      } else {
+        mostrarResponsables()
+      }
+    }, 1500)
+
+    /*  CÓDIGO REAL 
+    try {
+      const session = JSON.parse(localStorage.getItem("meditime_session") || "null")
+      
+      const response = await fetch(`${API_URL}/Tutelas/mis-tutores?tuteladoId=${userData.iD_Usuario}`, {
+        headers: {
+          'Authorization': `Bearer ${session.token}`
+        }
+      })
+
+      if (response.ok) {
+        tutoresAsignados = await response.json()
+        
+        if (tutoresAsignados.length === 0) {
+          container.innerHTML = `
+            <div class="empty-responsables">
+              <i class="fas fa-user-shield"></i>
+              <h3>Aún no tienes responsables asignados</h3>
+              <p>Haz clic en "Añadir responsable" para que alguien pueda supervisar tu medicación.</p>
+            </div>
+          `
+        } else {
+          mostrarResponsables()
+        }
+      } else {
+        container.innerHTML = `
+          <div class="empty-responsables">
+            <i class="fas fa-exclamation-circle"></i>
+            <h3>Error al cargar</h3>
+            <p>No se pudieron cargar tus responsables. Intenta de nuevo.</p>
+          </div>
+        `
+      }
+    } catch (error) {
+      console.error("Error:", error)
+      container.innerHTML = `
+        <div class="empty-responsables">
+          <i class="fas fa-exclamation-circle"></i>
+          <h3>Error de conexión</h3>
+          <p>No se pudo conectar con el servidor.</p>
+        </div>
+      `
+    }
+    */
+  }
+
+  function mostrarResponsables() {
+    const container = document.getElementById('responsables-container')
+    if (!container) return
+
+    if (!tutoresAsignados.length) {
+      container.innerHTML = `
+        <div class="empty-responsables">
+          <i class="fas fa-user-shield"></i>
+          <h3>No tienes responsables asignados</h3>
+          <p>Añade personas que puedan gestionar tu medicación</p>
+        </div>
+      `
+      return
+    }
+
+    let html = ''
+    tutoresAsignados.forEach(tutor => {
+      html += `
+        <div class="responsable-card" data-id="${tutor.id}">
+          <div class="responsable-info">
+            <h4><i class="fas fa-user-circle"></i> ${tutor.nombre}</h4>
+            <p><i class="fas fa-envelope"></i> ${tutor.email}</p>
+          </div>
+          <div class="responsable-actions">
+            <button class="btn-icon-danger" onclick="window.eliminarResponsable(${tutor.id})" title="Eliminar responsable">
+              <i class="fas fa-trash"></i>
+            </button>
+          </div>
+        </div>
+      `
+    })
+    container.innerHTML = html
+  }
+
+  //  FUNCIONES DEL MODAL 
+
+  window.cerrarModalResponsable = () => {
+    document.getElementById('modalAgregarResponsable').style.display = 'none'
+  }
+
+  function validarEmail(email) {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
+  }
+
+  async function buscarResponsable() {
+    const email = document.getElementById('buscarResponsableEmail').value.trim()
+    const resultadoDiv = document.getElementById('resultadoBusquedaResponsable')
+
+    if (!email) return resultadoDiv.innerHTML = '<p class="error-message">Ingresa un email</p>'
+    if (!validarEmail(email)) return resultadoDiv.innerHTML = '<p class="error-message">Email inválido</p>'
+    if (tutoresAsignados.some(t => t.email === email)) {
+      return resultadoDiv.innerHTML = '<p class="error-message">Este responsable ya está asignado</p>'
+    }
+
+    const btn = document.getElementById('btnBuscarResponsable')
+    btn.disabled = true
+    btn.textContent = 'Buscando...'
+
+    //  SIMULACIÓN
+    setTimeout(() => {
+      try {
+        if (email === 'carlos@email.com') {
+          mostrarResponsableExistente({ id: 2, nombre: 'Carlos López', email: email })
+        } else if (email === 'maria@email.com') {
+          mostrarResponsableExistente({ id: 3, nombre: 'María García', email: email })
+        } else {
+          mostrarFormularioRegistroResponsable(email)
+        }
+      } catch (error) {
+        resultadoDiv.innerHTML = '<p class="error-message">Error al procesar la búsqueda</p>'
+      } finally {
+        btn.disabled = false
+        btn.textContent = 'Buscar'
+      }
+    }, 1000)
+
+    /*  CÓDIGO REAL 
+    try {
+      const response = await fetch(`${API_URL}/Usuarios/buscar?email=${encodeURIComponent(email)}`)
+      const data = await response.json()
+
+      if (data.existe) {
+        mostrarResponsableExistente(data.usuario)
+      } else {
+        mostrarFormularioRegistroResponsable(email)
+      }
+    } catch (error) {
+      resultadoDiv.innerHTML = '<p class="error-message">Error al conectar con el servidor</p>'
+    } finally {
+      btn.disabled = false
+      btn.textContent = 'Buscar'
+    }
+    */
+  }
+
+  function mostrarResponsableExistente(usuario) {
+    const resultadoDiv = document.getElementById('resultadoBusquedaResponsable')
+    if (!resultadoDiv) return
+
+    resultadoDiv.innerHTML = `
+      <div class="tutor-info">
+        <p><strong>Responsable encontrado:</strong> ${usuario.nombre}</p>
+        <p>Email: ${usuario.email}</p>
+        <button onclick="window.asignarResponsable(${usuario.id}, '${usuario.nombre}', '${usuario.email}')" class="btn-success">
+          Asignar como responsable
+        </button>
+      </div>
+    `
+  }
+
+  function mostrarFormularioRegistroResponsable(email) {
+    const resultadoDiv = document.getElementById('resultadoBusquedaResponsable')
+    if (!resultadoDiv) return
+
+    resultadoDiv.innerHTML = `
+      <div class="tutor-registro-form">
+        <h4>Registrar nuevo responsable</h4>
+        <div class="form-group">
+          <label>Nombre completo</label>
+          <input type="text" id="nuevoResponsableNombre" placeholder="Nombre" style="width:100%; padding:8px; border:1px solid #ddd; border-radius:5px;">
+        </div>
+        <div class="form-group">
+          <label>Contraseña</label>
+          <input type="password" id="nuevoResponsablePassword" placeholder="Mínimo 6 caracteres" style="width:100%; padding:8px; border:1px solid #ddd; border-radius:5px;">
+        </div>
+        <div class="button-group" style="display:flex; gap:10px; margin-top:15px;">
+          <button onclick="window.registrarYAsignarResponsable('${email}')" class="btn-success" style="flex:1; padding:10px;">Registrar y asignar</button>
+          <button onclick="window.cancelarBusqueda()" class="btn btn-secondary" style="flex:1; padding:10px;">Cancelar</button>
+        </div>
+      </div>
+    `
+  }
+
+  window.asignarResponsable = async function (id, nombre, email) {
+    //  SIMULACIÓN 
+    setTimeout(() => {
+      tutoresAsignados.push({ id, nombre, email })
+      mostrarResponsables()
+      document.getElementById('modalAgregarResponsable').style.display = 'none'
+      alert('Responsable asignado correctamente')
+    }, 500)
+
+    /*  CÓDIGO REAL 
+    try {
+      const session = JSON.parse(localStorage.getItem("meditime_session") || "null")
+      
+      const response = await fetch(`${API_URL}/Tutelas/asignar`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${session.token}`
+        },
+        body: JSON.stringify({
+          tutorId: id,
+          tuteladoId: userData.iD_Usuario
+        })
+      })
+
+      if (response.ok) {
+        tutoresAsignados.push({ id, nombre, email })
+        mostrarResponsables()
+        document.getElementById('modalAgregarResponsable').style.display = 'none'
+        
+        // Mostrar mensaje de éxito
+        const msgDiv = document.createElement('div')
+        msgDiv.className = 'success-message'
+        msgDiv.textContent = 'Responsable asignado correctamente'
+        document.querySelector('.perfil-content').prepend(msgDiv)
+        setTimeout(() => msgDiv.remove(), 3000)
+      } else {
+        alert('Error al asignar responsable')
+      }
+    } catch (error) {
+      alert('Error de conexión')
+    }
+    */
+  }
+
+  window.registrarYAsignarResponsable = async function (email) {
+    const nombre = document.getElementById('nuevoResponsableNombre').value.trim()
+    const password = document.getElementById('nuevoResponsablePassword').value.trim()
+
+    if (!nombre || !password || password.length < 6) {
+      alert('Completa todos los campos correctamente (contraseña mínimo 6 caracteres)')
+      return
+    }
+
+    const btn = event.target
+    const originalText = btn.textContent
+    btn.disabled = true
+    btn.textContent = 'Registrando...'
+
+    //  SIMULACIÓN 
+    setTimeout(() => {
+      const nuevoId = Math.floor(Math.random() * 1000) + 10
+      tutoresAsignados.push({ id: nuevoId, nombre, email })
+      mostrarResponsables()
+      document.getElementById('modalAgregarResponsable').style.display = 'none'
+      alert('Responsable registrado y asignado correctamente')
+      btn.disabled = false
+      btn.textContent = originalText
+    }, 1000)
+
+    /*  CÓDIGO REAL 
+    try {
+      // Primero registrar al nuevo usuario como tutor
+      const responseRegistro = await fetch(`${API_URL}/Usuarios/registro`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          nombre: nombre,
+          email: email,
+          contrasena: password,
+          rol: 'tutor'
+        })
+      })
+
+      const dataRegistro = await responseRegistro.json()
+
+      if (!responseRegistro.ok) {
+        throw new Error(dataRegistro.message || 'Error al registrar tutor')
+      }
+
+      const nuevoId = dataRegistro.usuarioId || dataRegistro.id
+
+      // Luego asignarlo como responsable
+      const session = JSON.parse(localStorage.getItem("meditime_session") || "null")
+      
+      const responseAsignar = await fetch(`${API_URL}/Tutelas/asignar`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${session.token}`
+        },
+        body: JSON.stringify({
+          tutorId: nuevoId,
+          tuteladoId: userData.iD_Usuario
+        })
+      })
+
+      if (responseAsignar.ok) {
+        tutoresAsignados.push({ id: nuevoId, nombre, email })
+        mostrarResponsables()
+        document.getElementById('modalAgregarResponsable').style.display = 'none'
+        
+        const msgDiv = document.createElement('div')
+        msgDiv.className = 'success-message'
+        msgDiv.textContent = 'Responsable registrado y asignado correctamente'
+        document.querySelector('.perfil-content').prepend(msgDiv)
+        setTimeout(() => msgDiv.remove(), 3000)
+      } else {
+        alert('Error al asignar el responsable')
+      }
+    } catch (error) {
+      alert('Error de conexión: ' + error.message)
+    } finally {
+      btn.disabled = false
+      btn.textContent = originalText
+    }
+    */
+  }
+
+  window.cancelarBusqueda = () => {
+    document.getElementById('resultadoBusquedaResponsable').innerHTML = ''
+  }
+
+  window.eliminarResponsable = async function (id) {
+    if (!confirm('¿Estás seguro de que quieres eliminar este responsable?')) return
+
+    // SIMULACIÓN  
+    console.log("Eliminando responsable ID:", id)
+    tutoresAsignados = tutoresAsignados.filter(t => t.id !== id)
+    mostrarResponsables()
+    alert('Responsable eliminado correctamente')
+
+    /*  CÓDIGO REAL 
+    try {
+      const session = JSON.parse(localStorage.getItem("meditime_session") || "null")
+      
+      const response = await fetch(`${API_URL}/Tutelas/${id}`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${session.token}`
+        }
+      })
+
+      if (response.ok) {
+        tutoresAsignados = tutoresAsignados.filter(t => t.id !== id)
+        mostrarResponsables()
+        
+        const msgDiv = document.createElement('div')
+        msgDiv.className = 'success-message'
+        msgDiv.textContent = 'Responsable eliminado correctamente'
+        document.querySelector('.perfil-content').prepend(msgDiv)
+        setTimeout(() => msgDiv.remove(), 3000)
+      } else {
+        alert('Error al eliminar responsable')
+      }
+    } catch (error) {
+      alert('Error de conexión')
+    }
+    */
+  }
+
+  // FUNCIONES DE FORMULARIOS 
+
   async function handleDatosPersonalesSubmit(e) {
     e.preventDefault()
-
-    // Ocultar mensajes previos
     hideMessage("datos-error")
     hideMessage("datos-success")
 
-    // Recoger datos del formulario
     const formData = new FormData(datosPersonalesForm)
     const updatedUserData = {
       ...userData,
@@ -295,363 +665,212 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     try {
-      // Realizar solicitud a la API
+      /* CÓDIGO REAL 
       const response = await fetch(`${API_URL}/Usuarios/${userData.iD_Usuario}`, {
         method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(updatedUserData),
       })
 
-      if (!response.ok) {
-        throw new Error("Error al actualizar datos del usuario")
-      }
+      if (!response.ok) throw new Error("Error al actualizar")
+      */
 
-      // Actualizar datos
+      // SIMULACIÓN
       userData = updatedUserData
-
-      // Actualizar sesión
-      updateSession({
-        nombre: userData.nombre,
-        apellidos: userData.apellidos,
-        email: userData.email,
-      })
-
-      // Mostrar mensaje de éxito
+      updateSession({ nombre: userData.nombre, apellidos: userData.apellidos, email: userData.email })
       showMessage("datos-success", "Datos actualizados correctamente")
     } catch (error) {
-      console.error("Error al actualizar datos del usuario:", error)
+      console.error("Error:", error)
       showMessage("datos-error", "Error al actualizar datos. Intente nuevamente.")
-
-      // Para desarrollo, simular éxito
-      userData = updatedUserData
-
-      // Actualizar sesión
-      updateSession({
-        nombre: userData.nombre,
-        apellidos: userData.apellidos,
-        email: userData.email,
-      })
-
-      // Mostrar mensaje de éxito
-      showMessage("datos-success", "Datos actualizados correctamente")
     }
   }
 
   async function handleCambiarPasswordSubmit(e) {
     e.preventDefault()
-
-    // Ocultar mensajes previos
     hideMessage("password-error")
     hideMessage("password-success")
 
-    // Recoger datos del formulario
     const passwordActual = document.getElementById("password-actual").value
     const passwordNuevo = document.getElementById("password-nuevo").value
     const passwordConfirmar = document.getElementById("password-confirmar").value
 
-    // Validar contraseñas
     if (passwordNuevo !== passwordConfirmar) {
-      showMessage("password-error", "Las contraseñas no coinciden")
-      return
+      return showMessage("password-error", "Las contraseñas no coinciden")
     }
 
     try {
-      // Realizar solicitud a la API
+      /*  CÓDIGO REAL 
       const response = await fetch(`${API_URL}/Usuarios/cambiar-password`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          id: userData.iD_Usuario,
-          passwordActual,
-          passwordNuevo,
-        }),
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id: userData.iD_Usuario, passwordActual, passwordNuevo }),
       })
+      if (!response.ok) throw new Error("Error al cambiar contraseña")
+      */
 
-      if (!response.ok) {
-        throw new Error("Error al cambiar contraseña")
-      }
-
-      // Limpiar formulario
+      // SIMULACIÓN
       cambiarPasswordForm.reset()
-
-      // Mostrar mensaje de éxito
       showMessage("password-success", "Contraseña actualizada correctamente")
     } catch (error) {
-      console.error("Error al cambiar contraseña:", error)
+      console.error("Error:", error)
       showMessage("password-error", "Error al cambiar contraseña. Verifique su contraseña actual.")
-
-      // Para desarrollo, simular éxito
-      cambiarPasswordForm.reset()
-      showMessage("password-success", "Contraseña actualizada correctamente")
     }
   }
 
   async function handleNotificacionesSubmit(e) {
     e.preventDefault()
-
-    // Ocultar mensajes previos
     hideMessage("notificaciones-error")
     hideMessage("notificaciones-success")
 
-    // Recoger datos del formulario
-    const emailMedicamentos = document.getElementById("email-meds").checked
-    const navegadorMedicamentos = document.getElementById("browser-meds").checked
-    const tiempoAnticipacion = document.getElementById("reminder-time").value
-    const nuevasCaracteristicas = document.getElementById("features-updates").checked
-    const consejos = document.getElementById("tips-updates").checked
-
-    // Actualizar datos
     userData.configuracionNotificaciones = {
-      emailMedicamentos,
-      navegadorMedicamentos,
-      tiempoAnticipacion,
-      nuevasCaracteristicas,
-      consejos,
-    }
-
-    // Actualizar configuración de notificaciones en el sistema
-    if (window.medicationNotifications) {
-      window.medicationNotifications.updateConfig({
-        anticipacion: Number.parseInt(tiempoAnticipacion),
-        navegador: navegadorMedicamentos,
-        email: emailMedicamentos,
-      })
+      emailMedicamentos: document.getElementById("email-meds").checked,
+      navegadorMedicamentos: document.getElementById("browser-meds").checked,
+      tiempoAnticipacion: document.getElementById("reminder-time").value,
+      nuevasCaracteristicas: document.getElementById("features-updates").checked,
+      consejos: document.getElementById("tips-updates").checked,
     }
 
     try {
-      // Realizar solicitud a la API
+      /*  CÓDIGO REAL 
       const response = await fetch(`${API_URL}/Usuarios/${userData.iD_Usuario}/notificaciones`, {
         method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(userData.configuracionNotificaciones),
       })
+      if (!response.ok) throw new Error("Error al actualizar")
+      */
 
-      if (!response.ok) {
-        throw new Error("Error al actualizar preferencias de notificaciones")
-      }
-
-      // Mostrar mensaje de éxito
+      // SIMULACIÓN
       showMessage("notificaciones-success", "Preferencias de notificaciones actualizadas correctamente")
     } catch (error) {
-      console.error("Error al actualizar preferencias de notificaciones:", error)
+      console.error("Error:", error)
       showMessage("notificaciones-error", "Error al actualizar preferencias. Intente nuevamente.")
-
-      // Para desarrollo, simular éxito
-      showMessage("notificaciones-success", "Preferencias de notificaciones actualizadas correctamente")
     }
   }
 
   async function handlePreferenciasSubmit(e) {
     e.preventDefault()
-
-    // Ocultar mensajes previos
     hideMessage("preferencias-error")
     hideMessage("preferencias-success")
 
-    // Recoger datos del formulario
-    const tema = document.getElementById("theme").value
-    const tamanoTexto = document.getElementById("font-size").value
-    const vistaCalendario = document.getElementById("calendar-view").value
-    const primerDiaSemana = document.getElementById("first-day").value
-    const idioma = document.getElementById("language").value
-    const formatoHora = document.getElementById("time-format").value
-
-    // Actualizar datos
     userData.preferencias = {
-      tema,
-      tamanoTexto,
-      vistaCalendario,
-      primerDiaSemana,
-      idioma,
-      formatoHora,
+      tema: document.getElementById("theme").value,
+      tamanoTexto: document.getElementById("font-size").value,
+      vistaCalendario: document.getElementById("calendar-view").value,
+      primerDiaSemana: document.getElementById("first-day").value,
+      idioma: document.getElementById("language").value,
+      formatoHora: document.getElementById("time-format").value,
     }
 
     try {
-      // Realizar solicitud a la API
+      /*  CÓDIGO REAL 
       const response = await fetch(`${API_URL}/Usuarios/${userData.iD_Usuario}/preferencias`, {
         method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(userData.preferencias),
       })
+      if (!response.ok) throw new Error("Error al actualizar")
+      */
 
-      if (!response.ok) {
-        throw new Error("Error al actualizar preferencias")
-      }
-
-      // Aplicar preferencias
+      // SIMULACIÓN
       applyPreferences()
-
-      // Mostrar mensaje de éxito
       showMessage("preferencias-success", "Preferencias actualizadas correctamente")
     } catch (error) {
-      console.error("Error al actualizar preferencias:", error)
+      console.error("Error:", error)
       showMessage("preferencias-error", "Error al actualizar preferencias. Intente nuevamente.")
-
-      // Para desarrollo, simular éxito
-      applyPreferences()
-      showMessage("preferencias-success", "Preferencias actualizadas correctamente")
     }
   }
 
   function applyPreferences() {
-    // Aplicar tema
     if (userData.preferencias.tema === "dark") {
       document.body.classList.add("dark-theme")
     } else {
       document.body.classList.remove("dark-theme")
     }
-
-    // Aplicar tamaño de texto
     document.body.classList.remove("text-small", "text-medium", "text-large")
     document.body.classList.add(`text-${userData.preferencias.tamanoTexto}`)
   }
 
   function handleAvatarChange(e) {
     const file = e.target.files[0]
-    if (!file) return
-
-    // Validar tipo de archivo
-    if (!file.type.startsWith("image/")) {
-      alert("Por favor, seleccione una imagen")
+    if (!file || !file.type.startsWith("image/")) {
+      alert("Por favor, seleccione una imagen válida")
       return
     }
-
-    // Mostrar vista previa
     const reader = new FileReader()
-    reader.onload = (e) => {
-      avatarPreview.src = e.target.result
-    }
+    reader.onload = (e) => { if (avatarPreview) avatarPreview.src = e.target.result }
     reader.readAsDataURL(file)
-
-    // Aquí iría la lógica para subir la imagen al servidor
-    // Por ahora, solo mostramos la vista previa
+    alert("Avatar cambiado (simulación)")
   }
 
   function togglePasswordVisibility() {
-    const passwordField = this.parentElement.querySelector("input")
+    const input = this.parentElement.querySelector("input")
     const icon = this.querySelector("i")
-
-    if (passwordField.type === "password") {
-      passwordField.type = "text"
-      icon.classList.remove("fa-eye")
-      icon.classList.add("fa-eye-slash")
+    if (input.type === "password") {
+      input.type = "text"
+      icon.classList.replace("fa-eye", "fa-eye-slash")
     } else {
-      passwordField.type = "password"
-      icon.classList.remove("fa-eye-slash")
-      icon.classList.add("fa-eye")
+      input.type = "password"
+      icon.classList.replace("fa-eye-slash", "fa-eye")
     }
   }
 
   function updatePasswordStrength() {
     if (!strengthBar || !strengthText) return
-
     const password = this.value
     let strength = 0
-    let feedback = "Seguridad de la contraseña"
-
     if (password.length >= 8) strength += 25
     if (/[A-Z]/.test(password)) strength += 25
     if (/[0-9]/.test(password)) strength += 25
     if (/[^A-Za-z0-9]/.test(password)) strength += 25
-
     strengthBar.style.width = `${strength}%`
-
-    if (strength <= 25) {
-      strengthBar.style.backgroundColor = "#dc3545"
-      feedback = "Débil"
-    } else if (strength <= 50) {
-      strengthBar.style.backgroundColor = "#ffc107"
-      feedback = "Regular"
-    } else if (strength <= 75) {
-      strengthBar.style.backgroundColor = "#28a745"
-      feedback = "Buena"
-    } else {
-      strengthBar.style.backgroundColor = "#20c997"
-      feedback = "Excelente"
-    }
-
-    strengthText.textContent = feedback
+    strengthText.textContent = strength <= 25 ? "Débil" : strength <= 50 ? "Regular" : strength <= 75 ? "Buena" : "Excelente"
   }
 
   async function handleDeleteAccount() {
     const password = document.getElementById("confirm-delete-password").value
-
-    if (!password) {
-      alert("Por favor, ingrese su contraseña para confirmar")
-      return
-    }
+    if (!password) return alert("Por favor, ingrese su contraseña")
 
     try {
-      // Realizar solicitud a la API
+      /*  CÓDIGO REAL 
       const response = await fetch(`${API_URL}/Usuarios/${userData.iD_Usuario}`, {
         method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ password }),
       })
+      if (!response.ok) throw new Error("Error al eliminar")
+      */
 
-      if (!response.ok) {
-        throw new Error("Error al eliminar cuenta")
-      }
-
-      // Cerrar sesión
+      // SIMULACIÓN
       localStorage.removeItem("meditime_session")
-
-      // Redirigir a la página de inicio
       window.location.href = "/index.html"
     } catch (error) {
-      console.error("Error al eliminar cuenta:", error)
+      console.error("Error:", error)
       alert("Error al eliminar cuenta. Verifique su contraseña e intente nuevamente.")
-
-      // Para desarrollo, simular éxito
-      localStorage.removeItem("meditime_session")
-      window.location.href = "/"
     }
   }
 
   async function handleCloseAllSessions() {
     try {
-      // Realizar solicitud a la API
+      /*  CÓDIGO REAL 
       const response = await fetch(`${API_URL}/Usuarios/${userData.iD_Usuario}/sesiones`, {
         method: "DELETE",
       })
+      if (!response.ok) throw new Error("Error al cerrar sesiones")
+      */
 
-      if (!response.ok) {
-        throw new Error("Error al cerrar sesiones")
-      }
-
-      // Cerrar modal
+      // SIMULACIÓN
       closeModals()
-
-      // Mostrar mensaje de éxito
-      alert("Todas las sesiones han sido cerradas. Deberá iniciar sesión nuevamente.")
-
-      // Cerrar sesión actual
+      alert("Todas las sesiones han sido cerradas")
       localStorage.removeItem("meditime_session")
       window.location.href = "login.html"
     } catch (error) {
-      console.error("Error al cerrar sesiones:", error)
-      alert("Error al cerrar sesiones. Intente nuevamente.")
-
-      // Para desarrollo, simular éxito
-      closeModals()
-      alert("Todas las sesiones han sido cerradas. Deberá iniciar sesión nuevamente.")
-      localStorage.removeItem("meditime_session")
-      window.location.href = "login"
+      console.error("Error:", error)
+      alert("Error al cerrar sesiones")
     }
   }
 
   function handleExportData() {
-    // Crear objeto con los datos a exportar
     const dataToExport = {
       usuario: {
         nombre: userData.nombre,
@@ -663,71 +882,44 @@ document.addEventListener("DOMContentLoaded", () => {
       },
       preferencias: userData.preferencias,
       configuracionNotificaciones: userData.configuracionNotificaciones,
-      medicamentos: [], // Aquí se añadirían los medicamentos del usuario
+      medicamentos: [],
       fecha: new Date().toISOString(),
     }
 
-    // Convertir a JSON
     const jsonData = JSON.stringify(dataToExport, null, 2)
-
-    // Crear un blob
     const blob = new Blob([jsonData], { type: "application/json" })
-
-    // Crear URL para el blob
     const url = URL.createObjectURL(blob)
-
-    // Crear un enlace para descargar
     const a = document.createElement("a")
     a.href = url
     a.download = `meditime_datos_${new Date().toISOString().split("T")[0]}.json`
-
-    // Simular clic
     document.body.appendChild(a)
     a.click()
-
-    // Limpiar
     document.body.removeChild(a)
     URL.revokeObjectURL(url)
   }
 
   function closeModals() {
-    confirmDeleteModal.classList.remove("active")
-    sessionsModal.classList.remove("active")
+    confirmDeleteModal?.classList.remove("active")
+    sessionsModal?.classList.remove("active")
   }
 
   function showMessage(elementId, message) {
     const element = document.getElementById(elementId)
     if (!element) return
-
     element.textContent = message
     element.style.display = "block"
-
-    // Ocultar después de 5 segundos
-    setTimeout(() => {
-      element.style.display = "none"
-    }, 5000)
+    setTimeout(() => element.style.display = "none", 3000)
   }
 
   function hideMessage(elementId) {
     const element = document.getElementById(elementId)
-    if (!element) return
-
-    element.style.display = "none"
+    if (element) element.style.display = "none"
   }
 
   function updateSession(updatedData) {
-    // Obtener sesión actual
     const session = JSON.parse(localStorage.getItem("meditime_session") || "null")
     if (!session) return
-
-    // Actualizar datos
-    const updatedSession = {
-      ...session,
-      ...updatedData,
-    }
-
-    // Guardar sesión actualizada
-    localStorage.setItem("meditime_session", JSON.stringify(updatedSession))
+    localStorage.setItem("meditime_session", JSON.stringify({ ...session, ...updatedData }))
   }
 
   function setupNotificationPermission() {
