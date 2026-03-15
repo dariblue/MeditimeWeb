@@ -1,0 +1,164 @@
+/* CONTENEDOR */
+
+.tomas-container{
+margin-top:20px;
+}
+
+/* TARJETA */
+
+.toma-card{
+
+display:flex;
+justify-content:space-between;
+align-items:center;
+
+background:white;
+padding:18px;
+
+border-radius:10px;
+margin-bottom:12px;
+
+box-shadow:0 2px 6px rgba(0,0,0,0.08);
+
+transition:0.25s;
+
+}
+
+.toma-info{
+display:flex;
+flex-direction:column;
+}
+
+.toma-hora{
+font-weight:600;
+font-size:16px;
+}
+
+.toma-medicamento{
+color:#555;
+}
+
+.tiempo-restante{
+font-size:12px;
+color:#888;
+margin-top:3px;
+}
+
+/* BOTON */
+
+.confirmar-btn{
+
+background:#28a745;
+color:white;
+border:none;
+
+padding:8px 14px;
+
+border-radius:6px;
+cursor:pointer;
+font-weight:600;
+
+transition:0.2s;
+
+}
+
+.confirmar-btn:hover{
+transform:scale(1.05);
+}
+
+.confirmar-btn:disabled{
+cursor:not-allowed;
+}
+
+/* PROXIMA */
+
+.toma-proxima{
+
+opacity:0.55;
+background:#f4f4f4;
+
+}
+
+.toma-proxima .confirmar-btn{
+
+background:#6c757d !important;
+
+}
+
+/* PENDIENTE */
+
+.toma-pendiente{
+
+border-left:5px solid #28a745;
+
+}
+
+/* ATRASADA */
+
+.toma-atrasada{
+
+border-left:5px solid #dc3545;
+background:#fff3f3;
+
+}
+
+.toma-atrasada .confirmar-btn{
+
+background:#dc3545 !important;
+
+}
+
+/* COMPLETADA */
+
+.toma-completada{
+
+background:#e9f7ef;
+opacity:0.7;
+
+}
+
+.toma-completada .confirmar-btn{
+
+background:#198754 !important;
+
+}
+
+/* PROGRESO DEL DIA */
+
+/* BLOQUE PROGRESO */
+
+.progreso-dia{
+
+margin-bottom:25px;
+padding:10px 0;
+
+}
+
+/* CONTENEDOR CON MARGEN */
+
+.barra-progreso-wrapper{
+
+padding:0 10px;   /* separa de los bordes de la card */
+
+}
+
+/* BARRA */
+
+.barra-progreso{
+
+height:12px;
+background:#e5e5e5;
+border-radius:10px;
+overflow:hidden;
+
+}
+
+.barra-progreso-interna{
+
+height:100%;
+background:#28a745;
+width:0%;
+
+transition:0.4s;
+
+}
