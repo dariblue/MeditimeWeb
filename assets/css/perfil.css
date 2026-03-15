@@ -1044,3 +1044,90 @@ input:checked + .slider:before {
     gap: 10px;
   }
 }
+
+
+/* ===== Mis Cuidadores ===== */
+.cuidadores-info-banner {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+  background: #f4f8ff;
+  border: 1px solid #dbe7ff;
+  border-radius: 16px;
+  padding: 18px;
+  margin-bottom: 24px;
+}
+.cuidadores-info-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #e7f0ff;
+  color: #2563eb;
+  font-size: 1.1rem;
+  flex-shrink: 0;
+}
+.cuidadores-lista {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 18px;
+}
+.cuidador-card {
+  background: #fff;
+  border: 1px solid #e6e9ef;
+  border-radius: 18px;
+  padding: 20px;
+  box-shadow: 0 8px 24px rgba(15,23,42,.06);
+}
+.cuidador-card-top {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 12px;
+}
+.cuidador-identidad { display:flex; gap:14px; align-items:flex-start; }
+.cuidador-avatar {
+  width: 52px;
+  height: 52px;
+  border-radius: 16px;
+  background: #eef2ff;
+  color: #4f46e5;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-weight:700;
+  font-size: 1rem;
+}
+.cuidador-meta h5 { margin:0 0 6px; font-size:1rem; }
+.cuidador-meta p { margin:0 0 4px; color:#64748b; font-size:.95rem; }
+.cuidador-actions { display:flex; gap:8px; }
+.cuidador-actions .btn-icon {
+  width: 36px; height:36px; border:none; border-radius:10px; cursor:pointer;
+  background:#f8fafc; color:#334155;
+}
+.cuidador-actions .btn-delete { background:#fef2f2; color:#dc2626; }
+.cuidadores-permisos-box {
+  margin-top: 16px;
+  padding: 16px;
+  border-radius: 14px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+}
+.cuidadores-permisos-box h4 { margin:0 0 12px; font-size:1rem; }
+.permiso-option { display:block; margin: 10px 0; color:#334155; }
+.cuidador-permisos-lista {
+  display:flex; flex-wrap:wrap; gap:8px; margin-top:14px;
+}
+.cuidador-permiso-chip {
+  display:inline-flex; align-items:center; gap:6px; padding:8px 10px;
+  border-radius:999px; background:#eff6ff; color:#1d4ed8; font-size:.85rem;
+}
+.modal-cuidadores { max-width: 760px; }
+.no-border { border-top:none; padding-top:0; }
+.required { color:#dc2626; }
+@media (max-width: 768px) {
+  .cuidador-card-top { flex-direction:column; }
+  .cuidadores-info-banner { flex-direction:column; }
+}

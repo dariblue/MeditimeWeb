@@ -24,6 +24,7 @@
         <li><a href="recordatorios.html">Mis Recordatorios</a></li>
         <li><a href="calendario.html">Calendario</a></li>
         <li><a href="contacto.html">Contacto</a></li>
+                <li><a href="faq.html">FAQ</a></li>
       </ul>
       <div class="menu-toggle">
         <i class="fas fa-bars"></i>
@@ -69,6 +70,10 @@
               <div class="perfil-menu-item" data-tab="responsables">
                 <i class="fas fa-user-shield"></i>
                 <span>Mis Responsables</span>
+              </div>
+              <div class="perfil-menu-item" data-tab="cuidadores">
+                <i class="fas fa-user-friends"></i>
+                <span>Mis Cuidadores</span>
               </div>
             </div>
           </div>
@@ -577,6 +582,34 @@
                 </div>
               </div>
             </div>
+
+
+            <!-- Pestaña de Mis Cuidadores -->
+            <div class="perfil-tab" id="cuidadores-tab">
+              <div class="perfil-header">
+                <h3>Gestión de Cuidadores</h3>
+                <p>Administra las personas que pueden acceder a tu información médica</p>
+              </div>
+
+              <div class="cuidadores-info-banner">
+                <div class="cuidadores-info-icon">
+                  <i class="fas fa-shield-alt"></i>
+                </div>
+                <div>
+                  <h4>Privacidad y seguridad</h4>
+                  <p>Los cuidadores solo pueden acceder a la información relacionada con tu medicación y a los permisos que tú les concedas.</p>
+                </div>
+              </div>
+
+              <div class="responsables-list-header">
+                <h4>Cuidadores registrados</h4>
+                <button type="button" class="btn btn-primary" id="btnAgregarCuidador">
+                  <i class="fas fa-user-plus"></i> Agregar cuidador
+                </button>
+              </div>
+
+              <div id="cuidadores-container" class="cuidadores-lista"></div>
+            </div>
           </div>
         </div>
       </div>
@@ -599,13 +632,14 @@
               <li><a href="recordatorios.html">Mis Recordatorios</a></li>
               <li><a href="calendario.html">Calendario</a></li>
               <li><a href="contacto.html">Contacto</a></li>
+                            <li><a href="faq.html">FAQ</a></li>
             </ul>
           </div>
           <div class="footer-column">
             <h4>Recursos</h4>
             <ul>
               <li><a href="#">Ayuda</a></li>
-              <li><a href="#">Preguntas frecuentes</a></li>
+              <li><a href="faq.html">Preguntas frecuentes</a></li>
               <li><a href="#">Tutoriales</a></li>
             </ul>
           </div>
@@ -725,10 +759,64 @@
     </div>
   </div>
 
+
+  <!-- Modal de Cuidadores -->
+  <div id="modalCuidador" class="modal" style="display: none;">
+    <div class="modal-content modal-cuidadores">
+      <div class="modal-header">
+        <h3 id="cuidadoresModalTitle">Registrar nuevo cuidador</h3>
+        <button type="button" class="close-modal" id="cerrarModalCuidador">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form id="cuidador-form" class="perfil-form cuidador-form">
+          <input type="hidden" id="cuidadorId">
+          <div class="form-row">
+            <div class="form-group">
+              <label for="cuidadorNombre">Nombre completo <span class="required">*</span></label>
+              <input type="text" id="cuidadorNombre" placeholder="Nombre del cuidador" required>
+            </div>
+            <div class="form-group">
+              <label for="cuidadorRelacion">Relación <span class="required">*</span></label>
+              <input type="text" id="cuidadorRelacion" placeholder="Familiar, Enfermero/a" required>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="cuidadorEmail">Correo electrónico <span class="required">*</span></label>
+              <input type="email" id="cuidadorEmail" placeholder="email@ejemplo.com" required>
+            </div>
+            <div class="form-group">
+              <label for="cuidadorTelefono">Teléfono</label>
+              <input type="tel" id="cuidadorTelefono" placeholder="+34 600 000 000">
+            </div>
+          </div>
+
+          <div class="cuidadores-permisos-box">
+            <h4>Permisos</h4>
+            <label class="permiso-option"><input type="checkbox" id="permisoVer" checked> Ver medicamentos y horarios</label>
+            <label class="permiso-option"><input type="checkbox" id="permisoConfirmar" checked> Confirmar tomas</label>
+            <label class="permiso-option"><input type="checkbox" id="permisoNotificaciones" checked> Recibir notificaciones</label>
+            <label class="permiso-option"><input type="checkbox" id="permisoEditar"> Editar medicamentos</label>
+          </div>
+
+          <div id="cuidadores-form-error" class="error-message" style="display:none;"></div>
+
+          <div class="modal-footer no-border">
+            <button type="button" class="btn btn-secondary" id="cancelarCuidador">Cancelar</button>
+            <button type="submit" class="btn btn-primary">Guardar cuidador</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
   <!-- Scripts -->
   <script src="../assets/js/auth.js"></script>
   <script src="../assets/js/script.js"></script>
   <script src="../assets/js/perfil.js"></script>
+  <script src="../assets/js/cuidadores.js"></script>
 </body>
 
 </html>
