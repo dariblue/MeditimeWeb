@@ -1,4 +1,4 @@
-const API_URL = "https://api.dariblue.dev";
+const API_URL = "http://localhost:5050";
 
 let session;
 

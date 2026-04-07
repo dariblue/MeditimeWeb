@@ -1,178 +1,349 @@
-let tomas = [
+// ─────────────────────────────────────────────────────────────
+// inicio.js  –  Dashboard inteligente "Tomas de Hoy" (API v2.0)
+//
+// Motor de cálculo:
+//   1. Fetch medicamentos activos + historial del paciente
+//   2. Generar "tomas teóricas" de hoy (fechaInicio + frecuenciaHoras)
+//   3. Match con historial (±60 min tolerancia)
+//   4. Renderizar tarjetas + resumen + barra progreso
+//   5. Acción "Confirmar" → POST /api/HistorialTomas
+// ─────────────────────────────────────────────────────────────
 
-{nombre:"Paracetamol", dosis:"500mg", hora:"14:00", tomado:false},
-{nombre:"Ibuprofeno", dosis:"600mg", hora:"15:30", tomado:false},
-{nombre:"Omeprazol", dosis:"20mg", hora:"20:00", tomado:false}
-    
-]
+import { getMedicamentos, getHistorialTomas, registrarToma } from './modules/medicamentos.js';
+import { formatTime, isSameDay } from './modules/utils.js';
 
+// ── constantes ──────────────────────────────────────────────
+const TOLERANCIA_MS = 5 * 60 * 1000;   // ±5 minutos (umbral de toma)
 
-function minutosDiff(hora){
+// ── estado global ───────────────────────────────────────────
+let medicamentos = [];
+let historial    = [];
+let tomasHoy     = [];     // { medicamento, horaTeórica: Date, estado, historialMatch }
 
-const ahora = new Date()
+// ── referencias DOM ─────────────────────────────────────────
+const tomashoyContainer  = document.getElementById('tomas-hoy-container');
+const noTomasDiv         = document.getElementById('no-tomas');
+const barraProgreso      = document.getElementById('barra-progreso');
+const textoProgreso      = document.getElementById('texto-progreso');
+const pendientesEl       = document.getElementById('tomas-pendientes');
+const atrasadasEl        = document.getElementById('tomas-atrasadas');
+const completadasEl      = document.getElementById('tomas-completadas');
 
-const [h,m] = hora.split(":")
+// ═══════════════════════════════════════════════════════════
+//  1. MOTOR DE CÁLCULO DE TOMAS TEÓRICAS
+// ═══════════════════════════════════════════════════════════
 
-const toma = new Date()
+/**
+ * Para un medicamento, genera todas las horas de toma
+ * que caen en el día de hoy.
+ *
+ * @param {Object} med  – Medicamento de la API
+ * @returns {Date[]}    – Array de Date con las horas teóricas de hoy
+ */
+function calcularTomasDelDia(med) {
+  const hoy    = new Date();
+  const inicio = new Date(med.fechaInicio);
+  const fin    = med.fechaFin ? new Date(med.fechaFin) : null;
+  const freqMs = med.frecuenciaHoras * 3600000;
 
-toma.setHours(h)
-toma.setMinutes(m)
-toma.setSeconds(0)
+  if (isNaN(inicio.getTime()) || freqMs <= 0) return [];
 
-return Math.floor((ahora - toma)/60000)
+  // Si la fecha fin ya pasó (y no es hoy), este med no genera tomas hoy
+  if (fin && !isSameDay(fin, hoy) && fin < hoy) return [];
 
+  // ── Calcular el rango de "hoy" ────────────────────────────
+  const inicioDelDia = new Date(hoy.getFullYear(), hoy.getMonth(), hoy.getDate(), 0, 0, 0);
+  const finDelDia    = new Date(hoy.getFullYear(), hoy.getMonth(), hoy.getDate(), 23, 59, 59, 999);
+
+  const result = [];
+
+  // Si la primera toma es posterior al día de hoy, no hay tomas
+  if (inicio > finDelDia) return [];
+
+  // ── Caso 1: la primera toma es hoy o antes ────────────────
+  // Debemos calcular cuántas frecuencias hay entre inicio e inicioDelDia,
+  // y luego iterar desde ahí.
+
+  let primeraTomaDeCuadre;
+
+  if (inicio >= inicioDelDia) {
+    // La fecha de inicio cae hoy
+    primeraTomaDeCuadre = inicio;
+  } else {
+    // Calcular la primera toma del día de hoy
+    const diffMs = inicioDelDia.getTime() - inicio.getTime();
+    const intervalosCompletos = Math.ceil(diffMs / freqMs);
+    primeraTomaDeCuadre = new Date(inicio.getTime() + intervalosCompletos * freqMs);
+  }
+
+  // Iterar generando tomas mientras caigan en hoy
+  let cursor = primeraTomaDeCuadre;
+
+  while (cursor <= finDelDia) {
+    // Si hay fecha fin, no generar tomas posteriores
+    if (fin && cursor > fin) break;
+
+    result.push(new Date(cursor));
+    cursor = new Date(cursor.getTime() + freqMs);
+  }
+
+  return result;
 }
 
+// ═══════════════════════════════════════════════════════════
+//  2. MATCH CON HISTORIAL
+// ═══════════════════════════════════════════════════════════
 
-function calcularEstado(toma){
+/**
+ * Clasifica cada toma teórica comparándola con el historial.
+ * Tolerancia: ±60 min.
+ *
+ * @returns void – Modifica `tomasHoy` in place.
+ */
+function clasificarTomas() {
+  const ahora = new Date();
+  
+  // Set para llevar control de los registros de historial ya vinculados a una toma
+  const matchedHistorialIds = new Set();
 
-if(toma.tomado) return "completada"
+  tomasHoy.forEach(toma => {
+    // Buscar en historial un registro que coincida.
+    // Usamos una tolerancia basada en la mitad de su frecuencia, para enlazar el registro más cercano
+    // aunque lo haya tomado con retraso (ej. si es cada 8h -> ±4h de tolerancia de match).
+    const toleranciaMatch = (toma.medicamento.frecuenciaHoras * 60 * 60 * 1000) / 2;
 
-const diff = minutosDiff(toma.hora)
+    const posiblesMatches = historial.filter(h => {
+      // El ID del historial puede venir como idToma o iDToma dependiendo del serializador C#, 
+      // así que verificamos que no hayamos usado el mismo objeto
+      if (h.idMedicamento !== toma.medicamento.idMedicamento) return false;
+      if (h.estado !== 'Tomado' && h.estado !== 'Pasado') return false;
+      if (matchedHistorialIds.has(h)) return false; 
 
-if(diff < 0) return "proxima"
+      const fechaRegistro = new Date(h.fechaHoraToma);
+      const diff = Math.abs(fechaRegistro.getTime() - toma.horaTeórica.getTime());
+      return diff <= toleranciaMatch;
+    });
 
-if(diff <= 60) return "pendiente"
-
-return "atrasada"
-
+    if (posiblesMatches.length > 0) {
+      // Tomamos el registro que tenga la hora más cercana a esta toma teórica
+      posiblesMatches.sort((a, b) => {
+        const diffA = Math.abs(new Date(a.fechaHoraToma).getTime() - toma.horaTeórica.getTime());
+        const diffB = Math.abs(new Date(b.fechaHoraToma).getTime() - toma.horaTeórica.getTime());
+        return diffA - diffB;
+      });
+      const match = posiblesMatches[0];
+      matchedHistorialIds.add(match); // Marcamos el registro como usado
+      
+      toma.estado = 'completada';
+      toma.historialMatch = match;
+    } else if (ahora.getTime() > toma.horaTeórica.getTime() + TOLERANCIA_MS) {
+      // Ya pasó la hora + los 5 minutos de gracia
+      toma.estado = 'atrasada';
+    } else if (ahora.getTime() >= toma.horaTeórica.getTime() - TOLERANCIA_MS) {
+      // Dentro de los 5 minutos previos o los 5 minutos posteriores
+      toma.estado = 'disponible';
+    } else {
+      // Aún no llega la hora
+      toma.estado = 'pendiente';
+    }
+  });
 }
 
+// ═══════════════════════════════════════════════════════════
+//  3. FETCH + CÁLCULO COMPLETO
+// ═══════════════════════════════════════════════════════════
 
-function tiempoRestante(hora){
+async function cargarDashboard() {
+  try {
+    // Fetch paralelo
+    const [meds, hist] = await Promise.all([
+      getMedicamentos(),
+      getHistorialTomas()
+    ]);
 
-const diff = minutosDiff(hora)
+    medicamentos = (meds || []).filter(m => m.activo);
+    historial    = hist || [];
 
-if(diff < 0){
+  } catch (err) {
+    console.error('Error al cargar datos del dashboard:', err);
+    medicamentos = [];
+    historial    = [];
+  }
 
-const mins = Math.abs(diff)
+  // Generar tomas teóricas
+  tomasHoy = [];
+  medicamentos.forEach(med => {
+    const horas = calcularTomasDelDia(med);
+    horas.forEach(hora => {
+      tomasHoy.push({
+        medicamento:    med,
+        horaTeórica:    hora,
+        estado:         'pendiente',   // se reclasifica abajo
+        historialMatch: null
+      });
+    });
+  });
 
-if(mins > 60){
+  // Clasificar estados
+  clasificarTomas();
 
-const h = Math.floor(mins/60)
+  // Ordenar por hora
+  tomasHoy.sort((a, b) => a.horaTeórica - b.horaTeórica);
 
-return "En "+h+"h"
-
+  // Renderizar
+  render();
 }
 
-return "En "+mins+" min"
+// ═══════════════════════════════════════════════════════════
+//  4. RENDERIZADO
+// ═══════════════════════════════════════════════════════════
 
+function render() {
+  renderTarjetas();
+  renderResumen();
+  renderProgreso();
 }
 
-if(diff <= 60){
+function renderTarjetas() {
+  if (!tomashoyContainer) return;
 
-return "Hace "+diff+" min"
+  tomashoyContainer.innerHTML = '';
 
+  if (tomasHoy.length === 0) {
+    if (noTomasDiv) {
+      noTomasDiv.style.display = 'flex';
+      tomashoyContainer.appendChild(noTomasDiv);
+    }
+    return;
+  }
+
+  if (noTomasDiv) noTomasDiv.style.display = 'none';
+
+  tomasHoy.forEach((toma, index) => {
+    const card = document.createElement('div');
+    card.className = `toma-card toma-${toma.estado}`;
+
+    const horaStr = formatTime(toma.horaTeórica);
+    const tiempoStr = calcTiempoRelativo(toma.horaTeórica);
+
+    card.innerHTML = `
+      <div class="toma-info">
+        <div class="toma-hora">${horaStr}</div>
+        <div class="toma-medicamento">
+          ${toma.medicamento.nombre} · ${toma.medicamento.dosis}
+        </div>
+        <div class="tiempo-restante">${tiempoStr}</div>
+      </div>
+      <button class="confirmar-btn"
+              ${toma.estado === 'completada' || toma.estado === 'pendiente' ? 'disabled' : ''}
+              data-index="${index}">
+        ${toma.estado === 'completada' ? '✓ Tomado' : 'Confirmar'}
+      </button>
+    `;
+
+    // Solo habilitar el botón si es "atrasada" (ya pasó la hora && no tomada)
+    // O si la hora ya ha pasado (tolerancia). Permitimos confirmar tomas atrasadas.
+    const btn = card.querySelector('.confirmar-btn');
+
+    // Habilitar si la hora ya llegó (o estamos en los 5 min previos) y no está completada
+    if (toma.estado === 'disponible' || toma.estado === 'atrasada') {
+      btn.disabled = false;
+      btn.addEventListener('click', async () => {
+        // Ejecución optimista: aplicar animación y cambiar estado visual
+        card.classList.remove('toma-disponible', 'toma-atrasada', 'toma-pendiente');
+        card.classList.add('toma-completada', 'animating-success');
+        btn.disabled = true;
+        btn.innerHTML = '✓ Tomado';
+        
+        await confirmarToma(index);
+      });
+    }
+
+    tomashoyContainer.appendChild(card);
+  });
 }
 
-return "Retraso "+diff+" min"
+function renderResumen() {
+  const pendientes  = tomasHoy.filter(t => t.estado === 'pendiente').length;
+  const atrasadas   = tomasHoy.filter(t => t.estado === 'atrasada').length;
+  const completadas = tomasHoy.filter(t => t.estado === 'completada').length;
 
+  if (pendientesEl)  pendientesEl.textContent  = pendientes;
+  if (atrasadasEl)   atrasadasEl.textContent   = atrasadas;
+  if (completadasEl) completadasEl.textContent = completadas;
 }
 
+function renderProgreso() {
+  const total = tomasHoy.length;
+  const hechas = tomasHoy.filter(t => t.estado === 'completada').length;
+  const porcentaje = total > 0 ? Math.round((hechas / total) * 100) : 0;
 
-function ordenarTomas(){
-
-const prioridad = {
-
-"atrasada":0,
-"pendiente":1,
-"proxima":2,
-"completada":3
-
+  if (barraProgreso)  barraProgreso.style.width = `${porcentaje}%`;
+  if (textoProgreso)  textoProgreso.textContent = `${hechas} / ${total} tomas realizadas`;
 }
 
-tomas.sort((a,b)=>{
+// ═══════════════════════════════════════════════════════════
+//  5. ACCIÓN: CONFIRMAR TOMA
+// ═══════════════════════════════════════════════════════════
 
-const ea = calcularEstado(a)
-const eb = calcularEstado(b)
+async function confirmarToma(index) {
+  const toma = tomasHoy[index];
+  if (!toma || toma.estado === 'completada') return;
 
-return prioridad[ea] - prioridad[eb]
+  const ahora = new Date();
 
-})
+  // Determinar estado: "Tomado" si dentro de tolerancia, "Pasado" si fuera
+  const diffMs = ahora.getTime() - toma.horaTeórica.getTime();
+  const estado = diffMs > TOLERANCIA_MS ? 'Pasado' : 'Tomado';
 
+  try {
+    await registrarToma({
+      idMedicamento: toma.medicamento.idMedicamento,
+      fechaHoraToma: ahora.toISOString(),
+      estado
+    });
+
+    // Re-cargar todo el dashboard
+    await cargarDashboard();
+  } catch (err) {
+    console.error('Error al confirmar toma:', err);
+    alert('Error al registrar la toma. Inténtelo de nuevo.');
+  }
 }
 
+// ═══════════════════════════════════════════════════════════
+//  UTILIDADES
+// ═══════════════════════════════════════════════════════════
 
-function actualizarProgreso(){
+function calcTiempoRelativo(fecha) {
+  const ahora = new Date();
+  const diffMin = Math.floor((ahora - fecha) / 60000);
 
-const total = tomas.length
+  if (diffMin < 0) {
+    const mins = Math.abs(diffMin);
+    if (mins >= 60) {
+      const h = Math.floor(mins / 60);
+      const m = mins % 60;
+      return m > 0 ? `En ${h}h ${m}min` : `En ${h}h`;
+    }
+    return `En ${mins} min`;
+  }
 
-const hechas = tomas.filter(t=>t.tomado).length
+  if (diffMin === 0) return 'Ahora';
 
-const porcentaje = (hechas/total)*100
+  if (diffMin <= 60) return `Hace ${diffMin} min`;
 
-document.getElementById("barra-progreso").style.width = porcentaje+"%"
-
-document.getElementById("texto-progreso").innerText =
-hechas+" / "+total+" tomas realizadas"
-
+  const h = Math.floor(diffMin / 60);
+  return `Retraso ${h}h ${diffMin % 60}min`;
 }
 
+// ═══════════════════════════════════════════════════════════
+//  ARRANQUE
+// ═══════════════════════════════════════════════════════════
 
-function render(){
+document.addEventListener('DOMContentLoaded', () => {
+  cargarDashboard();
 
-ordenarTomas()
-
-const container = document.getElementById("tomas-hoy-container")
-
-container.innerHTML=""
-
-tomas.forEach((toma,i)=>{
-
-const estado = calcularEstado(toma)
-
-const card = document.createElement("div")
-
-card.className="toma-card toma-"+estado
-
-card.innerHTML=`
-
-<div class="toma-info">
-
-<div class="toma-hora">${toma.hora}</div>
-
-<div class="toma-medicamento">
-${toma.nombre} · ${toma.dosis}
-</div>
-
-<div class="tiempo-restante">
-${tiempoRestante(toma.hora)}
-</div>
-
-</div>
-
-<button class="confirmar-btn"
-${estado==="proxima" || estado==="completada" ? "disabled":""}>
-${estado==="completada" ? "Tomado":"Confirmar"}
-</button>
-
-`
-
-const btn = card.querySelector("button")
-
-btn.onclick=()=>{
-
-toma.tomado=true
-
-card.style.transform="scale(0.95)"
-
-setTimeout(()=>{
-
-render()
-
-},150)
-
-}
-
-container.appendChild(card)
-
-})
-
-actualizarProgreso()
-
-}
-
-
-render()
-
-setInterval(render,60000)
+  // Refrescar cada 60 segundos
+  setInterval(cargarDashboard, 60000);
+});

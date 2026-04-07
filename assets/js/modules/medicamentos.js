@@ -1,199 +1,166 @@
-const API_URL = 'https://api.dariblue.dev';
+// ─────────────────────────────────────────────────────────────
+// medicamentos.js  –  Capa de datos para API v2.0
+// Modelo: idMedicamento, idUsuarioPaciente, nombre, dosis,
+//         fechaInicio, frecuenciaHoras, fechaFin,
+//         stockActual, umbralAlerta, activo
+// ─────────────────────────────────────────────────────────────
 
-export async function saveMedicamento(medicamento) {
-  try {
-    const session = window.auth.getCurrentUser();
-    if (!session) {
-      console.error('No hay sesión activa');
-      throw new Error('No hay sesión activa');
-    }
+const API_URL = 'http://localhost:5050';
 
-    const medicamentoData = {
-      idUsuario: session.userId,
-      nombre: medicamento.nombre,
-      tipoMedicamento: medicamento.tipoMedicamento,
-      dosis: medicamento.dosis,
-      horaToma: medicamento.horaToma,
-      notas: medicamento.notas || '',
-      fechaInicio: medicamento.fechaInicio,
-      fechaFin: medicamento.fechaFin || null,
-      fechaCreacion: new Date().toISOString(),
-      fechaModificacion: new Date().toISOString()
-    };
-
-    // console.log('Cuerpo de la solicitud:', medicamentoData);
-
-    const response = await fetch(`${API_URL}/api/Medicamentos`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${session.token}`
-      },
-      body: JSON.stringify(medicamentoData)
-    });
-
-    if (!response.ok) {
-      const errorData = await response.json().catch(() => null);
-      console.error('Error de la API:', errorData || response.statusText);
-      throw new Error(errorData?.message || 'Error al guardar el medicamento');
-    }
-
-    const savedMedicamento = await response.json();
-    // console.log('Medicamento guardado:', savedMedicamento);
-    return savedMedicamento;
-  } catch (error) {
-    console.error('Error en saveMedicamento:', error);
-    throw error;
-  }
+// ── helpers ──────────────────────────────────────────────────
+function getSession() {
+  const session = window.auth?.getCurrentUser();
+  if (!session) throw new Error('No hay sesión activa');
+  return session;
 }
 
-export async function deleteMedicamento(id) {
-  try {
-    const session = window.auth.getCurrentUser();
-    if (!session) {
-      throw new Error('No hay sesión activa');
-    }
-
-    const response = await fetch(`${API_URL}/api/Medicamentos/${id}`, {
-      method: 'DELETE',
-      headers: {
-        'Authorization': `Bearer ${session.token}`
-      }
-    });
-
-    if (!response.ok) {
-      throw new Error('Error al eliminar el medicamento');
-    }
-
-    return true;
-  } catch (error) {
-    console.error('Error en deleteMedicamento:', error);
-    throw error;
-  }
+function authHeaders(session) {
+  return {
+    'Content-Type': 'application/json',
+    'Authorization': `Bearer ${session.token}`
+  };
 }
 
+// ── GET medicamentos del paciente ────────────────────────────
 export async function getMedicamentos() {
-  try {
-    const session = window.auth.getCurrentUser();
-    if (!session) {
-      throw new Error('No hay sesión activa');
-    }
+  const session = getSession();
 
-    const response = await fetch(`${API_URL}/api/Medicamentos/usuario/${session.userId}`, {
-      headers: {
-        'Authorization': `Bearer ${session.token}`
-      }
-    });
+  const response = await fetch(
+    `${API_URL}/api/Medicamentos/paciente/${session.userId}`,
+    { headers: authHeaders(session) }
+  );
 
-    if (!response.ok) {
-      throw new Error('Error al obtener los medicamentos');
-    }
-
-    const medicamentos = await response.json();
-    // console.log('Medicamentos obtenidos:', medicamentos);
-    return medicamentos;
-  } catch (error) {
-    console.error('Error en getMedicamentos:', error);
-    throw error;
+  if (!response.ok) {
+    throw new Error('Error al obtener los medicamentos');
   }
+
+  return response.json();
 }
 
-export async function saveMedicamentosBatch(medicamentos) {
-  try {
-    const session = window.auth.getCurrentUser();
-    if (!session) {
-      throw new Error('No hay sesión activa');
-    }
+// ── POST crear medicamento ───────────────────────────────────
+export async function saveMedicamento(medicamento) {
+  const session = getSession();
 
-    const medicamentosAPI = medicamentos.map(med => ({
-      idUsuario: session.userId,
-      nombre: med.nombre,
-      tipoMedicamento: med.tipo,
-      dosis: med.dosis,
-      horaToma: med.horas[0],
-      notas: med.instrucciones || '',
-      fechaInicio: med.inicio,
-      fechaFin: med.fin || null
-    }));
+  const body = {
+    idUsuarioPaciente: session.userId,
+    nombre:           medicamento.nombre,
+    dosis:            medicamento.dosis,
+    fechaInicio:      medicamento.fechaInicio,
+    frecuenciaHoras:  Number(medicamento.frecuenciaHoras),
+    fechaFin:         medicamento.fechaFin || null,
+    stockActual:      Number(medicamento.stockActual) || 0,
+    umbralAlerta:     Number(medicamento.umbralAlerta) || 0,
+    activo:           medicamento.activo !== undefined ? medicamento.activo : true
+  };
 
-    const response = await fetch(`${API_BASE_URL}/api/medicamentos/batch`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${session.token}`
-      },
-      body: JSON.stringify(medicamentosAPI)
-    });
+  const response = await fetch(`${API_URL}/api/Medicamentos`, {
+    method: 'POST',
+    headers: authHeaders(session),
+    body: JSON.stringify(body)
+  });
 
-    if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(errorData.message || 'Error al guardar los medicamentos');
-    }
-
-    const savedMedicamentos = await response.json();
-    
-    return savedMedicamentos.map(med => ({
-      id: med.idMedicamentos.toString(),
-      nombre: med.nombre,
-      tipo: med.tipoMedicamento,
-      dosis: med.dosis,
-      horas: [med.horaToma],
-      instrucciones: med.notas,
-      inicio: med.fechaInicio,
-      fin: med.fechaFin,
-      estado: 'pendiente'
-    }));
-  } catch (error) {
-    console.error('Error al guardar los medicamentos:', error);
-    throw error;
+  if (!response.ok) {
+    const err = await response.json().catch(() => null);
+    throw new Error(err?.message || 'Error al guardar el medicamento');
   }
+
+  return response.json();
 }
 
+// ── PUT actualizar medicamento ───────────────────────────────
 export async function updateMedicamento(medicamento) {
-  try {
-    const session = window.auth.getCurrentUser();
-    if (!session) {
-      throw new Error('No hay sesión activa');
-    }
+  const session = getSession();
 
-    const medicamentoData = {
-      idUsuario: session.userId,
-      nombre: medicamento.nombre,
-      tipoMedicamento: medicamento.tipoMedicamento,
-      dosis: medicamento.dosis,
-      horaToma: medicamento.horaToma,
-      notas: medicamento.notas || '',
-      fechaInicio: medicamento.fechaInicio,
-      fechaFin: medicamento.fechaFin || null,
-      fechaModificacion: new Date().toISOString()
-    };
+  const body = {
+    idUsuarioPaciente: session.userId,
+    nombre:           medicamento.nombre,
+    dosis:            medicamento.dosis,
+    fechaInicio:      medicamento.fechaInicio,
+    frecuenciaHoras:  Number(medicamento.frecuenciaHoras),
+    fechaFin:         medicamento.fechaFin || null,
+    stockActual:      Number(medicamento.stockActual) || 0,
+    umbralAlerta:     Number(medicamento.umbralAlerta) || 0,
+    activo:           medicamento.activo !== undefined ? medicamento.activo : true
+  };
 
-    const response = await fetch(`${API_URL}/api/Medicamentos/${medicamento.id}`, {
+  const response = await fetch(
+    `${API_URL}/api/Medicamentos/${medicamento.idMedicamento}`,
+    {
       method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${session.token}`
-      },
-      body: JSON.stringify(medicamentoData)
-    });
-
-    if (!response.ok) {
-      const errorData = await response.json().catch(() => null);
-      throw new Error(errorData?.message || 'Error al actualizar el medicamento');
+      headers: authHeaders(session),
+      body: JSON.stringify(body)
     }
+  );
 
-    const updatedMedicamento = await response.json();
-    return updatedMedicamento;
-  } catch (error) {
-    console.error('Error al actualizar medicamento:', error);
-    throw error;
+  if (!response.ok) {
+    const err = await response.json().catch(() => null);
+    throw new Error(err?.message || 'Error al actualizar el medicamento');
   }
+
+  return response.json();
 }
 
+// ── saveOrUpdate (decide según si tiene id) ──────────────────
 export async function saveOrUpdateMedicamento(medicamento) {
-  if (medicamento.id) {
-    return updateMedicamento(medicamento); // Actualizar si tiene ID
-  } else {
-    return saveMedicamento(medicamento); // Crear si no tiene ID
+  if (medicamento.idMedicamento) {
+    return updateMedicamento(medicamento);
   }
+  return saveMedicamento(medicamento);
+}
+
+// ── DELETE medicamento ───────────────────────────────────────
+export async function deleteMedicamento(id) {
+  const session = getSession();
+
+  const response = await fetch(`${API_URL}/api/Medicamentos/${id}`, {
+    method: 'DELETE',
+    headers: { 'Authorization': `Bearer ${session.token}` }
+  });
+
+  if (!response.ok) {
+    throw new Error('Error al eliminar el medicamento');
+  }
+
+  return true;
+}
+
+// ── GET historial de tomas del paciente ──────────────────────
+export async function getHistorialTomas() {
+  const session = getSession();
+
+  const response = await fetch(
+    `${API_URL}/api/HistorialTomas/paciente/${session.userId}`,
+    { headers: authHeaders(session) }
+  );
+
+  if (!response.ok) {
+    throw new Error('Error al obtener el historial de tomas');
+  }
+
+  return response.json();
+}
+
+// ── POST registrar una toma ──────────────────────────────────
+export async function registrarToma({ idMedicamento, fechaHoraToma, estado }) {
+  const session = getSession();
+
+  const body = {
+    idMedicamento,
+    idUsuarioAccion: session.userId,
+    fechaHoraToma,
+    estado              // "Tomado" o "Pasado"
+  };
+
+  const response = await fetch(`${API_URL}/api/HistorialTomas`, {
+    method: 'POST',
+    headers: authHeaders(session),
+    body: JSON.stringify(body)
+  });
+
+  if (!response.ok) {
+    const err = await response.json().catch(() => null);
+    throw new Error(err?.message || 'Error al registrar la toma');
+  }
+
+  return response.json();
 }

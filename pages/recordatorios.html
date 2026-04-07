@@ -57,21 +57,14 @@
                             </button>
                         </div>
 
-                        <!-- Filtros -->
-                        <div class="filtros">
-                            <button class="filtro-btn active" data-filter="todos">Todos</button>
-                            <button class="filtro-btn" data-filter="pendientes">Pendientes</button>
-                            <button class="filtro-btn" data-filter="completados">Completados</button>
-                        </div>
-
-                        <!-- Lista de recordatorios -->
+                        <!-- Lista de medicamentos -->
                         <div class="recordatorios-lista" id="recordatorios-container">
-                            <!-- Los recordatorios se cargarán aquí dinámicamente -->
+                            <!-- Los medicamentos se cargarán aquí dinámicamente -->
 
-                            <!-- Mensaje cuando no hay recordatorios -->
+                            <!-- Mensaje cuando no hay medicamentos -->
                             <div id="no-recordatorios" class="no-recordatorios">
                                 <i class="fas fa-pills"></i>
-                                <p>No tiene recordatorios en este momento</p>
+                                <p>No tiene medicamentos registrados</p>
                                 <button id="add-first-med" class="btn btn-primary">Añadir su primer medicamento</button>
                             </div>
                         </div>
@@ -86,19 +79,19 @@
                         </div>
 
                         <div class="info-card">
-                            <h3>Estadísticas</h3>
+                            <h3>Resumen</h3>
                             <div class="estadisticas">
-                                <div class="estadistica">
-                                    <div class="valor" id="porcentaje-cumplimiento">0%</div>
-                                    <div class="etiqueta">Cumplimiento</div>
-                                </div>
                                 <div class="estadistica">
                                     <div class="valor" id="total-medicamentos">0</div>
                                     <div class="etiqueta">Medicamentos</div>
                                 </div>
                                 <div class="estadistica">
-                                    <div class="valor" id="total-dosis">0</div>
-                                    <div class="etiqueta">Dosis diarias</div>
+                                    <div class="valor" id="total-activos">0</div>
+                                    <div class="etiqueta">Activos</div>
+                                </div>
+                                <div class="estadistica">
+                                    <div class="valor" id="total-stock-bajo">0</div>
+                                    <div class="etiqueta">Stock bajo</div>
                                 </div>
                             </div>
                         </div>
@@ -136,7 +129,7 @@
             </div>
         </section>
 
-        <!-- Modal para añadir/editar medicamento -->
+        <!-- Modal para añadir/editar medicamento (API v2.0) -->
         <div class="modal fade" id="med-modal" tabindex="-1" aria-labelledby="medModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
@@ -154,47 +147,46 @@
                             </div>
 
                             <div class="mb-3">
-                                <label for="med-tipo" class="form-label">Tipo de medicamento</label>
-                                <select class="form-select" id="med-tipo" name="tipo" required>
-                                    <option value="" disabled selected>Seleccione un tipo</option>
-                                    <option value="pastilla">Pastilla</option>
-                                    <option value="capsula">Cápsula</option>
-                                    <option value="jarabe">Jarabe</option>
-                                    <option value="aerosol">Aerosol</option>
-                                    <option value="inyeccion">Inyección</option>
-                                    <option value="pomada">Pomada</option>
-                                    <option value="gotas">Gotas</option>
-                                    <option value="otro">Otro</option>
-                                </select>
-                            </div>
-
-                            <div class="mb-3">
                                 <label for="med-dosis" class="form-label">Dosis</label>
                                 <input type="text" class="form-control" id="med-dosis" name="dosis" required
                                     placeholder="Ej: 1 pastilla, 5ml" autocomplete="off">
                             </div>
 
                             <div class="mb-3">
-                                <label for="med-hora" class="form-label">Hora de toma</label>
-                                <input type="time" class="form-control" id="med-hora" name="hora" required>
+                                <label for="med-inicio" class="form-label">Fecha y hora de inicio (primera toma)</label>
+                                <input type="datetime-local" class="form-control" id="med-inicio" name="fechaInicio" required>
                             </div>
 
                             <div class="mb-3">
-                                <label for="med-inicio" class="form-label">Fecha de inicio</label>
-                                <input type="date" class="form-control" id="med-inicio" name="inicio" required>
+                                <label for="med-frecuencia" class="form-label">Frecuencia (cada X horas)</label>
+                                <input type="number" class="form-control" id="med-frecuencia" name="frecuenciaHoras"
+                                    min="1" max="168" required placeholder="Ej: 8">
+                                <div class="form-text">¿Cada cuántas horas debe tomarse?</div>
                             </div>
 
                             <div class="mb-3">
                                 <label for="med-fin" class="form-label">Fecha de finalización (opcional)</label>
-                                <input type="date" class="form-control" id="med-fin" name="fin">
+                                <input type="datetime-local" class="form-control" id="med-fin" name="fechaFin">
                                 <div class="form-text">Deje en blanco si el tratamiento es indefinido</div>
                             </div>
 
-                            <div class="mb-3">
-                                <label for="med-instrucciones" class="form-label">Notas adicionales</label>
-                                <textarea class="form-control" id="med-instrucciones" name="instrucciones"
-                                    placeholder="Ej: Tomar con comida, no consumir con lácteos..." rows="4"
-                                    spellcheck="true"></textarea>
+                            <div class="row">
+                                <div class="col-6 mb-3">
+                                    <label for="med-stock" class="form-label">Stock actual</label>
+                                    <input type="number" class="form-control" id="med-stock" name="stockActual"
+                                        min="0" value="0" placeholder="Ej: 30">
+                                </div>
+                                <div class="col-6 mb-3">
+                                    <label for="med-umbral" class="form-label">Umbral de alerta</label>
+                                    <input type="number" class="form-control" id="med-umbral" name="umbralAlerta"
+                                        min="0" value="5" placeholder="Ej: 5">
+                                    <div class="form-text">Avisar cuando queden pocas unidades</div>
+                                </div>
+                            </div>
+
+                            <div class="mb-3 form-check">
+                                <input type="checkbox" class="form-check-input" id="med-activo" name="activo" checked>
+                                <label class="form-check-label" for="med-activo">Medicamento activo</label>
                             </div>
 
                             <div class="modal-footer">

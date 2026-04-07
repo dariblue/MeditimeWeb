@@ -30,7 +30,7 @@ function setupUserMenu() {
         <li><a href="/pages/calendario.html"><i class="fas fa-calendar"></i> Calendario</a></li>
         <li><a href="/pages/perfil.html"><i class="fas fa-user-circle"></i> Mi Perfil</a></li>
         <li><a href="#"><i class="fas fa-cog"></i> Configuración</a></li>
-        ${session.isAdmin ? '<li><a href="/pages/admin.html"><i class="fas fa-shield-alt"></i> Panel Admin</a></li>' : ''}
+        ${(session.rol === 'Responsable' || session.rol === 'Cuidador') ? '<li><a href="/pages/admin.html"><i class="fas fa-shield-alt"></i> Panel Admin</a></li>' : ''}
         <li><a href="#" id="logout-button"><i class="fas fa-sign-out-alt"></i> Cerrar Sesión</a></li>
       </ul>
     `;
@@ -76,7 +76,7 @@ function checkAuthentication() {
     if (isAuthPage) {
       window.location.href = "/index.html";
     }
-    if (isAdminPage && !session.isAdmin) {
+    if (isAdminPage && session.rol !== 'Responsable' && session.rol !== 'Cuidador') {
       window.location.href = "/index.html";
     }
   } else if (isAdminPage) {

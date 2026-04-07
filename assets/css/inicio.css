@@ -1,164 +1,227 @@
-/* CONTENEDOR */
+/* ─────────────────────────────────────────────────────────── */
+/*  inicio.css  –  Dashboard "Tomas de Hoy" (API v2.0)       */
+/* ─────────────────────────────────────────────────────────── */
 
-.tomas-container{
-margin-top:20px;
+/* ── PROGRESO DEL DÍA ────────────────────────────────────── */
+
+.progreso-dia {
+  margin-bottom: 25px;
+  padding: 10px 0;
 }
 
-/* TARJETA */
-
-.toma-card{
-
-display:flex;
-justify-content:space-between;
-align-items:center;
-
-background:white;
-padding:18px;
-
-border-radius:10px;
-margin-bottom:12px;
-
-box-shadow:0 2px 6px rgba(0,0,0,0.08);
-
-transition:0.25s;
-
+.progreso-dia h5 {
+  margin-bottom: 10px;
+  font-weight: 600;
+  color: #333;
 }
 
-.toma-info{
-display:flex;
-flex-direction:column;
+.barra-progreso-wrapper {
+  padding: 0 10px;
 }
 
-.toma-hora{
-font-weight:600;
-font-size:16px;
+.barra-progreso {
+  height: 14px;
+  background: #e9ecef;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
-.toma-medicamento{
-color:#555;
+.barra-progreso-interna {
+  height: 100%;
+  background: linear-gradient(90deg, #28a745, #20c997);
+  width: 0%;
+  border-radius: 10px;
+  transition: width 0.5s ease;
 }
 
-.tiempo-restante{
-font-size:12px;
-color:#888;
-margin-top:3px;
+#texto-progreso {
+  margin-top: 8px;
+  font-size: 0.9rem;
+  color: #666;
+  text-align: center;
 }
 
-/* BOTON */
+/* ── TARJETA DE TOMA ─────────────────────────────────────── */
 
-.confirmar-btn{
-
-background:#28a745;
-color:white;
-border:none;
-
-padding:8px 14px;
-
-border-radius:6px;
-cursor:pointer;
-font-weight:600;
-
-transition:0.2s;
-
+.toma-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #fff;
+  padding: 18px 20px;
+  border-radius: 12px;
+  margin-bottom: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  border-left: 5px solid transparent;
+  transition: transform 0.2s, box-shadow 0.2s;
 }
 
-.confirmar-btn:hover{
-transform:scale(1.05);
+.toma-card:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.1);
 }
 
-.confirmar-btn:disabled{
-cursor:not-allowed;
+.toma-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
 }
 
-/* PROXIMA */
-
-.toma-proxima{
-
-opacity:0.55;
-background:#f4f4f4;
-
+.toma-hora {
+  font-weight: 700;
+  font-size: 1.15rem;
+  color: #333;
 }
 
-.toma-proxima .confirmar-btn{
-
-background:#6c757d !important;
-
+.toma-medicamento {
+  color: #555;
+  font-size: 0.95rem;
 }
 
-/* PENDIENTE */
-
-.toma-pendiente{
-
-border-left:5px solid #28a745;
-
+.tiempo-restante {
+  font-size: 0.8rem;
+  color: #999;
+  margin-top: 2px;
+  font-style: italic;
 }
 
-/* ATRASADA */
+/* ── BOTÓN CONFIRMAR ─────────────────────────────────────── */
 
-.toma-atrasada{
-
-border-left:5px solid #dc3545;
-background:#fff3f3;
-
+.confirmar-btn {
+  background: #28a745;
+  color: #fff;
+  border: none;
+  padding: 10px 18px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.9rem;
+  transition: transform 0.15s, background 0.2s;
+  white-space: nowrap;
 }
 
-.toma-atrasada .confirmar-btn{
-
-background:#dc3545 !important;
-
+.confirmar-btn:hover:not(:disabled) {
+  transform: scale(1.05);
+  background: #218838;
 }
 
-/* COMPLETADA */
-
-.toma-completada{
-
-background:#e9f7ef;
-opacity:0.7;
-
+.confirmar-btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.65;
 }
 
-.toma-completada .confirmar-btn{
+/* ── ESTADO: PENDIENTE (hora aún no llegó) ───────────────── */
 
-background:#198754 !important;
-
+.toma-pendiente {
+  border-left-color: #6c757d;
+  background: #f8f9fa;
+  opacity: 0.65;
 }
 
-/* PROGRESO DEL DIA */
-
-/* BLOQUE PROGRESO */
-
-.progreso-dia{
-
-margin-bottom:25px;
-padding:10px 0;
-
+.toma-pendiente .confirmar-btn {
+  background: #6c757d;
 }
 
-/* CONTENEDOR CON MARGEN */
-
-.barra-progreso-wrapper{
-
-padding:0 10px;   /* separa de los bordes de la card */
-
+.toma-pendiente .tiempo-restante {
+  color: #6c757d;
 }
 
-/* BARRA */
+/* ── ESTADO: DISPONIBLE & ATRASADA (verde oscuro, lista para tomar) ───────── */
 
-.barra-progreso{
-
-height:12px;
-background:#e5e5e5;
-border-radius:10px;
-overflow:hidden;
-
+.toma-disponible, .toma-atrasada {
+  border-left-color: #198754;
+  background: linear-gradient(135deg, #f0fdf4, #e9f7ef);
 }
 
-.barra-progreso-interna{
+.toma-disponible .toma-hora, .toma-atrasada .toma-hora {
+  color: #198754;
+}
 
-height:100%;
-background:#28a745;
-width:0%;
+.toma-disponible .confirmar-btn, .toma-atrasada .confirmar-btn {
+  background: #198754;
+  animation: pulse-green 2s infinite;
+}
 
-transition:0.4s;
+.toma-disponible .confirmar-btn:hover:not(:disabled), .toma-atrasada .confirmar-btn:hover:not(:disabled) {
+  background: #146c43;
+}
 
+.toma-disponible .tiempo-restante, .toma-atrasada .tiempo-restante {
+  color: #198754;
+  font-weight: 600;
+}
+
+@keyframes pulse-green {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(25, 135, 84, 0.4); }
+  50%      { box-shadow: 0 0 0 8px rgba(25, 135, 84, 0); }
+}
+
+/* ── ESTADO: COMPLETADA (tomada - verde clarito) ─────────────────────────── */
+
+.toma-completada {
+  border-left-color: #85c8a6;
+  background: #f8fff9;
+  opacity: 0.7;
+}
+
+.toma-completada .toma-hora {
+  text-decoration: line-through;
+  color: #999;
+}
+
+.toma-completada .confirmar-btn {
+  background: #85c8a6;
+  color: #fff;
+}
+
+.toma-completada .tiempo-restante {
+  color: #85c8a6;
+}
+
+/* ── RESUMEN PANEL LATERAL ───────────────────────────────── */
+
+#tomas-pendientes {
+  color: #6c757d;
+}
+
+#tomas-atrasadas {
+  color: #198754;
+}
+
+#tomas-completadas {
+  color: #85c8a6;
+}
+
+/* ── ANIMACIÓN AL CONFIRMAR ───────────────────────────────── */
+
+@keyframes pulse-success {
+  0% { transform: scale(1); box-shadow: 0 0 0 rgba(133, 200, 166, 0); }
+  50% { transform: scale(1.03); box-shadow: 0 0 15px rgba(133, 200, 166, 0.6); }
+  100% { transform: scale(1); box-shadow: 0 0 0 rgba(133, 200, 166, 0); }
+}
+
+.animating-success {
+  animation: pulse-success 0.5s ease-out forwards;
+}
+
+.animating-success .confirmar-btn {
+  background: #85c8a6 !important;
+  color: #fff !important;
+  transition: all 0.3s;
+}
+
+/* ── RESPONSIVE ──────────────────────────────────────────── */
+
+@media (max-width: 768px) {
+  .toma-card {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .confirmar-btn {
+    width: 100%;
+    text-align: center;
+  }
 }

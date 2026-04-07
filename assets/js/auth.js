@@ -1,5 +1,5 @@
 (function () {
-  const API_URL = 'https://api.dariblue.dev';
+  const API_URL = 'http://localhost:5050';
   const SESSION_KEY = 'meditime_session';
 
   // Funciones de utilidad
@@ -88,8 +88,6 @@
         })
       });
 
-      // console.log('Respuesta del servidor:', loginResponse);
-
       if (!loginResponse.ok) {
         const errorData = await loginResponse.json();
         console.error('Error detallado:', errorData);
@@ -97,20 +95,19 @@
       }
 
       const data = await loginResponse.json();
-      // console.log('Datos de login:', data);
 
-      // Almacenar la sesión
+      // Almacenar la sesión con los campos de API v2.0
       const session = {
         token: data.token,
         userId: data.idUsuario || data.id,
         email: data.email,
         nombre: data.nombre,
         apellidos: data.apellidos,
-        isAdmin: data.isAdmin === 1
+        rol: data.rol || 'Usuario',             // "Usuario", "Responsable", "Cuidador"
+        esResponsable: !!data.esResponsable      // booleano
       };
 
       localStorage.setItem('meditime_session', JSON.stringify(session));
-      // console.log('Sesión almacenada:', session);
 
       return session;
     } catch (error) {
@@ -143,10 +140,8 @@
             apellidos: userData.apellidos,
             email: userData.email,
             contrasena: userData.password,
-            telefono: userData.telefono || '',
-            fecha_Nacimiento: userData.fecha_nacimiento || null,
-            domicilio: userData.domicilio || '',
-            notificaciones: userData.notificaciones || false
+            rol: userData.rol || 'Usuario',
+            esResponsable: userData.esResponsable !== undefined ? userData.esResponsable : true
           })
         });
       } catch (error) {
@@ -517,15 +512,13 @@
         const nombre = document.getElementById('nombre').value;
         const apellidos = document.getElementById('apellidos').value;
         const email = document.getElementById('email').value;
-        const telefono = document.getElementById('telefono').value;
-        const fecha_nacimiento = document.getElementById('fecha_nacimiento').value;
-        const domicilio = document.getElementById('domicilio').value;
         const password = document.getElementById('password').value;
         const confirmPassword = document.getElementById('confirm-password').value;
-        const notificaciones = document.getElementById('notificaciones').checked;
         const terms = document.getElementById('terms').checked;
 
         const noResponsable = document.getElementById('noResponsable')?.checked || false;
+        const rolSelect = document.getElementById('role');
+        const rol = rolSelect ? rolSelect.value : 'Usuario';
 
         // Limpiar mensajes anteriores
         if (errorElement) {
@@ -565,16 +558,13 @@
         }
 
         try {
-          // console.log('Iniciando proceso de registro...');
           const user = await register({
             nombre,
             apellidos,
             email,
             password,
-            telefono,
-            fecha_nacimiento,
-            domicilio,
-            notificaciones
+            rol,
+            esResponsable: !noResponsable
           });
 
           // console.log('Registro exitoso:', user);
