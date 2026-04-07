@@ -247,7 +247,7 @@
           }
 
           // Redirigir al usuario
-          window.location.href = '/';
+          window.location.href = '/pages/inicio.html';
         } catch (error) {
           console.error('Error en login:', error);
           if (errorElement) {
@@ -339,9 +339,9 @@
         </div>
       `;
       }
-    btn.disabled = false;
-    btn.textContent = 'Buscar';
-  }, 1000);
+      btn.disabled = false;
+      btn.textContent = 'Buscar';
+    }, 1000);
 
     /** PARA CUANDO ESTE HECHA LA BASE DE DATOS
         try {
