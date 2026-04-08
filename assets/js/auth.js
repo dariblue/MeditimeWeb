@@ -139,6 +139,8 @@
             nombre: userData.nombre,
             apellidos: userData.apellidos,
             email: userData.email,
+            telefono: userData.telefono,
+            fecha_Nacimiento: userData.fechaNacimiento,
             contrasena: userData.password,
             rol: userData.rol || 'Usuario',
             esResponsable: userData.esResponsable !== undefined ? userData.esResponsable : true
@@ -509,9 +511,22 @@
 
         isSubmitting = true;
 
-        const nombre = document.getElementById('nombre').value;
-        const apellidos = document.getElementById('apellidos').value;
+        const nombreCompleto = document.getElementById('nombre').value.trim();
+        const firstSpaceIndex = nombreCompleto.indexOf(' ');
+        let nombre = nombreCompleto;
+        let apellidos = '';
+        
+        if (firstSpaceIndex !== -1) {
+            nombre = nombreCompleto.substring(0, firstSpaceIndex).trim();
+            apellidos = nombreCompleto.substring(firstSpaceIndex + 1).trim();
+        }
+        
+        // Si el usuario no puso apellidos, podemos usar un valor por defecto para evitar errores en la API
+        if (!apellidos) apellidos = ' ';
+
         const email = document.getElementById('email').value;
+        const telefono = document.getElementById('telefono').value;
+        const fechaNacimiento = document.getElementById('fecha_nacimiento').value;
         const password = document.getElementById('password').value;
         const confirmPassword = document.getElementById('confirm-password').value;
         const terms = document.getElementById('terms').checked;
@@ -562,6 +577,8 @@
             nombre,
             apellidos,
             email,
+            telefono,
+            fechaNacimiento,
             password,
             rol,
             esResponsable: !noResponsable
