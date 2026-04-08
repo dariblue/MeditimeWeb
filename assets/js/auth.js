@@ -1,5 +1,5 @@
 (function () {
-  const API_URL = 'http://localhost:5050';
+  const API_URL = 'https://api.dariblue.dev';
   const SESSION_KEY = 'meditime_session';
 
   // Funciones de utilidad

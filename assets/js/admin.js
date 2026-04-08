@@ -20,7 +20,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const resetConfigBtn = document.getElementById("reset-config")
 
   // API URL
-  const API_URL = "http://localhost:5050"
+  const API_URL = "https://api.dariblue.dev"
 
   // Estado de la aplicación
   let currentTab = "usuarios"

@@ -11,7 +11,7 @@ import {
   deleteMedicamento
 } from './modules/medicamentos.js';
 
-const API_URL = 'http://localhost:5050';
+const API_URL = 'https://api.dariblue.dev';
 
 document.addEventListener('DOMContentLoaded', async () => {
 

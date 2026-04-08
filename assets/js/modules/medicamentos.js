@@ -5,7 +5,7 @@
 //         stockActual, umbralAlerta, activo
 // ─────────────────────────────────────────────────────────────
 
-const API_URL = 'http://localhost:5050';
+const API_URL = 'https://api.dariblue.dev';
 
 // ── helpers ──────────────────────────────────────────────────
 function getSession() {
