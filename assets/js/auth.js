@@ -140,7 +140,8 @@
             apellidos: userData.apellidos,
             email: userData.email,
             telefono: userData.telefono,
-            fecha_Nacimiento: userData.fechaNacimiento,
+            fechaNacimiento: userData.fechaNacimiento,
+            fecha_Nacimiento: userData.fechaNacimiento, // Enviamos ambas por si el modelo de C# usa snake_case o camelCase
             contrasena: userData.password,
             rol: userData.rol || 'Usuario',
             esResponsable: userData.esResponsable !== undefined ? userData.esResponsable : true
@@ -154,7 +155,18 @@
       const responseData = await response.json();
 
       if (!response.ok) {
-        throw new Error(responseData.message || 'Error al registrar usuario');
+        let errorMessage = responseData.message || 'Error al registrar usuario';
+        
+        // Si el backend es ASP.NET Muestra el primer error de validación de los campos
+        if (responseData.errors && typeof responseData.errors === 'object') {
+            console.error('Validation errors:', responseData.errors);
+            const firstKey = Object.keys(responseData.errors)[0];
+            if (firstKey && responseData.errors[firstKey].length > 0) {
+                errorMessage = responseData.errors[firstKey][0];
+            }
+        }
+        
+        throw new Error(errorMessage);
       }
 
       return responseData;
