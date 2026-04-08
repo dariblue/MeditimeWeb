@@ -179,6 +179,29 @@
   color: #85c8a6;
 }
 
+/* ── ESTADO: PASADA (hora + 1.5h - rojo, omitida) ────────────────────────── */
+
+.toma-pasada {
+  border-left-color: #dc3545;
+  background: #fff5f5;
+  opacity: 0.8;
+}
+
+.toma-pasada .toma-hora {
+  text-decoration: line-through;
+  color: #dc3545;
+}
+
+.toma-pasada .tiempo-restante {
+  color: #dc3545;
+  font-weight: 600;
+}
+
+.toma-pasada .confirmar-btn {
+  background: #dc3545;
+  color: #fff;
+}
+
 /* ── RESUMEN PANEL LATERAL ───────────────────────────────── */
 
 #tomas-pendientes {

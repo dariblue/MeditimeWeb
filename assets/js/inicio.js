@@ -102,6 +102,7 @@ function calcularTomasDelDia(med) {
  */
 function clasificarTomas() {
   const ahora = new Date();
+  const HORA_Y_MEDIA_MS = 1.5 * 60 * 60 * 1000;
   
   // Set para llevar control de los registros de historial ya vinculados a una toma
   const matchedHistorialIds = new Set();
@@ -136,6 +137,9 @@ function clasificarTomas() {
       
       toma.estado = 'completada';
       toma.historialMatch = match;
+    } else if (ahora.getTime() > toma.horaTeórica.getTime() + HORA_Y_MEDIA_MS) {
+      // Pasó más de una hora y media
+      toma.estado = 'pasada';
     } else if (ahora.getTime() > toma.horaTeórica.getTime() + TOLERANCIA_MS) {
       // Ya pasó la hora + los 5 minutos de gracia
       toma.estado = 'atrasada';
@@ -224,7 +228,14 @@ function renderTarjetas() {
     card.className = `toma-card toma-${toma.estado}`;
 
     const horaStr = formatTime(toma.horaTeórica);
-    const tiempoStr = calcTiempoRelativo(toma.horaTeórica);
+    let tiempoStr = calcTiempoRelativo(toma.horaTeórica);
+    if (toma.estado === 'pasada') tiempoStr = 'Esperar siguiente dosis';
+
+    let btnText = 'Confirmar';
+    if (toma.estado === 'completada') btnText = '✓ Tomado';
+    if (toma.estado === 'pasada') btnText = 'Pasada';
+
+    const btnDisabled = (toma.estado === 'completada' || toma.estado === 'pendiente' || toma.estado === 'pasada');
 
     card.innerHTML = `
       <div class="toma-info">
@@ -235,17 +246,17 @@ function renderTarjetas() {
         <div class="tiempo-restante">${tiempoStr}</div>
       </div>
       <button class="confirmar-btn"
-              ${toma.estado === 'completada' || toma.estado === 'pendiente' ? 'disabled' : ''}
+              ${btnDisabled ? 'disabled' : ''}
               data-index="${index}">
-        ${toma.estado === 'completada' ? '✓ Tomado' : 'Confirmar'}
+        ${btnText}
       </button>
     `;
 
     // Solo habilitar el botón si es "atrasada" (ya pasó la hora && no tomada)
-    // O si la hora ya ha pasado (tolerancia). Permitimos confirmar tomas atrasadas.
+    // O si la hora ya ha pasado (tolerancia). Permitimos confirmar tomas atrasadas no pasadas de hora y media.
     const btn = card.querySelector('.confirmar-btn');
 
-    // Habilitar si la hora ya llegó (o estamos en los 5 min previos) y no está completada
+    // Habilitar si la hora ya llegó (o estamos en los 5 min previos) y no está completada/pasada
     if (toma.estado === 'disponible' || toma.estado === 'atrasada') {
       btn.disabled = false;
       btn.addEventListener('click', async () => {
@@ -265,7 +276,7 @@ function renderTarjetas() {
 
 function renderResumen() {
   const pendientes  = tomasHoy.filter(t => t.estado === 'pendiente').length;
-  const atrasadas   = tomasHoy.filter(t => t.estado === 'atrasada').length;
+  const atrasadas   = tomasHoy.filter(t => t.estado === 'atrasada' || t.estado === 'pasada').length;
   const completadas = tomasHoy.filter(t => t.estado === 'completada').length;
 
   if (pendientesEl)  pendientesEl.textContent  = pendientes;
