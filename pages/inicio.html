@@ -2,233 +2,235 @@
 <html lang="es">
 
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MediTime - Inicio</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MediTime - Inicio</title>
 
-<!-- Bootstrap -->
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
 
-<link rel="stylesheet" href="../assets/css/styles.css">
-<link rel="stylesheet" href="../assets/css/recordatorios.css">
+    <link rel="stylesheet" href="../assets/css/styles.css">
+    <link rel="stylesheet" href="../assets/css/recordatorios.css">
 
-<!-- NUEVO CSS SOLO PARA INICIO -->
-<link rel="stylesheet" href="../assets/css/inicio.css">
+    <!-- NUEVO CSS SOLO PARA INICIO -->
+    <link rel="stylesheet" href="../assets/css/inicio.css">
 
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
 </head>
 
 <body>
 
-<!-- NAVBAR -->
-<nav class="navbar">
-<div class="container">
+    <!-- NAVBAR -->
+    <nav class="navbar">
+        <div class="container">
 
-<div class="logo">
-<a href="inicio.html">
-<img src="../assets/img/logo.png" height="150" width="150">
-</a>
-</div>
+            <div class="logo">
+                <a href="inicio.html">
+                    <img src="../assets/img/logo.png" height="150" width="150">
+                </a>
+            </div>
 
-<ul class="nav-links">
-<li><a href="inicio.html" class="active">Inicio</a></li>
-<li><a href="recordatorios.html">Mis Recordatorios</a></li>
-<li><a href="calendario.html">Calendario</a></li>
-<li><a href="contacto.html">Contacto</a></li>
-</ul>
+            <ul class="nav-links">
+                <li><a href="inicio.html" class="active">Inicio</a></li>
+                <li><a href="recordatorios.html">Mis Recordatorios</a></li>
+                <li><a href="calendario.html">Calendario</a></li>
+                <li><a href="contacto.html">Contacto</a></li>
+                <li><a href="faq.html">FAQ</a></li>
+            </ul>
 
-<div class="menu-toggle">
-<i class="fas fa-bars"></i>
-</div>
+            <div class="menu-toggle">
+                <i class="fas fa-bars"></i>
+            </div>
 
-</div>
-</nav>
+        </div>
+    </nav>
 
 
-<main>
+    <main>
 
-<!-- HEADER -->
+        <!-- HEADER -->
 
-<section class="page-header">
+        <section class="page-header">
 
-<div class="container">
+            <div class="container">
 
-<h2>Bienvenido a MediTime</h2>
-<p>Esto es lo que tienes para hoy</p>
+                <h2>Bienvenido a MediTime</h2>
+                <p>Esto es lo que tienes para hoy</p>
 
-</div>
+            </div>
 
-</section>
+        </section>
 
 
-<section class="recordatorios-section">
+        <section class="recordatorios-section">
 
-<div class="container">
+            <div class="container">
 
-<div class="recordatorios-grid">
+                <div class="recordatorios-grid">
 
-<!-- PANEL PRINCIPAL -->
+                    <!-- PANEL PRINCIPAL -->
 
-<div class="recordatorios-panel">
+                    <div class="recordatorios-panel">
 
-<div class="panel-header">
+                        <div class="panel-header">
 
-<h3>Tomas de Hoy</h3>
+                            <h3>Tomas de Hoy</h3>
 
-</div>
+                        </div>
 
 
-<!-- PROGRESO DEL DIA -->
+                        <!-- PROGRESO DEL DIA -->
 
-<div class="progreso-dia">
+                        <div class="progreso-dia">
 
-<h5>Progreso del día</h5>
+                            <h5>Progreso del día</h5>
 
-<div class="barra-progreso-wrapper">
-    <div class="barra-progreso">
-        <div id="barra-progreso" class="barra-progreso-interna"></div>
-    </div>
-</div>
+                            <div class="barra-progreso-wrapper">
+                                <div class="barra-progreso">
+                                    <div id="barra-progreso" class="barra-progreso-interna"></div>
+                                </div>
+                            </div>
 
-<p id="texto-progreso">0 / 0 tomas realizadas</p>
+                            <p id="texto-progreso">0 / 0 tomas realizadas</p>
 
-</div>
+                        </div>
 
 
-<!-- LISTA TOMAS -->
+                        <!-- LISTA TOMAS -->
 
-<div id="tomas-hoy-container" class="recordatorios-lista">
+                        <div id="tomas-hoy-container" class="recordatorios-lista">
 
-<div id="no-tomas" class="no-recordatorios">
+                            <div id="no-tomas" class="no-recordatorios">
 
-<i class="fas fa-check-circle"></i>
+                                <i class="fas fa-check-circle"></i>
 
-<p>No hay tomas pendientes hoy</p>
+                                <p>No hay tomas pendientes hoy</p>
 
-</div>
+                            </div>
 
-</div>
+                        </div>
 
-</div>
+                    </div>
 
 
-<!-- PANEL DERECHO -->
+                    <!-- PANEL DERECHO -->
 
-<div class="info-panel">
+                    <div class="info-panel">
 
-<div class="info-card">
+                        <div class="info-card">
 
-<h3>Resumen de Hoy</h3>
+                            <h3>Resumen de Hoy</h3>
 
-<div class="estadisticas">
+                            <div class="estadisticas">
 
-<div class="estadistica">
-<div class="valor" id="tomas-pendientes">0</div>
-<div class="etiqueta">Pendientes</div>
-</div>
+                                <div class="estadistica">
+                                    <div class="valor" id="tomas-pendientes">0</div>
+                                    <div class="etiqueta">Pendientes</div>
+                                </div>
 
-<div class="estadistica">
-<div class="valor" id="tomas-atrasadas">0</div>
-<div class="etiqueta">Atrasadas</div>
-</div>
+                                <div class="estadistica">
+                                    <div class="valor" id="tomas-atrasadas">0</div>
+                                    <div class="etiqueta">Atrasadas</div>
+                                </div>
 
-<div class="estadistica">
-<div class="valor" id="tomas-completadas">0</div>
-<div class="etiqueta">Completadas</div>
-</div>
+                                <div class="estadistica">
+                                    <div class="valor" id="tomas-completadas">0</div>
+                                    <div class="etiqueta">Completadas</div>
+                                </div>
 
-</div>
+                            </div>
 
-</div>
+                        </div>
 
 
-<div class="info-card">
+                        <div class="info-card">
 
-<h3>Consejo</h3>
+                            <h3>Consejo</h3>
 
-<p>
-Tomar sus medicamentos a la hora correcta mejora la eficacia del tratamiento.
-</p>
+                            <p>
+                                Tomar sus medicamentos a la hora correcta mejora la eficacia del tratamiento.
+                            </p>
 
-</div>
+                        </div>
 
-</div>
+                    </div>
 
-</div>
+                </div>
 
-</div>
+            </div>
 
-</section>
+        </section>
 
-</main>
+    </main>
 
 
-<!-- FOOTER -->
+    <!-- FOOTER -->
 
-<footer>
+    <footer>
 
-<div class="container">
+        <div class="container">
 
-<div class="footer-content">
+            <div class="footer-content">
 
-<div class="footer-logo">
-<h3>MEDITIME</h3>
-<p>Su asistente personal para medicamentos</p>
-</div>
+                <div class="footer-logo">
+                    <h3>MEDITIME</h3>
+                    <p>Su asistente personal para medicamentos</p>
+                </div>
 
-<div class="footer-links">
+                <div class="footer-links">
 
-<div class="footer-column">
-<h4>Navegación</h4>
-<ul>
-<li><a href="inicio.html">Inicio</a></li>
-<li><a href="recordatorios.html">Mis Recordatorios</a></li>
-<li><a href="calendario.html">Calendario</a></li>
-<li><a href="contacto.html">Contacto</a></li>
-</ul>
-</div>
+                    <div class="footer-column">
+                        <h4>Navegación</h4>
+                        <ul>
+                            <li><a href="inicio.html">Inicio</a></li>
+                            <li><a href="recordatorios.html">Mis Recordatorios</a></li>
+                            <li><a href="calendario.html">Calendario</a></li>
+                            <li><a href="contacto.html">Contacto</a></li>
+                            <li><a href="faq.html">FAQ</a></li>
+                        </ul>
+                    </div>
 
-<div class="footer-column">
-<h4>Recursos</h4>
-<ul>
-<li><a href="#">Ayuda</a></li>
-<li><a href="#">Preguntas frecuentes</a></li>
-<li><a href="#">Tutoriales</a></li>
-</ul>
-</div>
+                    <div class="footer-column">
+                        <h4>Recursos</h4>
+                        <ul>
+                            <li><a href="#">Ayuda</a></li>
+                            <li><a href="faq.html">Preguntas frecuentes</a></li>
+                            <li><a href="#">Tutoriales</a></li>
+                        </ul>
+                    </div>
 
-<div class="footer-column">
-<h4>Legal</h4>
-<ul>
-<li><a href="#">Política de privacidad</a></li>
-<li><a href="#">Términos de uso</a></li>
-</ul>
-</div>
+                    <div class="footer-column">
+                        <h4>Legal</h4>
+                        <ul>
+                            <li><a href="#">Política de privacidad</a></li>
+                            <li><a href="#">Términos de uso</a></li>
+                        </ul>
+                    </div>
 
-</div>
+                </div>
 
-</div>
+            </div>
 
-<div class="footer-bottom">
-<p>&copy; 2025 MEDITIME. Todos los derechos reservados.</p>
-</div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 MEDITIME. Todos los derechos reservados.</p>
+            </div>
 
-</div>
+        </div>
 
-</footer>
+    </footer>
 
 
-<!-- SCRIPTS -->
+    <!-- SCRIPTS -->
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 
-<script type="module" src="../assets/js/auth.js"></script>
-<script type="module" src="../assets/js/script.js"></script>
-<script src="../assets/js/notifications.js"></script>
+    <script type="module" src="../assets/js/auth.js"></script>
+    <script type="module" src="../assets/js/script.js"></script>
+    <script src="../assets/js/notifications.js"></script>
 
-<!-- SCRIPT DE LA PAGINA DE INICIO (motor de tomas) -->
-<script type="module" src="../assets/js/inicio.js"></script>
+    <!-- SCRIPT DE LA PAGINA DE INICIO (motor de tomas) -->
+    <script type="module" src="../assets/js/inicio.js"></script>
 
 </body>
 

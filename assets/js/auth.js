@@ -156,16 +156,16 @@
 
       if (!response.ok) {
         let errorMessage = responseData.message || 'Error al registrar usuario';
-        
+
         // Si el backend es ASP.NET Muestra el primer error de validación de los campos
         if (responseData.errors && typeof responseData.errors === 'object') {
-            console.error('Validation errors:', responseData.errors);
-            const firstKey = Object.keys(responseData.errors)[0];
-            if (firstKey && responseData.errors[firstKey].length > 0) {
-                errorMessage = responseData.errors[firstKey][0];
-            }
+          console.error('Validation errors:', responseData.errors);
+          const firstKey = Object.keys(responseData.errors)[0];
+          if (firstKey && responseData.errors[firstKey].length > 0) {
+            errorMessage = responseData.errors[firstKey][0];
+          }
         }
-        
+
         throw new Error(errorMessage);
       }
 
@@ -500,6 +500,65 @@
     const confirmPasswordInput = document.getElementById('confirm-password');
     let isSubmitting = false; // Bandera para evitar envíos duplicados
 
+    // Hacemos que la barra de seguridad de la contraseña cambie de color
+    const strengthBar = document.querySelector('.strength-bar');
+    const strengthText = document.querySelector('.strength-text');
+
+    function updatePasswordStrength(password) {
+      if (!strengthBar || !strengthText) return;
+
+      let score = 0;
+
+      const hasLength = password.length >= 8;
+      const hasUpper = /[A-ZÁÉÍÓÚÑ]/.test(password);
+      const hasNumber = /\d/.test(password);
+      const hasSpecial = /[^A-Za-z0-9]/.test(password);
+
+      if (hasLength) score++;
+      if (hasUpper) score++;
+      if (hasNumber) score++;
+      if (hasSpecial) score++;
+
+      // Reiniciar clases
+      strengthBar.className = 'strength-bar';
+      strengthText.className = 'strength-text';
+
+      if (password.length === 0) {
+        strengthBar.style.width = '0%';
+        strengthText.textContent = 'Empiece a escribir su contraseña';
+        return;
+      }
+
+      if (score === 1) {
+        strengthBar.style.width = '25%';
+        strengthBar.classList.add('very-weak');
+        strengthText.classList.add('very-weak');
+        strengthText.textContent = 'Muy débil';
+      } else if (score === 2) {
+        strengthBar.style.width = '50%';
+        strengthBar.classList.add('weak');
+        strengthText.classList.add('weak');
+        strengthText.textContent = 'Débil';
+      } else if (score === 3) {
+        strengthBar.style.width = '75%';
+        strengthBar.classList.add('medium');
+        strengthText.classList.add('medium');
+        strengthText.textContent = 'Aceptable';
+      } else {
+        strengthBar.style.width = '100%';
+        strengthBar.classList.add('strong');
+        strengthText.classList.add('strong');
+        strengthText.textContent = 'Fuerte';
+      }
+    }
+
+    // Añadimos el listener
+    if (passwordInput) {
+      passwordInput.addEventListener('input', () => {
+        updatePasswordStrength(passwordInput.value);
+      });
+    }
+
     initTutorRegistro(); // Inicializar la funcionalidad de asignación de tutores en el registro
 
     if (togglePassword && passwordInput) {
@@ -527,12 +586,12 @@
         const firstSpaceIndex = nombreCompleto.indexOf(' ');
         let nombre = nombreCompleto;
         let apellidos = '';
-        
+
         if (firstSpaceIndex !== -1) {
-            nombre = nombreCompleto.substring(0, firstSpaceIndex).trim();
-            apellidos = nombreCompleto.substring(firstSpaceIndex + 1).trim();
+          nombre = nombreCompleto.substring(0, firstSpaceIndex).trim();
+          apellidos = nombreCompleto.substring(firstSpaceIndex + 1).trim();
         }
-        
+
         // Si el usuario no puso apellidos, podemos usar un valor por defecto para evitar errores en la API
         if (!apellidos) apellidos = ' ';
 

@@ -124,6 +124,7 @@ img {
 
 .btn-secondary:hover {
   background-color: #f0f7ff;
+  color: var(--primary-color)
 }
 
 /* .btn-large {    COMENTADA TEMPORALMENTE *REVISAR* BOTON COMENZAR AHORA BOTON COMO FUNCIONA
@@ -145,6 +146,7 @@ img {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  min-height: 90px;
 }
 
 .logo {
@@ -208,9 +210,9 @@ img {
   align-items: center;
 }
 
-.btn-sm {
-  padding: 8px 15px;
-  font-size: 0.9rem;
+.auth-buttons .btn-sm {
+  padding: 10px 20px;
+  font-size: 1rem;
 }
 
 /* Añadir estilos para el menú de usuario */
@@ -751,6 +753,49 @@ footer {
     width: 100%;
     text-align: center;
   }
+}
+
+/* PONEMOS LOS BOTONES DE     <nav class="navbar">
+        <div class="container">
+            <div class="logo">
+                <a href="inicio.html" aria-label="Inicio">
+                    <img src="../assets/img/logo.png" height="150" width="150" alt="">
+                </a>
+            </div>
+            <ul class="nav-links">
+                <li><a href="inicio.html">Inicio</a></li>
+                <li><a href="recordatorios.html">Mis Recordatorios</a></li>
+                <li><a href="calendario.html" class="active">Calendario</a></li>
+                <li><a href="contacto.html">Contacto</a></li>
+                <li><a href="faq.html">FAQ</a></li>
+            </ul>
+            <div class="menu-toggle">
+                <i class="fas fa-bars"></i>
+            </div>
+        </div>
+    </nav>REGISTRO E INICIO DE SESIÓN IGUAL QUE EL RESTO (LETRAS BLANCAS/AZULES*/
+/* Seleccionamos el botón de inicio de sesión */
+.auth-buttons .btn-secondary {
+  background-color: white !important;
+  border: 2px solid var(--primary-color) !important;
+  color: var(--primary-color) !important;
+}
+
+.auth-buttons .btn-secondary:hover {
+  background-color: #f0f7ff !important;
+  color: var(--primary-color) !important;
+}
+
+/* Seleccionamos el botón de registro */
+.auth-buttons .btn-primary {
+  background-color: var(--primary-color) !important;
+  border: 2px solid var(--primary-color) !important;
+  color: white !important;
+}
+
+.auth-buttons .btn-primary:hover {
+  background-color: #1a4b8c !important;
+  color: white !important;
 }
 
 /* Mejoras de accesibilidad */

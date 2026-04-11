@@ -210,22 +210,87 @@
 }
 
 .strength-meter {
-  height: 5px;
-  background-color: #e9ecef;
-  border-radius: 3px;
-  margin-bottom: 5px;
+  width: 100%;
+  height: 10px;
+  background: #e5e7eb;
+  border-radius: 999px;
+  overflow: hidden;
+  position: relative;
+  margin-bottom: 8px;
 }
 
+/* Barra que cambia */
 .strength-bar {
   height: 100%;
-  width: 0;
-  border-radius: 3px;
-  transition: width 0.3s, background-color 0.3s;
+  width: 0%;
+  border-radius: 999px;
+  transition: width 0.35s ease, background-color 0.35s ease, box-shadow 0.35s ease;
+  background: #d1d5db;
+}
+
+/* Estados de la contraseña */
+.strength-bar.very-weak {
+  background: #ef4444;
+  box-shadow: 0 0 8px rgba(239, 68, 68, 0.35);
+}
+
+.strength-bar.weak {
+  background: #f97316;
+  box-shadow: 0 0 8px rgba(249, 115, 22, 0.35);
+}
+
+.strength-bar.medium {
+  background: #facc15;
+  box-shadow: 0 0 8px rgba(250, 204, 21, 0.35);
+}
+
+.strength-bar.strong {
+  background: #22c55e;
+  box-shadow: 0 0 10px rgba(34, 197, 94, 0.35);
 }
 
 .strength-text {
-  font-size: 0.8rem;
-  color: var(--text-light);
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #555;
+  display: inline-block;
+  min-height: 20px;
+}
+
+/* Colores del texto */
+.strength-text.very-weak {
+  color: #ef4444;
+}
+
+.strength-text.weak {
+  color: #f97316;
+}
+
+.strength-text.medium {
+  color: #ca8a04;
+}
+
+.strength-text.strong {
+  color: #16a34a;
+}
+
+/* Checklist visual */
+.password-hints {
+  margin-top: 10px;
+  padding-left: 0;
+  list-style: none;
+}
+
+.password-hints li {
+  font-size: 0.88rem;
+  margin-bottom: 4px;
+  color: #777;
+  transition: color 0.25s ease;
+}
+
+.password-hints li.valid {
+  color: #16a34a;
+  font-weight: 600;
 }
 
 /* Mensaje de error */
