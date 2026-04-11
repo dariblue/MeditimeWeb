@@ -208,9 +208,9 @@ img {
   align-items: center;
 }
 
-.btn-sm {
-  padding: 8px 15px;
-  font-size: 0.9rem;
+.auth-buttons .btn-sm {
+  padding: 10px 20px;
+  font-size: 1rem;
 }
 
 /* Añadir estilos para el menú de usuario */
