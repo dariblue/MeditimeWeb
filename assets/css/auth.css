@@ -603,3 +603,71 @@
         width: 100%;
     }
 }
+
+
+/* Mejoras de feedback visual en registro */
+.btn-success {
+  background-color: var(--primary-color);
+  color: #fff;
+  border: none;
+  padding: 12px 24px;
+  border-radius: var(--border-radius);
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.btn-success:hover,
+.btn-success:focus {
+  background-color: #1a4b8c;
+  color: #fff;
+}
+
+.button-group {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-top: 12px;
+}
+
+.field-invalid,
+.input-with-icon.field-invalid input,
+.custom-select.field-invalid .custom-select-trigger {
+  border-color: #dc3545 !important;
+  box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.15) !important;
+}
+
+.custom-select.field-invalid {
+  border-radius: var(--border-radius);
+}
+
+
+/* Botones específicos del registro de tutor */
+.btn-assign-tutor {
+    background-color: var(--primary-color) !important;
+    color: #fff !important;
+    border: none !important;
+}
+
+.btn-assign-tutor:hover {
+    background-color: #1a4b8c !important;
+}
+
+.btn-cancel-tutor,
+.btn-danger {
+    background-color: #dc3545 !important;
+    color: #fff !important;
+    border: none !important;
+    padding: 12px 24px;
+    border-radius: var(--border-radius);
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.btn-cancel-tutor:hover,
+.btn-danger:hover {
+    background-color: #b02a37 !important;
+}

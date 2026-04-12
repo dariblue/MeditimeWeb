@@ -37,6 +37,72 @@
     return password.length >= 6;
   }
 
+  function getFieldLabel(fieldId) {
+    const labels = {
+      nombre: 'Nombre completo',
+      role: 'Tipo de cuenta',
+      email: 'Correo electrónico',
+      fecha_nacimiento: 'Fecha de nacimiento',
+      password: 'Contraseña',
+      'confirm-password': 'Confirmar contraseña',
+      terms: 'Términos y condiciones'
+    };
+    return labels[fieldId] || 'este campo';
+  }
+
+  function markFieldInvalid(field) {
+    if (!field) return;
+    field.classList.add('field-invalid');
+    const wrapper = field.closest('.input-with-icon, .custom-select');
+    if (wrapper) wrapper.classList.add('field-invalid');
+  }
+
+  function clearFieldInvalid(field) {
+    if (!field) return;
+    field.classList.remove('field-invalid');
+    const wrapper = field.closest('.input-with-icon, .custom-select');
+    if (wrapper) wrapper.classList.remove('field-invalid');
+  }
+
+  function validateRequiredRegistrationFields(errorElement) {
+    const requiredIds = ['nombre', 'role', 'email', 'fecha_nacimiento', 'password', 'confirm-password', 'terms'];
+
+    for (const fieldId of requiredIds) {
+      const field = document.getElementById(fieldId);
+      if (!field) continue;
+      clearFieldInvalid(field);
+
+      const isCheckbox = field.type === 'checkbox';
+      const value = isCheckbox ? field.checked : field.value.trim();
+
+      if (!value) {
+        const label = getFieldLabel(fieldId);
+        const message = fieldId === 'terms'
+          ? 'Debes aceptar los Términos de servicio y la Política de privacidad.'
+          : `Falta completar el campo obligatorio: ${label}.`;
+
+        showError(errorElement, message);
+        markFieldInvalid(field);
+
+        if (fieldId === 'role') {
+          document.getElementById('roleSelect')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        } else {
+          field.focus();
+        }
+        return false;
+      }
+
+      if (fieldId === 'email' && !validateEmail(field.value.trim())) {
+        showError(errorElement, 'Introduce un correo electrónico válido.');
+        markFieldInvalid(field);
+        field.focus();
+        return false;
+      }
+    }
+
+    return true;
+  }
+
   // Funciones de sesión
   function saveSession(sessionData) {
     try {
@@ -342,8 +408,8 @@
             <input type="password" id="nuevoTutorPassword" placeholder="Mínimo 6 caracteres">
           </div>
           <div class="button-group">
-            <button onclick="registrarTutorRegistro('${email}')" class="btn-success">Registrar y asignar</button>
-            <button onclick="cancelarBusquedaRegistro()" class="btn btn-secondary">Cancelar</button>
+            <button onclick="registrarTutorRegistro('${email}')" class="btn btn-primary btn-assign-tutor">Registrar y asignar</button>
+            <button onclick="cancelarBusquedaRegistro()" class="btn btn-danger btn-cancel-tutor">Cancelar</button>
           </div>
         </div>
       `;
@@ -561,6 +627,11 @@
 
     initTutorRegistro(); // Inicializar la funcionalidad de asignación de tutores en el registro
 
+    registerForm?.querySelectorAll('input, select').forEach((field) => {
+      field.addEventListener('input', () => clearFieldInvalid(field));
+      field.addEventListener('change', () => clearFieldInvalid(field));
+    });
+
     if (togglePassword && passwordInput) {
       togglePassword.addEventListener('click', () => {
         const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
@@ -581,6 +652,11 @@
         }
 
         isSubmitting = true;
+
+        if (!validateRequiredRegistrationFields(errorElement)) {
+          isSubmitting = false;
+          return;
+        }
 
         const nombreCompleto = document.getElementById('nombre').value.trim();
         const firstSpaceIndex = nombreCompleto.indexOf(' ');
