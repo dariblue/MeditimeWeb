@@ -52,52 +52,73 @@
 
   function markFieldInvalid(field) {
     if (!field) return;
+
     field.classList.add('field-invalid');
+
     const wrapper = field.closest('.input-with-icon, .custom-select');
     if (wrapper) wrapper.classList.add('field-invalid');
   }
 
   function clearFieldInvalid(field) {
     if (!field) return;
+
     field.classList.remove('field-invalid');
+
     const wrapper = field.closest('.input-with-icon, .custom-select');
     if (wrapper) wrapper.classList.remove('field-invalid');
   }
 
   function validateRequiredRegistrationFields(errorElement) {
-    const requiredIds = ['nombre', 'role', 'email', 'fecha_nacimiento', 'password', 'confirm-password', 'terms'];
+    const requiredIds = [
+      'nombre',
+      'role',
+      'email',
+      'fecha_nacimiento',
+      'password',
+      'confirm-password',
+      'terms'
+    ];
+
+    let missingFields = [];
+    let firstInvalidField = null;
 
     for (const fieldId of requiredIds) {
       const field = document.getElementById(fieldId);
       if (!field) continue;
+
       clearFieldInvalid(field);
 
       const isCheckbox = field.type === 'checkbox';
       const value = isCheckbox ? field.checked : field.value.trim();
 
       if (!value) {
-        const label = getFieldLabel(fieldId);
-        const message = fieldId === 'terms'
-          ? 'Debes aceptar los Términos de servicio y la Política de privacidad.'
-          : `Falta completar el campo obligatorio: ${label}.`;
-
-        showError(errorElement, message);
+        missingFields.push(getFieldLabel(fieldId));
         markFieldInvalid(field);
 
-        if (fieldId === 'role') {
-          document.getElementById('roleSelect')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        } else {
-          field.focus();
+        if (!firstInvalidField) {
+          firstInvalidField = field;
         }
-        return false;
+      }
+    }
+
+    if (missingFields.length > 0) {
+      showError(
+        errorElement,
+        'Por favor, complete los campos obligatorios marcados en rojo.'
+      );
+
+      if (firstInvalidField) {
+        if (firstInvalidField.id === 'role') {
+          document.getElementById('roleSelect')?.scrollIntoView({
+            behavior: 'smooth',
+            block: 'center'
+          });
+        } else {
+          firstInvalidField.focus();
+        }
       }
 
-      if (fieldId === 'email' && !validateEmail(field.value.trim())) {
-        showError(errorElement, 'Introduce un correo electrónico válido.');
-        markFieldInvalid(field);
-        field.focus();
-        return false;
-      }
+      return false;
     }
 
     return true;
@@ -188,7 +209,7 @@
         throw new Error('Email inválido');
       }
       if (!validatePassword(userData.password)) {
-        throw new Error('La contraseña debe tener al menos 6 caracteres');
+        throw new Error('La contraseña debe tener al menos 8 caracteres');
       }
 
       // console.log('Registrando usuario:', userData);
@@ -305,6 +326,10 @@
         const password = document.getElementById('password').value;
         const remember = document.getElementById('remember')?.checked || false;
 
+        if (!validateRequiredRegistrationFields(errorElement)) {
+          isSubmitting = false;
+          return;
+        }
         // Limpiar mensajes de error anteriores
         if (errorElement) {
           errorElement.style.display = 'none';
@@ -585,7 +610,6 @@
       if (hasNumber) score++;
       if (hasSpecial) score++;
 
-      // Reiniciar clases
       strengthBar.className = 'strength-bar';
       strengthText.className = 'strength-text';
 
@@ -595,7 +619,12 @@
         return;
       }
 
-      if (score === 1) {
+      if (score === 0) {
+        strengthBar.style.width = '10%';
+        strengthBar.classList.add('very-weak');
+        strengthText.classList.add('very-weak');
+        strengthText.textContent = 'Muy débil';
+      } else if (score === 1) {
         strengthBar.style.width = '25%';
         strengthBar.classList.add('very-weak');
         strengthText.classList.add('very-weak');
@@ -618,7 +647,6 @@
       }
     }
 
-    // Añadimos el listener
     if (passwordInput) {
       passwordInput.addEventListener('input', () => {
         updatePasswordStrength(passwordInput.value);
@@ -626,11 +654,6 @@
     }
 
     initTutorRegistro(); // Inicializar la funcionalidad de asignación de tutores en el registro
-
-    registerForm?.querySelectorAll('input, select').forEach((field) => {
-      field.addEventListener('input', () => clearFieldInvalid(field));
-      field.addEventListener('change', () => clearFieldInvalid(field));
-    });
 
     if (togglePassword && passwordInput) {
       togglePassword.addEventListener('click', () => {
@@ -647,16 +670,10 @@
 
         // Evitar envíos duplicados
         if (isSubmitting) {
-          // console.log('Ya se está procesando un registro...');
           return;
         }
 
         isSubmitting = true;
-
-        if (!validateRequiredRegistrationFields(errorElement)) {
-          isSubmitting = false;
-          return;
-        }
 
         const nombreCompleto = document.getElementById('nombre').value.trim();
         const firstSpaceIndex = nombreCompleto.indexOf(' ');
@@ -690,6 +707,11 @@
         if (successElement) {
           successElement.style.display = 'none';
           successElement.textContent = '';
+        }
+
+        if (!validateRequiredRegistrationFields(errorElement)) {
+          isSubmitting = false;
+          return;
         }
 
         // Validar términos
@@ -731,8 +753,6 @@
             esResponsable: !noResponsable
           });
 
-          // console.log('Registro exitoso:', user);
-
           // Si no es responsable, asignar tutores
           if (noResponsable && tutoresRegistro.length > 0) {
             await asignarTutorRegistro(user.usuarioId || user.id);
@@ -756,6 +776,32 @@
         } finally {
           isSubmitting = false;
         }
+
+        const fieldsToWatch = [
+          'nombre',
+          'role',
+          'email',
+          'fecha_nacimiento',
+          'password',
+          'confirm-password',
+          'terms'
+        ];
+
+        fieldsToWatch.forEach((fieldId) => {
+          const field = document.getElementById(fieldId);
+          if (!field) return;
+
+          const eventName = field.type === 'checkbox' ? 'change' : 'input';
+
+          field.addEventListener(eventName, () => {
+            const isCheckbox = field.type === 'checkbox';
+            const value = isCheckbox ? field.checked : field.value.trim();
+
+            if (value) {
+              clearFieldInvalid(field);
+            }
+          });
+        });
       });
     }
   }

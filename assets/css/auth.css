@@ -671,3 +671,36 @@
 .btn-danger:hover {
     background-color: #b02a37 !important;
 }
+
+/* Marcamos campos en rojo si no se han rellenado*/
+.field-invalid {
+  border-color: #dc3545 !important;
+  box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.15) !important;
+}
+
+.input-with-icon.field-invalid input,
+.custom-select.field-invalid .custom-select-trigger {
+  border-color: #dc3545 !important;
+  box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.15) !important;
+}
+
+.input-with-icon.field-invalid i,
+.custom-select.field-invalid > i {
+  color: #dc3545 !important;
+}
+
+.field-invalid {
+  border-color: #dc3545 !important;
+  box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.15) !important;
+}
+
+.input-with-icon.field-invalid input,
+.custom-select.field-invalid .custom-select-trigger {
+  border-color: #dc3545 !important;
+  box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.15) !important;
+}
+
+.input-with-icon.field-invalid i,
+.custom-select.field-invalid > i {
+  color: #dc3545 !important;
+}
