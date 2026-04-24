@@ -1,5 +1,5 @@
 (function () {
-  const API_URL = 'https://api.dariblue.dev';
+  const API_URL = 'http://localhost:5020';
   const SESSION_KEY = 'meditime_session';
 
   // Funciones de utilidad
@@ -231,7 +231,8 @@
             fecha_Nacimiento: userData.fechaNacimiento, // Enviamos ambas por si el modelo de C# usa snake_case o camelCase
             contrasena: userData.password,
             rol: userData.rol || 'Usuario',
-            esResponsable: userData.esResponsable !== undefined ? userData.esResponsable : true
+            esResponsable: userData.esResponsable !== undefined ? userData.esResponsable : true,
+            idResponsableAsignado: userData.idResponsableAsignado || null
           })
         });
       } catch (error) {
@@ -394,75 +395,37 @@
     const btn = document.getElementById('buscarTutor');
     btn.disabled = true;
     btn.textContent = 'Buscando...';
-    // PARA PRUEBAS SIMULAMOS UNA RESPUESTA
-    setTimeout(() => {
-      // Datos de ejemplo para probar
-      if (email === 'carlos@email.com') {
-        // Tutor existente
-        resultadoDiv.innerHTML = `
-        <div class="tutor-info">
-          <p><strong>Tutor encontrado:</strong> Carlos López</p>
-          <p>Email: carlos@email.com</p>
-          <button onclick="asignarTutorRegistro(2, 'Carlos López', 'carlos@email.com')" class="btn-success">
-            Asignar
-          </button>
-        </div>
-      `;
-      } else if (email === 'maria@email.com') {
-        // Tutor existente
-        resultadoDiv.innerHTML = `
-        <div class="tutor-info">
-          <p><strong>Tutor encontrado:</strong> María García</p>
-          <p>Email: maria@email.com</p>
-          <button onclick="asignarTutorRegistro(3, 'María García', 'maria@email.com')" class="btn-success">
-            Asignar
-          </button>
-        </div>
-      `;
+
+    try {
+      const response = await fetch(`${API_URL}/Usuarios/buscar?email=${encodeURIComponent(email)}`);
+      const data = await response.json();
+
+      if (data.existe && data.usuario) {
+        mostrarTutorExistenteRegistro(data.usuario);
       } else {
-        // No existe - mostrar formulario de registro
-        resultadoDiv.innerHTML = `
-        <div class="tutor-registro-form">
-          <h4>Registrar nuevo tutor</h4>
-          <div class="form-group">
-            <label>Nombre completo</label>
-            <input type="text" id="nuevoTutorNombre" placeholder="Nombre">
-          </div>
-          <div class="form-group">
-            <label>Contraseña</label>
-            <input type="password" id="nuevoTutorPassword" placeholder="Mínimo 6 caracteres">
-          </div>
-          <div class="button-group">
-            <button onclick="registrarTutorRegistro('${email}')" class="btn btn-primary btn-assign-tutor">Registrar y asignar</button>
-            <button onclick="cancelarBusquedaRegistro()" class="btn btn-danger btn-cancel-tutor">Cancelar</button>
-          </div>
-        </div>
-      `;
+        mostrarFormularioRegistroTutor(email);
       }
+    } catch (error) {
+      console.error('Error al buscar tutor:', error);
+      resultadoDiv.innerHTML = '<p class="error-message">Error al buscar responsable</p>';
+    } finally {
       btn.disabled = false;
       btn.textContent = 'Buscar';
-    }, 1000);
-
-    /** PARA CUANDO ESTE HECHA LA BASE DE DATOS
-        try {
-          const response = await fetch(`${API_URL}/Usuarios/buscar?email=${encodeURIComponent(email)}`);
-          const data = await response.json();
-    
-          if (data.existe) {
-            mostrarTutorExistenteRegistro(data.usuario);
-          } else {
-            mostrarFormularioRegistroTutor(email);
-          }
-        } catch (error) {
-          resultadoDiv.innerHTML = '<p class="error-message">Error al buscar</p>';
-        } finally {
-          btn.disabled = false;
-          btn.textContent = 'Buscar';
-        } */
+    }
   }
 
   function mostrarTutorExistenteRegistro(usuario) {
     const resultadoDiv = document.getElementById('resultadoBusqueda');
+
+    if (usuario.rol !== 'Responsable') {
+      resultadoDiv.innerHTML = `
+        <div class="tutor-info error">
+          <p><strong>Usuario encontrado:</strong> ${usuario.nombre}</p>
+          <p class="error-message">⚠️ Este usuario no tiene el rol de Responsable y no puede ser asignado como tutor.</p>
+        </div>
+      `;
+      return;
+    }
 
     if (tutoresRegistro.some(t => t.email === usuario.email)) {
       resultadoDiv.innerHTML = '<p class="error-message">Este tutor ya está asignado</p>';
@@ -528,9 +491,11 @@
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           nombre: nombre,
+          apellidos: ' ', // Apellidos por defecto para tutores registrados rápido
           email: email,
           contrasena: password,
-          rol: 'tutor'
+          rol: 'Responsable',
+          esResponsable: true
         })
       });
 
@@ -538,7 +503,7 @@
 
       if (response.ok) {
         tutoresRegistro.push({
-          id: data.usuarioId || data.id,
+          id: data.idUsuario || data.id,
           nombre: nombre,
           email: email
         });
@@ -750,13 +715,9 @@
             fechaNacimiento,
             password,
             rol,
-            esResponsable: !noResponsable
+            esResponsable: !noResponsable,
+            idResponsableAsignado: (noResponsable && tutoresRegistro.length > 0) ? tutoresRegistro[0].id : null
           });
-
-          // Si no es responsable, asignar tutores
-          if (noResponsable && tutoresRegistro.length > 0) {
-            await asignarTutorRegistro(user.usuarioId || user.id);
-          }
 
           if (successElement) {
             successElement.textContent = 'Registro exitoso. Redirigiendo...';

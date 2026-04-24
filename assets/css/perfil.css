@@ -1131,3 +1131,54 @@ input:checked + .slider:before {
   .cuidador-card-top { flex-direction:column; }
   .cuidadores-info-banner { flex-direction:column; }
 }
+
+/* Notificaciones Globales (Toasts) */
+.mensaje-global {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  padding: 15px 25px;
+  border-radius: 10px;
+  color: white;
+  font-weight: 600;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  z-index: 10000;
+  transform: translateX(150%);
+  transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 300px;
+}
+
+.mensaje-global.visible {
+  transform: translateX(0);
+}
+
+.mensaje-global.success {
+  background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+  border-left: 5px solid #1e7e34;
+}
+
+.mensaje-global.error {
+  background: linear-gradient(135deg, #dc3545 0%, #f86d6d 100%);
+  border-left: 5px solid #bd2130;
+}
+
+.mensaje-global i {
+  font-size: 1.4rem;
+}
+
+@media (max-width: 600px) {
+  .mensaje-global {
+    left: 20px;
+    right: 20px;
+    min-width: auto;
+    transform: translateY(-150%);
+    top: 10px;
+  }
+  
+  .mensaje-global.visible {
+    transform: translateY(0);
+  }
+}
