@@ -1,8 +1,8 @@
 // ─────────────────────────────────────────────────────
 // perfil-api.js — Centraliza TODOS los fetch del perfil
-// API_URL apunta a localhost:5020 para pruebas locales
+// API_URL apunta a la dirección de producción api.dariblue.dev
 // ─────────────────────────────────────────────────────
-export const API_URL = "http://localhost:5020";
+export const API_URL = "https://api.dariblue.dev";
 
 export function getSession() {
     return JSON.parse(localStorage.getItem("meditime_session") || "null");
