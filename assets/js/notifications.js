@@ -44,7 +44,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const notificationOptions = {
       body: mensaje,
-      icon: "/assets/img/notificacion.png",
+      icon: "/assets/img/notificacion.webp",
       requireInteraction: true, // Mantener la notificación visible hasta que el usuario interactúe
     };
 
@@ -141,7 +141,7 @@ self.addEventListener("push", (event) => {
   const title = data.title || "MEDITIME - Notificación";
   const options = {
     body: data.body || "Tienes un recordatorio pendiente.",
-    icon: "/assets/img/notificacion.png",
+    icon: "/assets/img/notificacion.webp",
     badge: "/placeholder.svg?height=32&width=32",
     tag: data.tag || "meditime-notification",
     requireInteraction: true,
