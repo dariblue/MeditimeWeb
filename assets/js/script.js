@@ -27,7 +27,6 @@ function setupUserMenu() {
       </button>
       <ul class="user-dropdown">
         <li><a href="/pages/recordatorios.html"><i class="fas fa-bell"></i> Mis Recordatorios</a></li>
-        <li><a href="/pages/calendario.html"><i class="fas fa-calendar"></i> Calendario</a></li>
         <li><a href="/pages/perfil.html"><i class="fas fa-user-circle"></i> Mi Perfil</a></li>
         <li><a href="#"><i class="fas fa-cog"></i> Configuración</a></li>
         ${(session.rol === 'Responsable' || session.rol === 'Cuidador') ? '<li><a href="/pages/admin.html"><i class="fas fa-shield-alt"></i> Panel Admin</a></li>' : ''}
