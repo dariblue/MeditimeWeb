@@ -474,12 +474,56 @@ textarea {
     gap: 0;
   }
 
+  .form-card {
+    padding: 18px;
+  }
+
+  .accordion-button {
+    font-size: 1rem;
+    line-height: 1.35;
+    padding: 16px;
+    min-height: 44px;
+  }
+
+  .accordion-content.active {
+    padding: 16px;
+    max-height: 420px;
+  }
+
   .soporte-grid {
     grid-template-columns: 1fr;
+  }
+
+  .soporte-card {
+    padding: 22px 18px;
   }
 }
 
 @media (max-width: 576px) {
+  .contacto-section,
+  .soporte-section,
+  .faq-section {
+    padding: 36px 0;
+  }
+
+  .contact-list li {
+    margin-bottom: 18px;
+  }
+
+  .contact-list i {
+    margin-right: 12px;
+    font-size: 1.25rem;
+  }
+
+  .social-link {
+    width: 44px;
+    height: 44px;
+  }
+
+  .btn-outline {
+    width: 100%;
+  }
+
   .social-links {
     flex-wrap: wrap;
   }

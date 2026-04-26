@@ -507,4 +507,27 @@
   .stats-grid {
     grid-template-columns: 1fr;
   }
+
+  .admin-menu {
+    flex-direction: column;
+  }
+
+  .admin-menu-item {
+    width: 100%;
+    justify-content: flex-start;
+    text-align: left;
+    border-bottom: 1px solid var(--border-color);
+    border-left: 4px solid transparent;
+  }
+
+  .admin-menu-item.active {
+    border-bottom-color: var(--border-color);
+    border-left-color: var(--primary-color);
+  }
+}
+
+@media (max-width: 600px) {
+  .admin-tab {
+    padding: 16px;
+  }
 }
