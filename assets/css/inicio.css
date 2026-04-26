@@ -287,6 +287,7 @@
 .timeline-tomas{
   display: flex;
   gap: 6px;
+  width: 100%;
 
   margin: 12px 10px 0 10px;
 }
@@ -295,6 +296,7 @@
 
 .timeline-segmento{
   flex: 1;
+  min-width: 8px;
   height: 12px;
   border-radius: 6px;
   background: #dee2e6;
@@ -329,4 +331,15 @@
 
 .timeline-pasada{
   background: #dc3545;
+}
+
+@media (max-width: 768px) {
+  .timeline-tomas {
+    gap: 4px;
+  }
+
+  .timeline-segmento {
+    height: 10px;
+    border-radius: 5px;
+  }
 }
