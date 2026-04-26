@@ -248,3 +248,85 @@
     text-align: center;
   }
 }
+
+/* ── PROGRESO HEADER (alineación limpia) ─────────────────── */
+
+.progreso-header{
+  padding: 0 10px;
+  margin-bottom: 8px;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.progreso-header h5{
+  margin: 0;
+}
+
+.progreso-header p{
+  margin: 0;
+  font-size: 0.9rem;
+  color: #666;
+}
+
+/* Ajuste para que TODO quede alineado */
+
+.barra-progreso{
+  margin: 0 10px;
+}
+
+#texto-progreso{
+  padding: 0 10px;
+  text-align: right;
+}
+
+
+/* ── TIMELINE SEGMENTADA ─────────────────────────────────── */
+
+.timeline-tomas{
+  display: flex;
+  gap: 6px;
+
+  margin: 12px 10px 0 10px;
+}
+
+/* cada bloque */
+
+.timeline-segmento{
+  flex: 1;
+  height: 12px;
+  border-radius: 6px;
+  background: #dee2e6;
+
+  transition: transform 0.2s, background 0.3s;
+}
+
+/* hover bonito */
+
+.timeline-segmento:hover{
+  transform: scale(1.08);
+  cursor: pointer;
+}
+
+/* ── estados (coherentes con tu sistema) ─────────────────── */
+
+.timeline-pendiente{
+  background: #6c757d;
+}
+
+.timeline-disponible{
+  background: #198754;
+}
+
+.timeline-atrasada{
+  background: #198754;
+}
+
+.timeline-completada{
+  background: #85c8a6;
+}
+
+.timeline-pasada{
+  background: #dc3545;
+}

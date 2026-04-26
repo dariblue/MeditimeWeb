@@ -206,6 +206,7 @@ function render() {
   renderTarjetas();
   renderResumen();
   renderProgreso();
+  renderTimeline();
 }
 
 function renderTarjetas() {
@@ -291,6 +292,28 @@ function renderProgreso() {
 
   if (barraProgreso)  barraProgreso.style.width = `${porcentaje}%`;
   if (textoProgreso)  textoProgreso.textContent = `${hechas} / ${total} tomas realizadas`;
+}
+
+function renderTimeline() {
+
+  const container = document.getElementById('timeline-tomas');
+  if (!container) return;
+
+  container.innerHTML = '';
+
+  tomasHoy.forEach(toma => {
+
+    const segmento = document.createElement('div');
+
+    // 👇 usamos directamente tu estado (clave importante)
+    segmento.className = `timeline-segmento timeline-${toma.estado}`;
+
+    // tooltip útil
+    segmento.title = `${toma.medicamento.nombre} - ${formatTime(toma.horaTeórica)}`;
+
+    container.appendChild(segmento);
+
+  });
 }
 
 // ═══════════════════════════════════════════════════════════
