@@ -1029,6 +1029,15 @@ input:checked + .slider:before {
     gap: 0;
   }
 
+  .perfil-tab {
+    padding: 18px;
+  }
+
+  .perfil-menu-item {
+    padding: 12px 14px;
+    min-height: 44px;
+  }
+
   .option-card,
   .notification-option,
   .preference-option,
@@ -1042,6 +1051,23 @@ input:checked + .slider:before {
     flex-direction: column;
     align-items: flex-start;
     gap: 10px;
+  }
+
+  .perfil-menu {
+    flex-direction: column;
+  }
+
+  .perfil-menu-item {
+    width: 100%;
+    justify-content: flex-start;
+    text-align: left;
+    border-bottom: 1px solid var(--border-color);
+    border-left: 4px solid transparent;
+  }
+
+  .perfil-menu-item.active {
+    border-bottom-color: var(--border-color);
+    border-left-color: var(--primary-color);
   }
 }
 
@@ -1181,4 +1207,5 @@ input:checked + .slider:before {
   .mensaje-global.visible {
     transform: translateY(0);
   }
+
 }
