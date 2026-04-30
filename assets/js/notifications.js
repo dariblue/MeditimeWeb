@@ -83,5 +83,33 @@ document.addEventListener("DOMContentLoaded", async () => {
           window.medicationNotifications.sendTestNotification();
       });
   }
+
+  // Asignar evento al botón de activar notificaciones si existe
+  const enableBtn = document.getElementById("enable-notifications");
+  if (enableBtn) {
+      enableBtn.addEventListener("click", async () => {
+          const session = JSON.parse(localStorage.getItem("meditime_session") || "{}");
+          const userId = session.userId || 0;
+          
+          if (!userId) {
+              alert("Debes iniciar sesión para activar las notificaciones.");
+              return;
+          }
+
+          enableBtn.textContent = "Activando...";
+          enableBtn.disabled = true;
+
+          const success = await window.medicationNotifications.requestPermission(userId);
+          
+          if (success) {
+              enableBtn.textContent = "¡Activadas!";
+              enableBtn.style.backgroundColor = "#10b981"; // Verde éxito
+              enableBtn.style.borderColor = "#10b981";
+          } else {
+              enableBtn.textContent = "Permitir Alertas";
+              enableBtn.disabled = false;
+          }
+      });
+  }
 });
 
