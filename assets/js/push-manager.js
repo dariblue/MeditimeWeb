@@ -5,7 +5,7 @@
  * la solicitud de claves VAPID al servidor y la suscripción push.
  */
 class PushManager {
-    constructor(apiUrl = 'http://localhost:5032/api') {
+    constructor(apiUrl = 'https://api.dariblue.dev/api') {
         this.apiUrl = apiUrl;
         this.vapidPublicKey = null;
         this.isSupported = 'serviceWorker' in navigator && 'PushManager' in window;
