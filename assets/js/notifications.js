@@ -125,5 +125,42 @@ document.addEventListener("DOMContentLoaded", async () => {
           }
       });
   }
+
+  // Asignar evento al botón de prueba remota de 1 minuto
+  const testDelayedBtn = document.getElementById("test-delayed-notification");
+  if (testDelayedBtn) {
+      testDelayedBtn.addEventListener("click", async () => {
+          const session = JSON.parse(localStorage.getItem("meditime_session") || "{}");
+          const userId = session.userId || 0;
+          
+          if (!userId) {
+              alert("Debes iniciar sesión primero.");
+              return;
+          }
+
+          testDelayedBtn.textContent = "Programando...";
+          testDelayedBtn.disabled = true;
+
+          try {
+              const response = await fetch(`https://api.dariblue.dev/api/PushSubscriptions/test-delayed-push`, {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({ idUsuario: userId })
+              });
+
+              if (response.ok) {
+                  alert("¡Programada con éxito! Puedes cerrar la aplicación web o bloquear tu móvil. En exactamente 1 minuto el servidor te enviará una notificación real.");
+                  testDelayedBtn.textContent = "¡Esperando 1 min!";
+              } else {
+                  throw new Error("Error en la respuesta de la API");
+              }
+          } catch (error) {
+              console.error(error);
+              alert("Hubo un error al programar la notificación de prueba.");
+              testDelayedBtn.textContent = "Probar (1 min)";
+              testDelayedBtn.disabled = false;
+          }
+      });
+  }
 });
 

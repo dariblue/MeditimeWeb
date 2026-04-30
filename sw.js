@@ -127,7 +127,87 @@ self.addEventListener('fetch', event => {
   );
 });
 
-// ─── PLACEHOLDER para Fase 4 ────────────────────────────────
-// Los eventos 'push' y 'notificationclick' se implementarán aquí
-// en la Fase 4 del plan de implementación.
-// ─────────────────────────────────────────────────────────────
+// ─── PUSH EVENT (Fase 4) ──────────────────────────────────────
+self.addEventListener('push', event => {
+  console.log('[SW] Evento Push recibido.');
+
+  let payload = {
+    title: 'Nueva Notificación',
+    body: 'Tienes un nuevo mensaje de MediTime.',
+    idMedicamento: 0
+  };
+
+  if (event.data) {
+    try {
+      payload = event.data.json();
+    } catch (e) {
+      payload.body = event.data.text();
+    }
+  }
+
+  const options = {
+    body: payload.body,
+    icon: '/assets/img/icons/icon-192.png',
+    badge: '/assets/img/icons/icon-72.png',
+    vibrate: [200, 100, 200, 100, 200],
+    data: {
+      url: '/pages/inicio.html',
+      idMedicamento: payload.idMedicamento,
+      payloadStr: JSON.stringify(payload)
+    },
+    actions: [
+      { action: 'tomar', title: '✅ Ya lo tomé' },
+      { action: 'posponer', title: '⏳ Posponer 5 min' }
+    ]
+  };
+
+  event.waitUntil(
+    self.registration.showNotification(payload.title || 'MediTime', options)
+  );
+});
+
+// ─── NOTIFICATION CLICK (Fase 4) ─────────────────────────────
+self.addEventListener('notificationclick', event => {
+  console.log('[SW] Click en notificación:', event.action);
+  const notification = event.notification;
+  const action = event.action;
+  
+  notification.close();
+
+  if (action === 'posponer') {
+    // Solución aprobada: event.waitUntil + setTimeout en el SW
+    // Mantiene el SW vivo durante 5 minutos para volver a mostrarla
+    console.log('[SW] Notificación pospuesta por 5 minutos...');
+    const originalData = notification.data;
+    let payload = { title: notification.title, body: notification.body };
+    if (originalData && originalData.payloadStr) {
+      try { payload = JSON.parse(originalData.payloadStr); } catch(e){}
+    }
+    
+    const promise = new Promise(resolve => {
+      setTimeout(() => {
+        self.registration.showNotification("⏰ RECORDATORIO POSPUESTO: " + payload.title, {
+          body: payload.body,
+          icon: '/assets/img/icons/icon-192.png',
+          badge: '/assets/img/icons/icon-72.png',
+          vibrate: [500, 200, 500],
+          data: originalData,
+          actions: [{ action: 'tomar', title: '✅ Ya lo tomé' }]
+        }).then(resolve);
+      }, 5 * 60 * 1000); // 5 minutos
+    });
+
+    event.waitUntil(promise);
+  } else if (action === 'tomar') {
+    // Si queremos marcar como tomado directamente, podríamos hacer un fetch() a la API aquí.
+    // Por ahora redirigimos a la app.
+    event.waitUntil(
+      clients.openWindow('/pages/inicio.html')
+    );
+  } else {
+    // Click normal en el cuerpo de la notificación
+    event.waitUntil(
+      clients.openWindow(notification.data?.url || '/pages/inicio.html')
+    );
+  }
+});
