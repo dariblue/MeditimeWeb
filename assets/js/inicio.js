@@ -330,10 +330,15 @@ async function confirmarToma(index) {
   const diffMs = ahora.getTime() - toma.horaTeórica.getTime();
   const estado = diffMs > TOLERANCIA_MS ? 'Pasado' : 'Tomado';
 
+  // FIX TIMEZONE: Enviar la hora local exacta a la base de datos (sin la Z de UTC)
+  // para que el motor de emparejamiento no calcule una diferencia de horas errónea.
+  const tzOffset = ahora.getTimezoneOffset() * 60000;
+  const localIsoString = new Date(ahora.getTime() - tzOffset).toISOString().slice(0, -1);
+
   try {
     await registrarToma({
       idMedicamento: toma.medicamento.idMedicamento,
-      fechaHoraToma: ahora.toISOString(),
+      fechaHoraToma: localIsoString,
       estado
     });
 
