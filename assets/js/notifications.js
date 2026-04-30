@@ -57,13 +57,27 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
   // Notificación local de prueba
-  function sendTestNotification() {
+  async function sendTestNotification() {
     if (Notification.permission === "granted") {
-        new Notification("MEDITIME - Notificación de prueba", {
-            body: "Esta es una notificación de prueba. Las notificaciones push funcionan correctamente.",
-            icon: "/assets/img/icons/icon-192.png",
-            badge: "/assets/img/icons/icon-72.png"
-        });
+        try {
+            if ('serviceWorker' in navigator) {
+                const reg = await navigator.serviceWorker.ready;
+                await reg.showNotification("MEDITIME - Notificación de prueba", {
+                    body: "Esta es una notificación de prueba. Las notificaciones push funcionan correctamente.",
+                    icon: "/assets/img/icons/icon-192.png",
+                    badge: "/assets/img/icons/icon-72.png",
+                    vibrate: [200, 100, 200]
+                });
+            } else {
+                new Notification("MEDITIME - Notificación de prueba", {
+                    body: "Esta es una notificación de prueba. Las notificaciones push funcionan correctamente.",
+                    icon: "/assets/img/icons/icon-192.png"
+                });
+            }
+        } catch (error) {
+            console.error("Error al enviar notificación de prueba:", error);
+            alert("Error al mostrar la notificación: " + error.message);
+        }
     } else {
         alert("Debes conceder permisos de notificación primero.");
     }
