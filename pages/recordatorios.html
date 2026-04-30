@@ -10,6 +10,10 @@
     <link rel="stylesheet" href="../assets/css/styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="../assets/css/recordatorios.css">
+    <!-- PWA -->
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#6366f1">
+    <link rel="apple-touch-icon" href="/assets/img/icons/icon-192.png">
 </head>
 
 <body>
@@ -271,6 +275,16 @@
     <script type="module" src="../assets/js/modules/medicamentos.js"></script>
     <script type="module" src="../assets/js/recordatorios.js"></script>
     <script src="../assets/js/notifications.js"></script>
+    <!-- Service Worker Registration -->
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('/sw.js')
+            .then(reg => console.log('[MediTime] SW registrado, scope:', reg.scope))
+            .catch(err => console.error('[MediTime] SW error:', err));
+        });
+      }
+    </script>
 </body>
 
 </html>
