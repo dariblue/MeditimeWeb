@@ -5,7 +5,7 @@
 // Los eventos 'push' y 'notificationclick' se añadirán en Fase 4.
 // ─────────────────────────────────────────────────────────────
 
-const CACHE_NAME = 'meditime-cache-v1';
+const CACHE_NAME = 'meditime-cache-v2';
 
 // Shell de la app: recursos críticos para funcionar offline
 const APP_SHELL = [
@@ -35,8 +35,11 @@ const APP_SHELL = [
   '/assets/img/notificacion.webp',
   '/assets/img/ImagenInicio.webp',
   '/assets/img/default-avatar.png',
+  '/assets/img/favicon.ico',
   '/assets/img/icons/icon-192.png',
+  '/assets/img/icons/icon-192.webp',
   '/assets/img/icons/icon-512.png',
+  '/assets/img/icons/icon-512.webp',
   '/manifest.json'
 ];
 
