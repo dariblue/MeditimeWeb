@@ -209,11 +209,11 @@
 }
 
 #tomas-atrasadas {
-  color: #198754;
+  color: #dc3545;
 }
 
 #tomas-completadas {
-  color: #85c8a6;
+  color: #28a745;
 }
 
 /* ── ANIMACIÓN AL CONFIRMAR ───────────────────────────────── */
@@ -416,54 +416,6 @@
   outline: none;
   border-color: #0d47a1;
   box-shadow: 0 0 0 3px rgba(25, 118, 210, 0.2);
-}
-
-/* ── BANNER: GESTIONANDO A OTRO PACIENTE ─────────────────── */
-
-.managing-banner {
-  background: linear-gradient(135deg, #4a148c, #7b1fa2);
-  padding: 14px 0;
-  animation: slideDown 0.3s ease-out;
-}
-
-@keyframes slideDown {
-  from { transform: translateY(-100%); opacity: 0; }
-  to { transform: translateY(0); opacity: 1; }
-}
-
-.managing-banner-content {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  color: #fff;
-  font-weight: 600;
-  font-size: 1rem;
-  flex-wrap: wrap;
-}
-
-.managing-banner-content i {
-  font-size: 1.4rem;
-  color: #ce93d8;
-}
-
-.managing-banner-close {
-  margin-left: auto;
-  background: rgba(255, 255, 255, 0.2);
-  border: 1px solid rgba(255, 255, 255, 0.4);
-  color: #fff;
-  padding: 6px 14px;
-  border-radius: 8px;
-  cursor: pointer;
-  font-size: 0.85rem;
-  font-weight: 500;
-  transition: background 0.2s;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-
-.managing-banner-close:hover {
-  background: rgba(255, 255, 255, 0.35);
 }
 
 /* ── PANTALLA VACÍA: SIN MEDICAMENTOS ────────────────────── */

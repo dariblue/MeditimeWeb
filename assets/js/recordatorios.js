@@ -16,7 +16,7 @@ import {
   isResponsable, canEdit,
   getPacientesACargo, getActivePacienteId,
   setActivePaciente, resetActivePaciente,
-  isViewingOtherPatient, getCurrentUserId
+  getCurrentUserId
 } from './modules/roles.js';
 
 const API_URL = 'https://api.dariblue.dev';
@@ -45,9 +45,6 @@ document.addEventListener('DOMContentLoaded', async () => {
   const readonlyBanner   = document.getElementById('readonly-banner');
   const pacienteSelector = document.getElementById('paciente-selector');
   const selectPaciente   = document.getElementById('select-paciente-rec');
-  const managingBanner   = document.getElementById('managing-banner');
-  const managingText     = document.getElementById('managing-banner-text');
-  const managingClose    = document.getElementById('managing-banner-close');
 
   // ── botones abrir modal ────────────────────────────────────
   const addMedBtn   = document.getElementById('add-med-btn');
@@ -107,12 +104,11 @@ document.addEventListener('DOMContentLoaded', async () => {
         selectPaciente.appendChild(opt);
       });
 
-      // Restaurar selección previa
+      // Restaurar selección previa (persiste entre páginas via sessionStorage)
       const activeId = getActivePacienteId();
       const myId = getCurrentUserId();
       if (activeId && activeId !== myId) {
         selectPaciente.value = String(activeId);
-        showManagingBanner(activeId);
       }
 
       pacienteSelector.style.display = 'block';
@@ -121,38 +117,12 @@ document.addEventListener('DOMContentLoaded', async () => {
         const val = selectPaciente.value;
         if (val) {
           setActivePaciente(parseInt(val, 10));
-          showManagingBanner(parseInt(val, 10));
         } else {
           resetActivePaciente();
-          hideManagingBanner();
         }
         await loadAndRender();
       });
-
-      if (managingClose) {
-        managingClose.addEventListener('click', async () => {
-          resetActivePaciente();
-          selectPaciente.value = '';
-          hideManagingBanner();
-          await loadAndRender();
-        });
-      }
     }
-  }
-
-  function showManagingBanner(pacienteId) {
-    const paciente = pacientesACargo.find(p =>
-      (p.idUsuario || p.IDUsuario || p.id) == pacienteId
-    );
-    if (managingBanner && managingText && paciente) {
-      const nombre = `${paciente.nombre || ''} ${paciente.apellidos || ''}`.trim();
-      managingText.innerHTML = `Gestionando a: <strong>${nombre}</strong>`;
-      managingBanner.style.display = 'block';
-    }
-  }
-
-  function hideManagingBanner() {
-    if (managingBanner) managingBanner.style.display = 'none';
   }
 
   // ═══════════════════════════════════════════════════════════

@@ -16,7 +16,7 @@ import {
   isResponsable, canEdit,
   getPacientesACargo, getActivePacienteId,
   setActivePaciente, resetActivePaciente,
-  isViewingOtherPatient, getCurrentUserId
+  getCurrentUserId
 } from './modules/roles.js';
 
 // ── constantes ──────────────────────────────────────────────
@@ -41,9 +41,6 @@ const completadasEl      = document.getElementById('tomas-completadas');
 const readonlyBanner    = document.getElementById('readonly-banner');
 const pacienteSelector  = document.getElementById('paciente-selector');
 const selectPaciente    = document.getElementById('select-paciente');
-const managingBanner    = document.getElementById('managing-banner');
-const managingText      = document.getElementById('managing-banner-text');
-const managingClose     = document.getElementById('managing-banner-close');
 const noMedicamentos    = document.getElementById('no-medicamentos');
 const recordatoriosSection = document.querySelector('.recordatorios-section');
 
@@ -73,12 +70,11 @@ async function setupRoles() {
       selectPaciente.appendChild(opt);
     });
 
-    // Restaurar selección previa
+    // Restaurar selección previa (persiste entre páginas via sessionStorage)
     const activeId = getActivePacienteId();
     const myId = getCurrentUserId();
     if (activeId && activeId !== myId) {
       selectPaciente.value = String(activeId);
-      showManagingBanner(activeId);
     }
 
     pacienteSelector.style.display = 'block';
@@ -88,39 +84,12 @@ async function setupRoles() {
       const val = selectPaciente.value;
       if (val) {
         setActivePaciente(parseInt(val, 10));
-        showManagingBanner(parseInt(val, 10));
       } else {
         resetActivePaciente();
-        hideManagingBanner();
       }
       await cargarDashboard();
     });
-
-    // Botón "Volver a mi cuenta"
-    if (managingClose) {
-      managingClose.addEventListener('click', async () => {
-        resetActivePaciente();
-        selectPaciente.value = '';
-        hideManagingBanner();
-        await cargarDashboard();
-      });
-    }
   }
-}
-
-function showManagingBanner(pacienteId) {
-  const paciente = pacientesACargo.find(p =>
-    (p.idUsuario || p.IDUsuario || p.id) == pacienteId
-  );
-  if (managingBanner && managingText && paciente) {
-    const nombre = `${paciente.nombre || ''} ${paciente.apellidos || ''}`.trim();
-    managingText.innerHTML = `Gestionando a: <strong>${nombre}</strong>`;
-    managingBanner.style.display = 'block';
-  }
-}
-
-function hideManagingBanner() {
-  if (managingBanner) managingBanner.style.display = 'none';
 }
 
 // ═══════════════════════════════════════════════════════════
