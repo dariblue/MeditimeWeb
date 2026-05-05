@@ -88,6 +88,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       if (!userId) return;
 
       const cacheKey = `meditime_alerts_${userId}`;
+      const dismissKey = `meditime_alerts_dismissed_${userId}`;
       const status = localStorage.getItem(cacheKey);
 
       // Si ya está configurado, verificar la suscripción real silenciosamente
@@ -96,25 +97,46 @@ document.addEventListener("DOMContentLoaded", async () => {
               try {
                   const reg = await navigator.serviceWorker.ready;
                   const sub = await reg.pushManager.getSubscription();
-                  if (!sub) {
-                      // Se desuscribió desde el navegador o caducó
-                      localStorage.removeItem(cacheKey);
-                  } else {
-                      return; // Todo correcto
+                  if (sub) {
+                      return; // Todo correcto, suscripción activa
                   }
+                  // Se desuscribió — no borrar la config, simplemente intentar re-suscribir
+                  // en silencio sin molestar al usuario
+                  try {
+                      const newSub = await window.pushManagerInstance.subscribe(userId);
+                      if (newSub) return;
+                  } catch (e) { /* silencioso */ }
               } catch (e) {
-                  return;
+                  return; // Error de SW, no molestar
               }
           } else {
               return;
           }
       }
 
-      // Si llegamos aquí, no está configurado o se perdió la suscripción
-      // Solo mostramos el prompt si el navegador lo permite
+      // Comprobar si el usuario ya rechazó recientemente (cooldown 24h)
+      const dismissed = localStorage.getItem(dismissKey);
+      if (dismissed) {
+          const dismissedAt = parseInt(dismissed, 10);
+          const horasPasadas = (Date.now() - dismissedAt) / (1000 * 60 * 60);
+          if (horasPasadas < 24) return; // No preguntar en 24h
+      }
+
+      // Si el navegador ya denegó los permisos, no insistir
       if (Notification.permission === 'denied') {
           console.warn("Permisos denegados previamente.");
           return;
+      }
+
+      // Si ya tiene permiso granted pero no suscripción, intentar suscribir silenciosamente
+      if (Notification.permission === 'granted' && window.pushManagerInstance) {
+          try {
+              const sub = await window.pushManagerInstance.subscribe(userId);
+              if (sub) {
+                  localStorage.setItem(cacheKey, 'configured');
+                  return;
+              }
+          } catch (e) { /* silencioso */ }
       }
 
       // Preguntar amigablemente antes de lanzar el prompt del navegador
@@ -124,7 +146,14 @@ document.addEventListener("DOMContentLoaded", async () => {
           const success = await requestNotificationPermission(userId);
           if (success) {
               localStorage.setItem(cacheKey, 'configured');
+              localStorage.removeItem(dismissKey);
+          } else {
+              // Suscripción falló pero no es culpa del usuario, guardar cooldown corto
+              localStorage.setItem(dismissKey, String(Date.now()));
           }
+      } else {
+          // Usuario rechazó el prompt — no molestar en 24h
+          localStorage.setItem(dismissKey, String(Date.now()));
       }
   }
 

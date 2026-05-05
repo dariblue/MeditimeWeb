@@ -104,11 +104,11 @@ export async function updateMedicamento(medicamento, pacienteId) {
 }
 
 // ── saveOrUpdate (decide según si tiene id) ──────────────────
-export async function saveOrUpdateMedicamento(medicamento) {
+export async function saveOrUpdateMedicamento(medicamento, pacienteId) {
   if (medicamento.idMedicamento) {
-    return updateMedicamento(medicamento);
+    return updateMedicamento(medicamento, pacienteId);
   }
-  return saveMedicamento(medicamento);
+  return saveMedicamento(medicamento, pacienteId);
 }
 
 // ── DELETE medicamento ───────────────────────────────────────

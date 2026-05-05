@@ -315,7 +315,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (editingId) data.idMedicamento = editingId;
 
     try {
-      await saveOrUpdateMedicamento(data);
+      await saveOrUpdateMedicamento(data, pacienteId);
       closeModal('med-modal');
       await loadAndRender();
     } catch (err) {
