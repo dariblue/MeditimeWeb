@@ -38,10 +38,10 @@ function setupUserMenu() {
         <i class="fas fa-chevron-down"></i>
       </button>
       <ul class="user-dropdown">
-        <li><a href="/pages/recordatorios.html"><i class="fas fa-pills"></i> Mis Medicamentos</a></li>
-        <li><a href="/pages/perfil.html"><i class="fas fa-user-circle"></i> Mi Perfil</a></li>
+        <li><a href="/recordatorios"><i class="fas fa-pills"></i> Mis Medicamentos</a></li>
+        <li><a href="/perfil"><i class="fas fa-user-circle"></i> Mi Perfil</a></li>
         <li><a href="#"><i class="fas fa-cog"></i> Configuración</a></li>
-        ${(session.rol === 'Responsable' || session.rol === 'Cuidador') ? '<li><a href="/pages/admin.html"><i class="fas fa-shield-alt"></i> Panel Admin</a></li>' : ''}
+        ${(session.rol === 'Responsable' || session.rol === 'Cuidador') ? '<li><a href="/admin"><i class="fas fa-shield-alt"></i> Panel Admin</a></li>' : ''}
         <li><a href="#" id="logout-button"><i class="fas fa-sign-out-alt"></i> Cerrar Sesión</a></li>
       </ul>
     `;
@@ -65,7 +65,7 @@ function setupUserMenu() {
       logoutButton.addEventListener('click', (e) => {
         e.preventDefault();
         window.auth.logout();
-        window.location.href = '/index.html';
+        window.location.href = '/index';
       });
     }
   } else {
@@ -85,13 +85,13 @@ function checkAuthentication() {
 
   if (session) {
     if (isAuthPage) {
-      window.location.href = "/index.html";
+      window.location.href = "/index";
     }
     if (isAdminPage && session.rol !== 'Responsable' && session.rol !== 'Cuidador') {
-      window.location.href = "/index.html";
+      window.location.href = "/index";
     }
   } else if (isAdminPage) {
-    window.location.href = "login.html";
+    window.location.href = "login";
   }
 }
 

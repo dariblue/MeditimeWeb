@@ -5,11 +5,11 @@ let session;
 document.addEventListener("DOMContentLoaded", async () => {
   // Recuperar la sesión desde localStorage
   const sessionData = localStorage.getItem("meditime_session");
-  // if (!sessionData) {
-  //   // Si no hay sesión, redirigir al inicio de sesión
-  //   window.location.href = "/pages/login";
-  //   return;
-  // }
+  if (!sessionData) {
+    // Si no hay sesión, redirigir al inicio de sesión
+    window.location.href = "/login";
+    return;
+  }
 
   // Parsear la sesión
   session = JSON.parse(sessionData);
@@ -17,7 +17,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   // Verificar que la sesión tenga los datos necesarios
   if (!session.userId || !session.token) {
     console.error("Sesión inválida:", session);
-    window.location.href = "/pages/login.html";
+    window.location.href = "/login";
     return;
   }
 
@@ -107,7 +107,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     editarMedicamentoBtn.addEventListener("click", () => {
       closeModal()
       // Aquí iría la lógica para redirigir a la edición del medicamento
-      window.location.href = "recordatorios.html"
+      window.location.href = "recordatorios"
     })
   }
 

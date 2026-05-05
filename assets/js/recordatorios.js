@@ -17,7 +17,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   // ── sesión ─────────────────────────────────────────────────
   const session = window.auth?.getCurrentUser();
-  // if (!session) { window.location.href = '/pages/login.html'; return; }
+  if (!session) { window.location.href = '/login'; return; }
 
   // ── estado ─────────────────────────────────────────────────
   let medicamentos = [];
@@ -58,7 +58,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (session && window.medicationNotifications?.checkAndPrompt) {
       window.medicationNotifications.checkAndPrompt(session.userId);
     }
-  }, 1500);
+  }, 5000);
 
   // ═══════════════════════════════════════════════════════════
   //                     FUNCIONES

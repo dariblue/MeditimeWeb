@@ -389,7 +389,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (session && window.medicationNotifications?.checkAndPrompt) {
       window.medicationNotifications.checkAndPrompt(session.userId);
     }
-  }, 1500);
+  }, 5000);
 
   // Refrescar cada 60 segundos
   setInterval(cargarDashboard, 60000);

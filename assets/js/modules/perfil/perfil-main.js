@@ -84,7 +84,7 @@ async function loadUserData() {
     try {
         const session = JSON.parse(localStorage.getItem("meditime_session") || "null");
         if (!session) {
-            window.location.href = "login.html";
+            window.location.href = "login";
             return;
         }
 

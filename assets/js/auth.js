@@ -267,7 +267,7 @@
   // Función de logout
   function logout() {
     clearSession(); // Elimina la sesión del almacenamiento local
-    window.location.href = 'login.html'; // Redirige al usuario a la página de inicio de sesión
+    window.location.href = 'login'; // Redirige al usuario a la página de inicio de sesión
   }
 
   // Función para verificar si el usuario está autenticado
@@ -348,7 +348,7 @@
           }
 
           // Redirigir al usuario
-          window.location.href = 'inicio.html';
+          window.location.href = 'inicio';
         } catch (error) {
           console.error('Error en login:', error);
           if (errorElement) {
@@ -726,7 +726,7 @@
 
           // Redirigir al usuario a la página de login después de 2 segundos
           setTimeout(() => {
-            window.location.href = 'login.html';
+            window.location.href = 'login';
           }, 2000);
         } catch (error) {
           console.error('Error en registro:', error);

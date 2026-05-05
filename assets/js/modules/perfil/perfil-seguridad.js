@@ -60,7 +60,7 @@ export async function handleDeleteAccount(userData) {
     try {
         await eliminarCuenta(userData.iD_Usuario);
         localStorage.removeItem("meditime_session");
-        window.location.href = "/index.html";
+        window.location.href = "/index";
     } catch (error) {
         console.error("Error:", error);
         mostrarMensajeGlobal("Error al eliminar cuenta: " + error.message, "error");
@@ -129,7 +129,7 @@ export async function handleCloseAllSessions(userData) {
         mostrarMensajeGlobal("Todas las sesiones han sido cerradas", "success");
         setTimeout(() => {
             localStorage.removeItem("meditime_session");
-            window.location.href = "login.html";
+            window.location.href = "login";
         }, 1500);
     } catch (error) {
         console.error("Error:", error);
