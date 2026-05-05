@@ -1,6 +1,7 @@
 // ─────────────────────────────────────────────────────────────
 // recordatorios.js  –  CRUD puro de medicamentos (API v2.0)
 // Sin tracking / historial. Solo Añadir, Editar y Eliminar.
+// + Sistema de roles: responsable vs paciente no responsable
 // ─────────────────────────────────────────────────────────────
 
 import {
@@ -10,6 +11,13 @@ import {
   saveOrUpdateMedicamento,
   deleteMedicamento
 } from './modules/medicamentos.js';
+
+import {
+  isResponsable, canEdit,
+  getPacientesACargo, getActivePacienteId,
+  setActivePaciente, resetActivePaciente,
+  isViewingOtherPatient, getCurrentUserId
+} from './modules/roles.js';
 
 const API_URL = 'https://api.dariblue.dev';
 
@@ -23,6 +31,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   let medicamentos = [];
   let editingId = null;
   let deleteId = null;
+  let pacientesACargo = [];
 
   // ── referencias DOM ────────────────────────────────────────
   const container       = document.getElementById('recordatorios-container');
@@ -31,6 +40,14 @@ document.addEventListener('DOMContentLoaded', async () => {
   const totalMedsEl     = document.getElementById('total-medicamentos');
   const totalActivosEl  = document.getElementById('total-activos');
   const totalStockEl    = document.getElementById('total-stock-bajo');
+
+  // ── Roles DOM ──────────────────────────────────────────────
+  const readonlyBanner   = document.getElementById('readonly-banner');
+  const pacienteSelector = document.getElementById('paciente-selector');
+  const selectPaciente   = document.getElementById('select-paciente-rec');
+  const managingBanner   = document.getElementById('managing-banner');
+  const managingText     = document.getElementById('managing-banner-text');
+  const managingClose    = document.getElementById('managing-banner-close');
 
   // ── botones abrir modal ────────────────────────────────────
   const addMedBtn   = document.getElementById('add-med-btn');
@@ -49,6 +66,9 @@ document.addEventListener('DOMContentLoaded', async () => {
   const medForm = document.getElementById('med-form');
   if (medForm) medForm.addEventListener('submit', (e) => e.preventDefault());
 
+  // ── configurar roles ───────────────────────────────────────
+  await setupRoles();
+
   // ── inicializar ────────────────────────────────────────────
   await loadAndRender();
   renderMiniCalendario();
@@ -61,13 +81,89 @@ document.addEventListener('DOMContentLoaded', async () => {
   }, 5000);
 
   // ═══════════════════════════════════════════════════════════
+  //                    ROLES
+  // ═══════════════════════════════════════════════════════════
+
+  async function setupRoles() {
+    const esResp = isResponsable();
+
+    if (!esResp) {
+      // Paciente no responsable → modo solo lectura
+      if (readonlyBanner) readonlyBanner.style.display = 'block';
+      if (addMedBtn) addMedBtn.style.display = 'none';
+      if (addFirstBtn) addFirstBtn.style.display = 'none';
+      return;
+    }
+
+    // Es responsable → comprobar pacientes a cargo
+    pacientesACargo = await getPacientesACargo();
+
+    if (pacientesACargo.length > 0 && pacienteSelector && selectPaciente) {
+      selectPaciente.innerHTML = '<option value="">Mi cuenta</option>';
+      pacientesACargo.forEach(p => {
+        const opt = document.createElement('option');
+        opt.value = p.idUsuario || p.IDUsuario || p.id;
+        opt.textContent = `${p.nombre || ''} ${p.apellidos || ''}`.trim() || p.email;
+        selectPaciente.appendChild(opt);
+      });
+
+      // Restaurar selección previa
+      const activeId = getActivePacienteId();
+      const myId = getCurrentUserId();
+      if (activeId && activeId !== myId) {
+        selectPaciente.value = String(activeId);
+        showManagingBanner(activeId);
+      }
+
+      pacienteSelector.style.display = 'block';
+
+      selectPaciente.addEventListener('change', async () => {
+        const val = selectPaciente.value;
+        if (val) {
+          setActivePaciente(parseInt(val, 10));
+          showManagingBanner(parseInt(val, 10));
+        } else {
+          resetActivePaciente();
+          hideManagingBanner();
+        }
+        await loadAndRender();
+      });
+
+      if (managingClose) {
+        managingClose.addEventListener('click', async () => {
+          resetActivePaciente();
+          selectPaciente.value = '';
+          hideManagingBanner();
+          await loadAndRender();
+        });
+      }
+    }
+  }
+
+  function showManagingBanner(pacienteId) {
+    const paciente = pacientesACargo.find(p =>
+      (p.idUsuario || p.IDUsuario || p.id) == pacienteId
+    );
+    if (managingBanner && managingText && paciente) {
+      const nombre = `${paciente.nombre || ''} ${paciente.apellidos || ''}`.trim();
+      managingText.innerHTML = `Gestionando a: <strong>${nombre}</strong>`;
+      managingBanner.style.display = 'block';
+    }
+  }
+
+  function hideManagingBanner() {
+    if (managingBanner) managingBanner.style.display = 'none';
+  }
+
+  // ═══════════════════════════════════════════════════════════
   //                     FUNCIONES
   // ═══════════════════════════════════════════════════════════
 
   // ── cargar datos + renderizar ──────────────────────────────
   async function loadAndRender() {
+    const pacienteId = getActivePacienteId();
     try {
-      medicamentos = await getMedicamentos();
+      medicamentos = await getMedicamentos(pacienteId);
     } catch (err) {
       console.error('Error al cargar medicamentos:', err);
       medicamentos = [];
@@ -86,6 +182,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     if (medicamentos.length === 0) {
       if (noRecordatorios) noRecordatorios.style.display = 'flex';
+      // Si no puede editar, ocultar botón de añadir primer med
+      if (!canEdit() && addFirstBtn) addFirstBtn.style.display = 'none';
       return;
     }
 
@@ -120,6 +218,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         })
       : '—';
 
+    const puedeEditar = canEdit();
+
     card.innerHTML = `
       <div class="recordatorio-info" style="flex:1">
         <h4>
@@ -137,23 +237,27 @@ document.addEventListener('DOMContentLoaded', async () => {
           </span>
         </p>
       </div>
-      <div class="recordatorio-acciones">
-        <button class="btn-accion btn-editar" aria-label="Editar medicamento">
-          <i class="fas fa-edit"></i>
-        </button>
-        <button class="btn-accion btn-eliminar" aria-label="Eliminar medicamento">
-          <i class="fas fa-trash"></i>
-        </button>
-      </div>
+      ${puedeEditar ? `
+        <div class="recordatorio-acciones">
+          <button class="btn-accion btn-editar" aria-label="Editar medicamento">
+            <i class="fas fa-edit"></i>
+          </button>
+          <button class="btn-accion btn-eliminar" aria-label="Eliminar medicamento">
+            <i class="fas fa-trash"></i>
+          </button>
+        </div>
+      ` : ''}
     `;
 
-    // eventos
-    card.querySelector('.btn-editar').addEventListener('click', () =>
-      openEditModal(med.idMedicamento)
-    );
-    card.querySelector('.btn-eliminar').addEventListener('click', () =>
-      openDeleteModal(med.idMedicamento)
-    );
+    // eventos (solo si puede editar)
+    if (puedeEditar) {
+      card.querySelector('.btn-editar').addEventListener('click', () =>
+        openEditModal(med.idMedicamento)
+      );
+      card.querySelector('.btn-eliminar').addEventListener('click', () =>
+        openDeleteModal(med.idMedicamento)
+      );
+    }
 
     return card;
   }
@@ -220,6 +324,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   // ── guardar (crear o editar) ───────────────────────────────
   async function handleSave() {
+    const pacienteId = getActivePacienteId();
+
     const data = {
       nombre:          document.getElementById('med-nombre').value.trim(),
       dosis:           document.getElementById('med-dosis').value.trim(),

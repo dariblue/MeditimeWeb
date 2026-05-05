@@ -22,11 +22,12 @@ function authHeaders(session) {
 }
 
 // ── GET medicamentos del paciente ────────────────────────────
-export async function getMedicamentos() {
+export async function getMedicamentos(pacienteId) {
   const session = getSession();
+  const id = pacienteId || session.userId;
 
   const response = await fetch(
-    `${API_URL}/api/Medicamentos/paciente/${session.userId}`,
+    `${API_URL}/api/Medicamentos/paciente/${id}`,
     { headers: authHeaders(session) }
   );
 
@@ -38,11 +39,12 @@ export async function getMedicamentos() {
 }
 
 // ── POST crear medicamento ───────────────────────────────────
-export async function saveMedicamento(medicamento) {
+export async function saveMedicamento(medicamento, pacienteId) {
   const session = getSession();
+  const id = pacienteId || session.userId;
 
   const body = {
-    idUsuarioPaciente: session.userId,
+    idUsuarioPaciente: id,
     nombre:           medicamento.nombre,
     dosis:            medicamento.dosis,
     fechaInicio:      medicamento.fechaInicio,
@@ -68,11 +70,12 @@ export async function saveMedicamento(medicamento) {
 }
 
 // ── PUT actualizar medicamento ───────────────────────────────
-export async function updateMedicamento(medicamento) {
+export async function updateMedicamento(medicamento, pacienteId) {
   const session = getSession();
+  const id = pacienteId || session.userId;
 
   const body = {
-    idUsuarioPaciente: session.userId,
+    idUsuarioPaciente: id,
     nombre:           medicamento.nombre,
     dosis:            medicamento.dosis,
     fechaInicio:      medicamento.fechaInicio,
@@ -125,11 +128,12 @@ export async function deleteMedicamento(id) {
 }
 
 // ── GET historial de tomas del paciente ──────────────────────
-export async function getHistorialTomas() {
+export async function getHistorialTomas(pacienteId) {
   const session = getSession();
+  const id = pacienteId || session.userId;
 
   const response = await fetch(
-    `${API_URL}/api/HistorialTomas/paciente/${session.userId}`,
+    `${API_URL}/api/HistorialTomas/paciente/${id}`,
     { headers: authHeaders(session) }
   );
 

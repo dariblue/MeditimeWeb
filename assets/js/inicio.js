@@ -7,10 +7,17 @@
 //   3. Match con historial (±60 min tolerancia)
 //   4. Renderizar tarjetas + resumen + barra progreso
 //   5. Acción "Confirmar" → POST /api/HistorialTomas
+//   6. Sistema de roles: responsable vs paciente no responsable
 // ─────────────────────────────────────────────────────────────
 
 import { getMedicamentos, getHistorialTomas, registrarToma } from './modules/medicamentos.js';
 import { formatTime, isSameDay } from './modules/utils.js';
+import {
+  isResponsable, canEdit,
+  getPacientesACargo, getActivePacienteId,
+  setActivePaciente, resetActivePaciente,
+  isViewingOtherPatient, getCurrentUserId
+} from './modules/roles.js';
 
 // ── constantes ──────────────────────────────────────────────
 const TOLERANCIA_MS = 5 * 60 * 1000;   // ±5 minutos (umbral de toma)
@@ -19,6 +26,7 @@ const TOLERANCIA_MS = 5 * 60 * 1000;   // ±5 minutos (umbral de toma)
 let medicamentos = [];
 let historial    = [];
 let tomasHoy     = [];     // { medicamento, horaTeórica: Date, estado, historialMatch }
+let pacientesACargo = [];  // lista de pacientes del responsable
 
 // ── referencias DOM ─────────────────────────────────────────
 const tomashoyContainer  = document.getElementById('tomas-hoy-container');
@@ -28,6 +36,92 @@ const textoProgreso      = document.getElementById('texto-progreso');
 const pendientesEl       = document.getElementById('tomas-pendientes');
 const atrasadasEl        = document.getElementById('tomas-atrasadas');
 const completadasEl      = document.getElementById('tomas-completadas');
+
+// ── Roles DOM ───────────────────────────────────────────────
+const readonlyBanner    = document.getElementById('readonly-banner');
+const pacienteSelector  = document.getElementById('paciente-selector');
+const selectPaciente    = document.getElementById('select-paciente');
+const managingBanner    = document.getElementById('managing-banner');
+const managingText      = document.getElementById('managing-banner-text');
+const managingClose     = document.getElementById('managing-banner-close');
+const noMedicamentos    = document.getElementById('no-medicamentos');
+const recordatoriosSection = document.querySelector('.recordatorios-section');
+
+// ═══════════════════════════════════════════════════════════
+//  0. CONFIGURACIÓN DE ROLES
+// ═══════════════════════════════════════════════════════════
+
+async function setupRoles() {
+  const esResp = isResponsable();
+
+  if (!esResp) {
+    // Paciente NO responsable → modo solo lectura
+    if (readonlyBanner) readonlyBanner.style.display = 'block';
+    return;
+  }
+
+  // Es responsable → comprobar si tiene pacientes a cargo
+  pacientesACargo = await getPacientesACargo();
+
+  if (pacientesACargo.length > 0 && pacienteSelector && selectPaciente) {
+    // Rellenar dropdown
+    selectPaciente.innerHTML = '<option value="">Mi cuenta</option>';
+    pacientesACargo.forEach(p => {
+      const opt = document.createElement('option');
+      opt.value = p.idUsuario || p.IDUsuario || p.id;
+      opt.textContent = `${p.nombre || ''} ${p.apellidos || ''}`.trim() || p.email;
+      selectPaciente.appendChild(opt);
+    });
+
+    // Restaurar selección previa
+    const activeId = getActivePacienteId();
+    const myId = getCurrentUserId();
+    if (activeId && activeId !== myId) {
+      selectPaciente.value = String(activeId);
+      showManagingBanner(activeId);
+    }
+
+    pacienteSelector.style.display = 'block';
+
+    // Evento cambio de paciente
+    selectPaciente.addEventListener('change', async () => {
+      const val = selectPaciente.value;
+      if (val) {
+        setActivePaciente(parseInt(val, 10));
+        showManagingBanner(parseInt(val, 10));
+      } else {
+        resetActivePaciente();
+        hideManagingBanner();
+      }
+      await cargarDashboard();
+    });
+
+    // Botón "Volver a mi cuenta"
+    if (managingClose) {
+      managingClose.addEventListener('click', async () => {
+        resetActivePaciente();
+        selectPaciente.value = '';
+        hideManagingBanner();
+        await cargarDashboard();
+      });
+    }
+  }
+}
+
+function showManagingBanner(pacienteId) {
+  const paciente = pacientesACargo.find(p =>
+    (p.idUsuario || p.IDUsuario || p.id) == pacienteId
+  );
+  if (managingBanner && managingText && paciente) {
+    const nombre = `${paciente.nombre || ''} ${paciente.apellidos || ''}`.trim();
+    managingText.innerHTML = `Gestionando a: <strong>${nombre}</strong>`;
+    managingBanner.style.display = 'block';
+  }
+}
+
+function hideManagingBanner() {
+  if (managingBanner) managingBanner.style.display = 'none';
+}
 
 // ═══════════════════════════════════════════════════════════
 //  1. MOTOR DE CÁLCULO DE TOMAS TEÓRICAS
@@ -158,11 +252,13 @@ function clasificarTomas() {
 // ═══════════════════════════════════════════════════════════
 
 async function cargarDashboard() {
+  const pacienteId = getActivePacienteId();
+
   try {
-    // Fetch paralelo
+    // Fetch paralelo — usando pacienteId para obtener datos del paciente correcto
     const [meds, hist] = await Promise.all([
-      getMedicamentos(),
-      getHistorialTomas()
+      getMedicamentos(pacienteId),
+      getHistorialTomas(pacienteId)
     ]);
 
     medicamentos = (meds || []).filter(m => m.activo);
@@ -173,6 +269,25 @@ async function cargarDashboard() {
     medicamentos = [];
     historial    = [];
   }
+
+  // ── ¿Sin medicamentos? Mostrar pantalla vacía ─────────────
+  if (medicamentos.length === 0) {
+    if (noMedicamentos) noMedicamentos.style.display = 'block';
+    if (recordatoriosSection) recordatoriosSection.style.display = 'none';
+
+    // Si no es responsable, ocultar el botón de añadir
+    if (!canEdit()) {
+      const btnIr = document.getElementById('btn-ir-medicamentos');
+      if (btnIr) btnIr.style.display = 'none';
+      const noMedCard = noMedicamentos?.querySelector('.no-medicamentos-card p');
+      if (noMedCard) noMedCard.textContent = 'Aún no se han configurado medicamentos. Tu responsable se encargará de ello.';
+    }
+    return;
+  }
+
+  // Hay medicamentos → mostrar dashboard
+  if (noMedicamentos) noMedicamentos.style.display = 'none';
+  if (recordatoriosSection) recordatoriosSection.style.display = 'block';
 
   // Generar tomas teóricas
   tomasHoy = [];
@@ -224,6 +339,8 @@ function renderTarjetas() {
 
   if (noTomasDiv) noTomasDiv.style.display = 'none';
 
+  const puedeConfirmar = canEdit();
+
   tomasHoy.forEach((toma, index) => {
     const card = document.createElement('div');
     card.className = `toma-card toma-${toma.estado}`;
@@ -236,7 +353,9 @@ function renderTarjetas() {
     if (toma.estado === 'completada') btnText = '✓ Tomado';
     if (toma.estado === 'pasada') btnText = 'Pasada';
 
-    const btnDisabled = (toma.estado === 'completada' || toma.estado === 'pendiente' || toma.estado === 'pasada');
+    // Si no puede editar, siempre deshabilitado (excepto ya completada que ya lo estaba)
+    const btnDisabled = !puedeConfirmar ||
+      (toma.estado === 'completada' || toma.estado === 'pendiente' || toma.estado === 'pasada');
 
     card.innerHTML = `
       <div class="toma-info">
@@ -246,29 +365,30 @@ function renderTarjetas() {
         </div>
         <div class="tiempo-restante">${tiempoStr}</div>
       </div>
-      <button class="confirmar-btn"
-              ${btnDisabled ? 'disabled' : ''}
-              data-index="${index}">
-        ${btnText}
-      </button>
+      ${puedeConfirmar ? `
+        <button class="confirmar-btn"
+                ${btnDisabled ? 'disabled' : ''}
+                data-index="${index}">
+          ${btnText}
+        </button>
+      ` : ''}
     `;
 
-    // Solo habilitar el botón si es "atrasada" (ya pasó la hora && no tomada)
-    // O si la hora ya ha pasado (tolerancia). Permitimos confirmar tomas atrasadas no pasadas de hora y media.
-    const btn = card.querySelector('.confirmar-btn');
-
-    // Habilitar si la hora ya llegó (o estamos en los 5 min previos) y no está completada/pasada
-    if (toma.estado === 'disponible' || toma.estado === 'atrasada') {
-      btn.disabled = false;
-      btn.addEventListener('click', async () => {
-        // Ejecución optimista: aplicar animación y cambiar estado visual
-        card.classList.remove('toma-disponible', 'toma-atrasada', 'toma-pendiente');
-        card.classList.add('toma-completada', 'animating-success');
-        btn.disabled = true;
-        btn.innerHTML = '✓ Tomado';
-        
-        await confirmarToma(index);
-      });
+    // Solo habilitar el botón si puede editar y la toma está disponible/atrasada
+    if (puedeConfirmar && (toma.estado === 'disponible' || toma.estado === 'atrasada')) {
+      const btn = card.querySelector('.confirmar-btn');
+      if (btn) {
+        btn.disabled = false;
+        btn.addEventListener('click', async () => {
+          // Ejecución optimista: aplicar animación y cambiar estado visual
+          card.classList.remove('toma-disponible', 'toma-atrasada', 'toma-pendiente');
+          card.classList.add('toma-completada', 'animating-success');
+          btn.disabled = true;
+          btn.innerHTML = '✓ Tomado';
+          
+          await confirmarToma(index);
+        });
+      }
     }
 
     tomashoyContainer.appendChild(card);
@@ -380,8 +500,12 @@ function calcTiempoRelativo(fecha) {
 //  ARRANQUE
 // ═══════════════════════════════════════════════════════════
 
-document.addEventListener('DOMContentLoaded', () => {
-  cargarDashboard();
+document.addEventListener('DOMContentLoaded', async () => {
+  // Configurar roles primero (banners, selector, etc.)
+  await setupRoles();
+
+  // Cargar dashboard
+  await cargarDashboard();
 
   // Prompt para alertas automáticas
   setTimeout(() => {

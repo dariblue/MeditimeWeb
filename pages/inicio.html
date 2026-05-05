@@ -66,6 +66,56 @@
 
         </section>
 
+        <!-- BANNER: Solo lectura (paciente no responsable) -->
+        <div id="readonly-banner" class="readonly-banner" style="display: none;">
+            <div class="container">
+                <div class="readonly-banner-content">
+                    <i class="fas fa-shield-alt"></i>
+                    <span>Tu medicación es gestionada por tus responsables. Contacta con ellos para realizar cambios.</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- SELECTOR DE PACIENTE (responsable con pacientes a cargo) -->
+        <div id="paciente-selector" class="paciente-selector" style="display: none;">
+            <div class="container">
+                <div class="paciente-selector-content">
+                    <label for="select-paciente"><i class="fas fa-users"></i> Gestionando a:</label>
+                    <select id="select-paciente" class="select-paciente">
+                        <option value="">Mi cuenta</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!-- BANNER: Gestionando a otro paciente -->
+        <div id="managing-banner" class="managing-banner" style="display: none;">
+            <div class="container">
+                <div class="managing-banner-content">
+                    <i class="fas fa-user-cog"></i>
+                    <span id="managing-banner-text">Gestionando a: —</span>
+                    <button id="managing-banner-close" class="managing-banner-close" title="Volver a mi cuenta">
+                        <i class="fas fa-times"></i> Volver a mi cuenta
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- PANTALLA VACÍA: Sin medicamentos -->
+        <section id="no-medicamentos" class="no-medicamentos-section" style="display: none;">
+            <div class="container">
+                <div class="no-medicamentos-card">
+                    <div class="no-medicamentos-icon">
+                        <i class="fas fa-capsules"></i>
+                    </div>
+                    <h3>No tienes medicamentos</h3>
+                    <p>Añade tu primer medicamento para empezar a gestionar tus tomas diarias de forma sencilla.</p>
+                    <a href="recordatorios" class="btn btn-primary btn-large" id="btn-ir-medicamentos">
+                        <i class="fas fa-plus-circle"></i> Añadir mi primer medicamento
+                    </a>
+                </div>
+            </div>
+        </section>
 
         <section class="recordatorios-section">
 

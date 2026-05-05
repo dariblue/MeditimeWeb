@@ -77,13 +77,16 @@ export function actualizarStatusCard(userData) {
         card.innerHTML = `
         <div class="status-title">ESTADO DE TU CUENTA</div>
         <div class="status-value">
-          Necesitas responsables que supervisen tu medicación
+          Tu medicación es supervisada por responsables
           <span class="status-badge no-responsable">No responsable</span>
         </div>
-        <p>Las personas que asignes como responsables podrán gestionar tu medicación y recibir notificaciones de tus tomas.</p>
+        <p>Tus responsables gestionan tu medicación. Puedes ver quiénes son pero no realizar cambios.</p>
       `;
         const header = document.querySelector('.responsables-list-header');
         if (header) header.style.display = 'flex';
+        // Ocultar botón de añadir responsable
+        const btnAgregar = document.getElementById('btnAgregarResponsable');
+        if (btnAgregar) btnAgregar.style.display = 'none';
     } else {
         card.innerHTML = `
         <div class="status-title">ESTADO DE TU CUENTA</div>
@@ -124,19 +127,21 @@ export function cargarResponsables(userData, responsablesAsignados, eliminarResp
         return;
     }
 
-    mostrarResponsables(responsablesAsignados, eliminarResponsableHandler);
+    mostrarResponsables(userData, responsablesAsignados, eliminarResponsableHandler);
 }
 
-export function mostrarResponsables(responsablesAsignados, eliminarResponsableHandler) {
+export function mostrarResponsables(userData, responsablesAsignados, eliminarResponsableHandler) {
     const container = document.getElementById('responsables-container');
     if (!container) return;
+
+    const puedeEditar = userData.rol !== 'no_responsable';
 
     if (!responsablesAsignados.length) {
         container.innerHTML = `
         <div class="empty-responsables">
           <i class="fas fa-user-shield"></i>
           <h3>No tienes responsables asignados</h3>
-          <p>Añade personas que puedan gestionar tu medicación</p>
+          <p>${puedeEditar ? 'Añade personas que puedan gestionar tu medicación' : 'Aún no se te han asignado responsables'}</p>
         </div>
       `;
         return;
@@ -148,20 +153,24 @@ export function mostrarResponsables(responsablesAsignados, eliminarResponsableHa
           <h4><i class="fas fa-user-circle"></i> ${responsable.nombre}</h4>
           <p><i class="fas fa-envelope"></i> ${responsable.email}</p>
         </div>
-        <div class="responsable-actions">
-          <button data-id="${responsable.id}" class="btn-icon-danger btn-eliminar-responsable" title="Eliminar responsable" type="button">
-            <i class="fas fa-trash-alt"></i>
-          </button>
-        </div>
+        ${puedeEditar ? `
+          <div class="responsable-actions">
+            <button data-id="${responsable.id}" class="btn-icon-danger btn-eliminar-responsable" title="Eliminar responsable" type="button">
+              <i class="fas fa-trash-alt"></i>
+            </button>
+          </div>
+        ` : ''}
       </div>
     `).join('');
 
-    document.querySelectorAll('.btn-eliminar-responsable').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-            const id = e.currentTarget.getAttribute('data-id');
-            eliminarResponsableHandler(id);
-        });
-    });
+    if (puedeEditar) {
+      document.querySelectorAll('.btn-eliminar-responsable').forEach(btn => {
+          btn.addEventListener('click', (e) => {
+              const id = e.currentTarget.getAttribute('data-id');
+              eliminarResponsableHandler(id);
+          });
+      });
+    }
 }
 
 export function mostrarResponsableExistente(usuario, asignarResponsableHandler) {
