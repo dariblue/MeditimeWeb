@@ -383,6 +383,14 @@ function calcTiempoRelativo(fecha) {
 document.addEventListener('DOMContentLoaded', () => {
   cargarDashboard();
 
+  // Prompt para alertas automáticas
+  setTimeout(() => {
+    const session = window.auth?.getCurrentUser();
+    if (session && window.medicationNotifications?.checkAndPrompt) {
+      window.medicationNotifications.checkAndPrompt(session.userId);
+    }
+  }, 1500);
+
   // Refrescar cada 60 segundos
   setInterval(cargarDashboard, 60000);
 });

@@ -5,7 +5,7 @@
 // Los eventos 'push' y 'notificationclick' se añadirán en Fase 4.
 // ─────────────────────────────────────────────────────────────
 
-const CACHE_NAME = 'meditime-cache-v3';
+const CACHE_NAME = 'meditime-cache-v4';
 
 // Shell de la app: recursos críticos para funcionar offline
 const APP_SHELL = [

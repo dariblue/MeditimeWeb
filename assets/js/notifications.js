@@ -83,84 +83,57 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
   }
 
-  // Exponer funciones para uso en la UI (ej. Perfil > Notificaciones)
+  // Función para comprobar y solicitar automáticamente (se llama desde inicio.js y recordatorios.js)
+  async function checkAndPrompt(userId) {
+      if (!userId) return;
+
+      const cacheKey = `meditime_alerts_${userId}`;
+      const status = localStorage.getItem(cacheKey);
+
+      // Si ya está configurado, verificar la suscripción real silenciosamente
+      if (status === 'configured') {
+          if ('serviceWorker' in navigator && window.pushManagerInstance) {
+              try {
+                  const reg = await navigator.serviceWorker.ready;
+                  const sub = await reg.pushManager.getSubscription();
+                  if (!sub) {
+                      // Se desuscribió desde el navegador o caducó
+                      localStorage.removeItem(cacheKey);
+                  } else {
+                      return; // Todo correcto
+                  }
+              } catch (e) {
+                  return;
+              }
+          } else {
+              return;
+          }
+      }
+
+      // Si llegamos aquí, no está configurado o se perdió la suscripción
+      // Solo mostramos el prompt si el navegador lo permite
+      if (Notification.permission === 'denied') {
+          console.warn("Permisos denegados previamente.");
+          return;
+      }
+
+      // Preguntar amigablemente antes de lanzar el prompt del navegador
+      const wantsAlerts = confirm("¡Hola! Para que no olvides tus tomas, MediTime necesita enviarte recordatorios. ¿Deseas activar las notificaciones push ahora?");
+      
+      if (wantsAlerts) {
+          const success = await requestNotificationPermission(userId);
+          if (success) {
+              localStorage.setItem(cacheKey, 'configured');
+          }
+      }
+  }
+
+  // Exponer funciones para uso en la UI
   window.medicationNotifications = {
     requestPermission: requestNotificationPermission,
     disableNotifications: disableNotifications,
-    sendTestNotification: sendTestNotification
+    sendTestNotification: sendTestNotification,
+    checkAndPrompt: checkAndPrompt
   };
-  
-  // Asignar evento al botón de prueba si existe
-  const testBtn = document.getElementById("test-notification");
-  if (testBtn) {
-      testBtn.addEventListener("click", () => {
-          window.medicationNotifications.sendTestNotification();
-      });
-  }
-
-  // Asignar evento al botón de activar notificaciones si existe
-  const enableBtn = document.getElementById("enable-notifications");
-  if (enableBtn) {
-      enableBtn.addEventListener("click", async () => {
-          const session = JSON.parse(localStorage.getItem("meditime_session") || "{}");
-          const userId = session.userId || 0;
-          
-          if (!userId) {
-              alert("Debes iniciar sesión para activar las notificaciones.");
-              return;
-          }
-
-          enableBtn.textContent = "Activando...";
-          enableBtn.disabled = true;
-
-          const success = await window.medicationNotifications.requestPermission(userId);
-          
-          if (success) {
-              enableBtn.textContent = "¡Activadas!";
-              enableBtn.style.backgroundColor = "#10b981"; // Verde éxito
-              enableBtn.style.borderColor = "#10b981";
-          } else {
-              enableBtn.textContent = "Permitir Alertas";
-              enableBtn.disabled = false;
-          }
-      });
-  }
-
-  // Asignar evento al botón de prueba remota de 1 minuto
-  const testDelayedBtn = document.getElementById("test-delayed-notification");
-  if (testDelayedBtn) {
-      testDelayedBtn.addEventListener("click", async () => {
-          const session = JSON.parse(localStorage.getItem("meditime_session") || "{}");
-          const userId = session.userId || 0;
-          
-          if (!userId) {
-              alert("Debes iniciar sesión primero.");
-              return;
-          }
-
-          testDelayedBtn.textContent = "Programando...";
-          testDelayedBtn.disabled = true;
-
-          try {
-              const response = await fetch(`https://api.dariblue.dev/api/PushSubscriptions/test-delayed-push`, {
-                  method: 'POST',
-                  headers: { 'Content-Type': 'application/json' },
-                  body: JSON.stringify({ idUsuario: userId })
-              });
-
-              if (response.ok) {
-                  alert("¡Programada con éxito! Puedes cerrar la aplicación web o bloquear tu móvil. En exactamente 1 minuto el servidor te enviará una notificación real.");
-                  testDelayedBtn.textContent = "¡Esperando 1 min!";
-              } else {
-                  throw new Error("Error en la respuesta de la API");
-              }
-          } catch (error) {
-              console.error(error);
-              alert("Hubo un error al programar la notificación de prueba.");
-              testDelayedBtn.textContent = "Probar (1 min)";
-              testDelayedBtn.disabled = false;
-          }
-      });
-  }
 });
 

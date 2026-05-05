@@ -16,6 +16,18 @@ function setupUserMenu() {
       authButtons.style.display = 'none';
     }
 
+    // Mostrar enlaces exclusivos para usuarios logueados (como en index.html)
+    document.querySelectorAll('.nav-auth-only').forEach(el => {
+      el.style.display = '';
+    });
+
+    // Actualizar botón principal del hero en index.html
+    const ctaMainBtn = document.getElementById('cta-main-btn');
+    if (ctaMainBtn) {
+      ctaMainBtn.href = 'pages/inicio.html';
+      ctaMainBtn.textContent = 'Entrar';
+    }
+
     // Crear menú de usuario
     const userMenu = document.createElement('div');
     userMenu.className = 'user-menu';
@@ -26,7 +38,7 @@ function setupUserMenu() {
         <i class="fas fa-chevron-down"></i>
       </button>
       <ul class="user-dropdown">
-        <li><a href="/pages/recordatorios.html"><i class="fas fa-bell"></i> Mis Recordatorios</a></li>
+        <li><a href="/pages/recordatorios.html"><i class="fas fa-pills"></i> Mis Medicamentos</a></li>
         <li><a href="/pages/perfil.html"><i class="fas fa-user-circle"></i> Mi Perfil</a></li>
         <li><a href="#"><i class="fas fa-cog"></i> Configuración</a></li>
         ${(session.rol === 'Responsable' || session.rol === 'Cuidador') ? '<li><a href="/pages/admin.html"><i class="fas fa-shield-alt"></i> Panel Admin</a></li>' : ''}

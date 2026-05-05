@@ -303,34 +303,7 @@
   color: #666;
 }
 
-/* Modal */
-.modal {
-  display: none;
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
-  z-index: 1001;
-  overflow-y: auto;
-}
-
-.modal.active {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.modal-content {
-  background-color: white;
-  border-radius: 8px;
-  width: 90%;
-  max-width: 500px;
-  max-height: 90vh;
-  overflow-y: auto;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-}
+/* Modal is handled by Bootstrap 5 */
 
 .modal-header {
   display: flex;
@@ -481,5 +454,32 @@
 @media (max-width: 768px) {
   .modal-content {
     width: 95%;
+  }
+  
+  .recordatorios-panel {
+    border-radius: 0;
+    box-shadow: none;
+    border-bottom: 1px solid #eee;
+  }
+  
+  .panel-header {
+    border-bottom: none;
+  }
+  
+  /* FAB styles for Add Medication button */
+  .add-fab {
+    position: fixed;
+    bottom: 2rem;
+    right: 1.5rem;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    padding: 0;
+    font-size: 1.5rem;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    z-index: 1000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 }

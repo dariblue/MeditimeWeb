@@ -9,7 +9,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="../assets/css/styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link rel="stylesheet" href="../assets/css/recordatorios.css">
+    <link rel="stylesheet" href="../assets/css/recordatorios.css?v=2">
     <!-- PWA -->
     <link rel="manifest" href="/manifest.json">
     <meta name="theme-color" content="#6366f1">
@@ -28,7 +28,7 @@
             </div>
             <ul class="nav-links">
                 <li><a href="inicio.html">Inicio</a></li>
-                <li><a href="recordatorios.html" class="active">Mis Recordatorios</a></li>
+                <li><a href="recordatorios.html" class="active">Mis Medicamentos</a></li>
                 <li><a href="contacto.html">Contacto</a></li>
                 <li><a href="faq.html">FAQ</a></li>
             </ul>
@@ -40,9 +40,9 @@
 
     <!-- Contenido principal -->
     <main>
-        <section class="page-header">
+        <section class="page-header d-none d-md-block">
             <div class="container">
-                <h2>Mis Recordatorios de Medicamentos</h2>
+                <h2>Mis Medicamentos</h2>
                 <p>Gestione sus medicamentos y recordatorios en un solo lugar</p>
             </div>
         </section>
@@ -54,10 +54,8 @@
                     <div class="recordatorios-panel">
                         <div class="panel-header">
                             <h3>Mis Medicamentos</h3>
-                            <!-- Boton para comprobar las notificaciones -->
-                            <!-- <button id="test-notification" class="btn btn-secondary">Probar Notificación</button> -->
-                            <button id="add-med-btn" class="btn btn-primary">
-                                <i class="fas fa-plus"></i> Añadir Medicamento
+                            <button id="add-med-btn" class="btn btn-primary add-fab">
+                                <i class="fas fa-plus"></i> <span class="d-none d-md-inline">Añadir Medicamento</span>
                             </button>
                         </div>
 
@@ -133,95 +131,6 @@
             </div>
         </section>
 
-        <!-- Modal para añadir/editar medicamento (API v2.0) -->
-        <div class="modal fade" id="med-modal" tabindex="-1" aria-labelledby="medModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="medModalLabel">Añadir Nuevo Medicamento</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
-                    </div>
-
-                    <div class="modal-body">
-                        <form id="med-form">
-                            <div class="mb-3">
-                                <label for="med-nombre" class="form-label">Nombre del medicamento</label>
-                                <input type="text" class="form-control" id="med-nombre" name="nombre" required
-                                    placeholder="Ej: Paracetamol 500mg" autocomplete="off">
-                            </div>
-
-                            <div class="mb-3">
-                                <label for="med-dosis" class="form-label">Dosis</label>
-                                <input type="text" class="form-control" id="med-dosis" name="dosis" required
-                                    placeholder="Ej: 1 pastilla, 5ml" autocomplete="off">
-                            </div>
-
-                            <div class="mb-3">
-                                <label for="med-inicio" class="form-label">Fecha y hora de inicio (primera toma)</label>
-                                <input type="datetime-local" class="form-control" id="med-inicio" name="fechaInicio" required>
-                            </div>
-
-                            <div class="mb-3">
-                                <label for="med-frecuencia" class="form-label">Frecuencia (cada X horas)</label>
-                                <input type="number" class="form-control" id="med-frecuencia" name="frecuenciaHoras"
-                                    min="1" max="168" required placeholder="Ej: 8">
-                                <div class="form-text">¿Cada cuántas horas debe tomarse?</div>
-                            </div>
-
-                            <div class="mb-3">
-                                <label for="med-fin" class="form-label">Fecha de finalización (opcional)</label>
-                                <input type="datetime-local" class="form-control" id="med-fin" name="fechaFin">
-                                <div class="form-text">Deje en blanco si el tratamiento es indefinido</div>
-                            </div>
-
-                            <div class="row">
-                                <div class="col-6 mb-3">
-                                    <label for="med-stock" class="form-label">Stock actual</label>
-                                    <input type="number" class="form-control" id="med-stock" name="stockActual"
-                                        min="0" value="0" placeholder="Ej: 30">
-                                </div>
-                                <div class="col-6 mb-3">
-                                    <label for="med-umbral" class="form-label">Umbral de alerta</label>
-                                    <input type="number" class="form-control" id="med-umbral" name="umbralAlerta"
-                                        min="0" value="5" placeholder="Ej: 5">
-                                    <div class="form-text">Avisar cuando queden pocas unidades</div>
-                                </div>
-                            </div>
-
-                            <div class="mb-3 form-check">
-                                <input type="checkbox" class="form-check-input" id="med-activo" name="activo" checked>
-                                <label class="form-check-label" for="med-activo">Medicamento activo</label>
-                            </div>
-
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary"
-                                    data-bs-dismiss="modal">Cancelar</button>
-                                <button type="submit" class="btn btn-success">Guardar Medicamento</button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Modal de confirmación para eliminar -->
-        <div class="modal fade" id="confirm-modal" tabindex="-1" aria-labelledby="confirmModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="confirmModalLabel">Confirmar eliminación</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
-                    </div>
-                    <div class="modal-body">
-                        <p>¿Está seguro de que desea eliminar este recordatorio?</p>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                        <button type="button" class="btn btn-danger" id="confirm-delete">Eliminar</button>
-                    </div>
-                </div>
-            </div>
-        </div>
     </main>
 
     <!-- Pie de página -->
@@ -237,7 +146,7 @@
                         <h4>Navegación</h4>
                         <ul>
                             <li><a href="inicio.html">Inicio</a></li>
-                            <li><a href="recordatorios.html">Mis Recordatorios</a></li>
+                            <li><a href="recordatorios.html">Mis Medicamentos</a></li>
                             <li><a href="contacto.html">Contacto</a></li>
                             <li><a href="faq.html">FAQ</a></li>
                         </ul>
@@ -265,16 +174,91 @@
         </div>
     </footer>
 
+    <!-- Modal para añadir/editar medicamento (API v2.0) -->
+    <div class="modal fade" id="med-modal" tabindex="-1" aria-labelledby="medModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="medModalLabel">Añadir Nuevo Medicamento</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="med-form">
+                        <div class="mb-3">
+                            <label for="med-nombre" class="form-label">Nombre del medicamento</label>
+                            <input type="text" class="form-control" id="med-nombre" name="nombre" required placeholder="Ej: Paracetamol 500mg" autocomplete="off">
+                        </div>
+                        <div class="mb-3">
+                            <label for="med-dosis" class="form-label">Dosis</label>
+                            <input type="text" class="form-control" id="med-dosis" name="dosis" required placeholder="Ej: 1 pastilla, 5ml" autocomplete="off">
+                        </div>
+                        <div class="mb-3">
+                            <label for="med-inicio" class="form-label">Fecha y hora de inicio (primera toma)</label>
+                            <input type="datetime-local" class="form-control" id="med-inicio" name="fechaInicio" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="med-frecuencia" class="form-label">Frecuencia (cada X horas)</label>
+                            <input type="number" class="form-control" id="med-frecuencia" name="frecuenciaHoras" min="1" max="168" required placeholder="Ej: 8">
+                            <div class="form-text">¿Cada cuántas horas debe tomarse?</div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="med-fin" class="form-label">Fecha de finalización (opcional)</label>
+                            <input type="datetime-local" class="form-control" id="med-fin" name="fechaFin">
+                            <div class="form-text">Deje en blanco si el tratamiento es indefinido</div>
+                        </div>
+                        <div class="row">
+                            <div class="col-6 mb-3">
+                                <label for="med-stock" class="form-label">Stock actual</label>
+                                <input type="number" class="form-control" id="med-stock" name="stockActual" min="0" value="0" placeholder="Ej: 30">
+                            </div>
+                            <div class="col-6 mb-3">
+                                <label for="med-umbral" class="form-label">Umbral de alerta</label>
+                                <input type="number" class="form-control" id="med-umbral" name="umbralAlerta" min="0" value="5" placeholder="Ej: 5">
+                                <div class="form-text">Avisar cuando queden pocas unidades</div>
+                            </div>
+                        </div>
+                        <div class="mb-3 form-check">
+                            <input type="checkbox" class="form-check-input" id="med-activo" name="activo" checked>
+                            <label class="form-check-label" for="med-activo">Medicamento activo</label>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                            <button type="submit" class="btn btn-success">Guardar Medicamento</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de confirmación para eliminar -->
+    <div class="modal fade" id="confirm-modal" tabindex="-1" aria-labelledby="confirmModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="confirmModalLabel">Confirmar eliminación</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <div class="modal-body">
+                    <p>¿Está seguro de que desea eliminar este recordatorio?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-danger" id="confirm-delete">Eliminar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
     <script type="module" src="../assets/js/auth.js"></script>
     <script type="module" src="../assets/js/script.js"></script>
     <script type="module" src="../assets/js/modules/utils.js"></script>
-    <script type="module" src="../assets/js/modules/modal.js"></script>
     <script type="module" src="../assets/js/modules/medicamentos.js"></script>
     <script type="module" src="../assets/js/recordatorios.js"></script>
     <script src="../assets/js/push-manager.js?v=2"></script>
-    <script src="../assets/js/notifications.js?v=2"></script>
+    <script src="../assets/js/notifications.js?v=3"></script>
     <!-- Service Worker Registration -->
     <script>
       if ('serviceWorker' in navigator) {

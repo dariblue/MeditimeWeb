@@ -53,6 +53,13 @@ document.addEventListener('DOMContentLoaded', async () => {
   await loadAndRender();
   renderMiniCalendario();
 
+  // Prompt para alertas automáticas
+  setTimeout(() => {
+    if (session && window.medicationNotifications?.checkAndPrompt) {
+      window.medicationNotifications.checkAndPrompt(session.userId);
+    }
+  }, 1500);
+
   // ═══════════════════════════════════════════════════════════
   //                     FUNCIONES
   // ═══════════════════════════════════════════════════════════
@@ -279,19 +286,15 @@ document.addEventListener('DOMContentLoaded', async () => {
   function showModal(id) {
     const el = document.getElementById(id);
     if (!el) return;
-    el.classList.add('show', 'active');
-    el.style.display = 'block';
-    document.body.classList.add('modal-open');
+    const modalInst = bootstrap.Modal.getOrCreateInstance(el);
+    modalInst.show();
   }
 
   function closeModal(id) {
     const el = document.getElementById(id);
     if (!el) return;
-    el.classList.remove('show', 'active');
-    el.style.display = 'none';
-    document.body.classList.remove('modal-open');
-    const backdrop = document.querySelector('.modal-backdrop');
-    if (backdrop) backdrop.remove();
+    const modalInst = bootstrap.Modal.getInstance(el);
+    if (modalInst) modalInst.hide();
   }
 
   // ── helper: ISO → datetime-local ──────────────────────────

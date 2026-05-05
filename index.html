@@ -43,6 +43,10 @@
                 </a>
             </div>
             <ul class="nav-links">
+                <li class="nav-auth-only" style="display: none;"><a href="pages/inicio.html">Inicio</a></li>
+                <li class="nav-auth-only" style="display: none;"><a href="pages/recordatorios.html">Mis Medicamentos</a></li>
+                <li><a href="pages/contacto.html">Contacto</a></li>
+                <li><a href="pages/faq.html">FAQ</a></li>
                 <li class="auth-buttons" id="auth-buttons">
                     <a href="pages/login.html" class="btn btn-secondary btn-sm">Iniciar Sesión</a>
                     <a href="pages/registro.html" class="btn btn-primary btn-sm">Registrarse</a>
@@ -63,7 +67,7 @@
                     <h1>Nunca olvide tomar sus medicamentos</h1>
                     <p>MEDITIME le ayuda a recordar cuándo tomar sus medicamentos de forma sencilla y confiable.</p>
                     <div class="cta-buttons">
-                        <a href="pages/login.html" class="btn btn-primary btn-large">Comenzar ahora</a>
+                        <a href="pages/login.html" id="cta-main-btn" class="btn btn-primary btn-large">Comenzar ahora</a>
                         <a href="#como-funciona" class="btn btn-secondary">Cómo funciona</a>
                     </div>
                 </div>
@@ -203,7 +207,7 @@
                         <h4>Navegación</h4>
                         <ul>
                             <li><a href="index.html">Inicio</a></li>
-                            <li><a href="pages/recordatorios.html">Mis Recordatorios</a></li>
+                            <li><a href="pages/recordatorios.html">Mis Medicamentos</a></li>
                             <li><a href="pages/calendario.html">Calendario</a></li>
                             <li><a href="pages/contacto.html">Contacto</a></li>
                             <li><a href="pages/faq.html">FAQ</a></li>
@@ -233,8 +237,8 @@
     </footer>
 
     <!-- Añadir script de autenticación antes del script principal -->
-    <script src="assets/js/auth.js"></script>
-    <script src="assets/js/script.js"></script>
+    <script src="assets/js/auth.js?v=2"></script>
+    <script src="assets/js/script.js?v=2"></script>
 
     <!-- Service Worker Registration -->
     <script>
