@@ -40,7 +40,7 @@ function setupUserMenu() {
       <ul class="user-dropdown">
         <li><a href="/recordatorios"><i class="fas fa-pills"></i> Mis Medicamentos</a></li>
         <li><a href="/perfil"><i class="fas fa-user-circle"></i> Mi Perfil</a></li>
-        <li><a href="#"><i class="fas fa-cog"></i> Configuración</a></li>
+        <!-- <li><a href="#"><i class="fas fa-cog"></i> Configuración</a></li> -->
         ${(session.rol === 'Responsable' || session.rol === 'Cuidador') ? '<li><a href="/admin"><i class="fas fa-shield-alt"></i> Panel Admin</a></li>' : ''}
         <li><a href="#" id="logout-button"><i class="fas fa-sign-out-alt"></i> Cerrar Sesión</a></li>
       </ul>
