@@ -1,0 +1,11 @@
+User-agent: *
+Allow: /
+Disallow: /inicio
+Disallow: /perfil
+Disallow: /recordatorios
+Disallow: /calendario
+Disallow: /admin
+Disallow: /assets/
+Disallow: /pages/
+
+Sitemap: https://meditime.dariblue.dev/sitemap.xml
