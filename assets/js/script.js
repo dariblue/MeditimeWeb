@@ -65,7 +65,7 @@ function setupUserMenu() {
       logoutButton.addEventListener('click', (e) => {
         e.preventDefault();
         window.auth.logout();
-        window.location.href = '/index';
+        window.location.href = '/';
       });
     }
   } else {
@@ -85,10 +85,10 @@ function checkAuthentication() {
 
   if (session) {
     if (isAuthPage) {
-      window.location.href = "/index";
+      window.location.href = "/";
     }
     if (isAdminPage && session.rol !== 'Responsable' && session.rol !== 'Cuidador') {
-      window.location.href = "/index";
+      window.location.href = "/";
     }
   } else if (isAdminPage) {
     window.location.href = "login";

@@ -60,7 +60,7 @@ export async function handleDeleteAccount(userData) {
     try {
         await eliminarCuenta(userData.iD_Usuario);
         localStorage.removeItem("meditime_session");
-        window.location.href = "/index";
+        window.location.href = "/";
     } catch (error) {
         console.error("Error:", error);
         mostrarMensajeGlobal("Error al eliminar cuenta: " + error.message, "error");

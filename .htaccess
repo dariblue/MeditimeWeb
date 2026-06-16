@@ -1,18 +1,23 @@
 RewriteEngine On
 
+# A. Redirigir /index e /index.html a la raíz / (301) de forma segura con HTTPS
+RewriteCond %{THE_REQUEST} \s/index(\.html)?[\s?] [NC]
+RewriteRule ^index(\.html)?$ https://meditime.dariblue.dev/ [R=301,L,NC]
+
 # 1. Si alguien entra a /pages/algo, redirigir a /algo (301)
 RewriteCond %{THE_REQUEST} \s/+pages/([^.\s]+)(\.html)?[\s?] [NC]
-RewriteRule ^pages/(.*)(\.html)?$ /$1 [R=301,L,NC]
+RewriteRule ^pages/(.*)(\.html)?$ https://meditime.dariblue.dev/$1 [R=301,L,NC]
 
-# 2. Si alguien entra a /algo.html en la raíz, redirigir a /algo (301)
-RewriteCond %{THE_REQUEST} \s/+(.+?)\.html[\s?] [NC]
+# 2. Si alguien entra a /algo.html en la raíz (que no sea index.html), redirigir a /algo (301)
+RewriteCond %{THE_REQUEST} \s/+(?!index)(.+?)\.html[\s?] [NC]
 RewriteCond %{REQUEST_URI} !^/pages/
-RewriteRule ^(.+)\.html$ /$1 [R=301,L,NC]
+RewriteRule ^(.+)\.html$ https://meditime.dariblue.dev/$1 [R=301,L,NC]
 
 # 3. Reescribir internamente /algo a /pages/algo.html si existe el archivo
 RewriteCond %{DOCUMENT_ROOT}/pages/$1.html -f
 RewriteRule ^([^/]+)/?$ /pages/$1.html [L]
 
-# 4. Reescribir internamente añadiendo .html para archivos en la raíz (ej. /index -> /index.html)
+# 4. Reescribir internamente añadiendo .html para archivos en la raíz
+RewriteCond %{REQUEST_URI} !^/$
 RewriteCond %{DOCUMENT_ROOT}/$1.html -f
 RewriteRule ^(.*?)/?$ $1.html [L]

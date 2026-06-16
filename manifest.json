@@ -2,7 +2,7 @@
   "name": "MediTime - Recordatorio de Medicamentos",
   "short_name": "MediTime",
   "description": "Tu asistente personal para nunca olvidar tus medicamentos. Alertas, calendario y seguimiento de tomas.",
-  "start_url": "/index.html",
+  "start_url": "/",
   "scope": "/",
   "display": "standalone",
   "background_color": "#0f172a",
